@@ -1,0 +1,10 @@
+BEGIN:VCARD
+VERSION:3.0
+UID:0
+N:FirstName;LasteName;;;
+FN:FirstName LasteName
+TEL:1234567890
+X-QTPROJECT-EXTENDED-DETAIL:X-REMOTE-ID;[\n    "qtcontacts:mock:id=remote-so
+ urce:999"\n]\n
+END:VCARD
+

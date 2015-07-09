@@ -1,0 +1,158 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<feed gd:etag="&quot;QHo5fTVSLyt7I2A9XRVXFkgPQgA.&quot;" xmlns="http://www.w3.org/2005/Atom" xmlns:batch="http://schemas.google.com/gdata/batch" xmlns:gContact="http://schemas.google.com/contact/2008" xmlns:gd="http://schemas.google.com/g/2005" xmlns:openSearch="http://a9.com/-/spec/opensearch/1.1/">
+ <id>renato.teste2@gmail.com</id>
+ <updated>2015-06-18T19:25:41.425Z</updated>
+ <category scheme="http://schemas.google.com/g/2005#kind" term="http://schemas.google.com/contact/2008#contact"/>
+ <title>Filho Renato's Contacts</title>
+ <link rel="alternate" type="text/html" href="https://www.google.com/"/>
+ <link rel="http://schemas.google.com/g/2005#feed" type="application/atom+xml" href="https://www.google.com/m8/feeds/contacts/renato.teste2%40gmail.com/full"/>
+ <link rel="http://schemas.google.com/g/2005#post" type="application/atom+xml" href="https://www.google.com/m8/feeds/contacts/renato.teste2%40gmail.com/full"/>
+ <link rel="http://schemas.google.com/g/2005#batch" type="application/atom+xml" href="https://www.google.com/m8/feeds/contacts/renato.teste2%40gmail.com/full/batch"/>
+ <link rel="self" type="application/atom+xml" href="https://www.google.com/m8/feeds/contacts/renato.teste2%40gmail.com/full?max-results=10&amp;start-index=11"/>
+ <link rel="previous" type="application/atom+xml" href="https://www.google.com/m8/feeds/contacts/renato.teste2%40gmail.com/full?max-results=10&amp;start-index=1"/>
+ <author>
+  <name>Filho Renato</name>
+  <email>renato.teste2@gmail.com</email>
+ </author>
+ <generator version="1.0" uri="http://www.google.com/m8/feeds">Contacts</generator>
+ <openSearch:totalResults>15</openSearch:totalResults>
+ <openSearch:startIndex>11</openSearch:startIndex>
+ <openSearch:itemsPerPage>10</openSearch:itemsPerPage>
+ <entry gd:etag="&quot;Rn09cDVSLit7I2A9XRVXFkgOQAQ.&quot;">
+  <id>http://www.google.com/m8/feeds/contacts/renato.teste2%40gmail.com/base/604d67ec8adf79bc</id>
+  <updated>2015-06-18T19:11:47.368Z</updated>
+  <app:edited xmlns:app="http://www.w3.org/2007/app">2015-06-18T19:11:47.368Z</app:edited>
+  <category scheme="http://schemas.google.com/g/2005#kind" term="http://schemas.google.com/contact/2008#contact"/>
+  <title>Aaron Hentschke</title>
+  <link rel="http://schemas.google.com/contacts/2008/rel#photo" type="image/*" href="https://www.google.com/m8/feeds/photos/media/renato.teste2%40gmail.com/604d67ec8adf79bc"/>
+  <link rel="self" type="application/atom+xml" href="https://www.google.com/m8/feeds/contacts/renato.teste2%40gmail.com/full/604d67ec8adf79bc"/>
+  <link rel="edit" type="application/atom+xml" href="https://www.google.com/m8/feeds/contacts/renato.teste2%40gmail.com/full/604d67ec8adf79bc"/>
+  <gd:name>
+   <gd:fullName>Aaron Hentschke</gd:fullName>
+   <gd:givenName>Aaron</gd:givenName>
+   <gd:familyName>Hentschke</gd:familyName>
+  </gd:name>
+  <gd:email rel="http://schemas.google.com/g/2005#other" address="hentschke@hildenbrand.org"/>
+  <gd:phoneNumber rel="http://schemas.google.com/g/2005#mobile" uri="tel:+49-178-2572849">+49-178-2572849</gd:phoneNumber>
+  <gd:phoneNumber rel="http://schemas.google.com/g/2005#work">(05530) 8188983</gd:phoneNumber>
+  <gd:structuredPostalAddress rel="http://schemas.google.com/g/2005#home">
+   <gd:formattedAddress>Moosweg 33c
+81232
+Deutschland</gd:formattedAddress>
+   <gd:street>Moosweg 33c</gd:street>
+   <gd:postcode>81232</gd:postcode>
+   <gd:country>Deutschland</gd:country>
+  </gd:structuredPostalAddress>
+  <gContact:groupMembershipInfo deleted="false" href="http://www.google.com/m8/feeds/groups/renato.teste2%40gmail.com/base/6"/>
+ </entry>
+ <entry gd:etag="&quot;QXY5ejVSLit7I2A9XRVXFkkORwY.&quot;">
+  <id>http://www.google.com/m8/feeds/contacts/renato.teste2%40gmail.com/base/763e9f2d08921a16</id>
+  <updated>2015-06-18T16:13:40.822Z</updated>
+  <app:edited xmlns:app="http://www.w3.org/2007/app">2015-06-18T16:13:40.822Z</app:edited>
+  <category scheme="http://schemas.google.com/g/2005#kind" term="http://schemas.google.com/contact/2008#contact"/>
+  <title>Abdul Feld</title>
+  <link rel="http://schemas.google.com/contacts/2008/rel#photo" type="image/*" href="https://www.google.com/m8/feeds/photos/media/renato.teste2%40gmail.com/763e9f2d08921a16"/>
+  <link rel="self" type="application/atom+xml" href="https://www.google.com/m8/feeds/contacts/renato.teste2%40gmail.com/full/763e9f2d08921a16"/>
+  <link rel="edit" type="application/atom+xml" href="https://www.google.com/m8/feeds/contacts/renato.teste2%40gmail.com/full/763e9f2d08921a16"/>
+  <gd:name>
+   <gd:fullName>Abdul Feld</gd:fullName>
+   <gd:givenName>Abdul</gd:givenName>
+   <gd:familyName>Feld</gd:familyName>
+  </gd:name>
+  <gd:email rel="http://schemas.google.com/g/2005#other" address="feld@prediger.org"/>
+  <gd:phoneNumber rel="http://schemas.google.com/g/2005#other" uri="tel:+49-7197-68234855">+49-7197-68234855</gd:phoneNumber>
+  <gd:phoneNumber rel="http://schemas.google.com/g/2005#other">+49-198-5948206</gd:phoneNumber>
+  <gd:structuredPostalAddress rel="http://schemas.google.com/g/2005#other">
+   <gd:formattedAddress>Albin-Edelmann-Str. 98c
+37466
+Deutschland</gd:formattedAddress>
+   <gd:street>Albin-Edelmann-Str. 98c</gd:street>
+   <gd:postcode>37466</gd:postcode>
+   <gd:country>Deutschland</gd:country>
+  </gd:structuredPostalAddress>
+  <gContact:groupMembershipInfo deleted="false" href="http://www.google.com/m8/feeds/groups/renato.teste2%40gmail.com/base/6"/>
+ </entry>
+ <entry gd:etag="&quot;QXY5ejVSLit7I2A9XRVXFkkORwY.&quot;">
+  <id>http://www.google.com/m8/feeds/contacts/renato.teste2%40gmail.com/base/76af90190bfd1a3f</id>
+  <updated>2015-06-18T16:13:40.822Z</updated>
+  <app:edited xmlns:app="http://www.w3.org/2007/app">2015-06-18T16:13:40.822Z</app:edited>
+  <category scheme="http://schemas.google.com/g/2005#kind" term="http://schemas.google.com/contact/2008#contact"/>
+  <title>Abby Burkhard</title>
+  <link rel="http://schemas.google.com/contacts/2008/rel#photo" type="image/*" href="https://www.google.com/m8/feeds/photos/media/renato.teste2%40gmail.com/76af90190bfd1a3f"/>
+  <link rel="self" type="application/atom+xml" href="https://www.google.com/m8/feeds/contacts/renato.teste2%40gmail.com/full/76af90190bfd1a3f"/>
+  <link rel="edit" type="application/atom+xml" href="https://www.google.com/m8/feeds/contacts/renato.teste2%40gmail.com/full/76af90190bfd1a3f"/>
+  <gd:name>
+   <gd:fullName>Abby Burkhard</gd:fullName>
+   <gd:givenName>Abby</gd:givenName>
+   <gd:familyName>Burkhard</gd:familyName>
+  </gd:name>
+  <gd:email rel="http://schemas.google.com/g/2005#other" address="burkhard@schlachtervogelgsang.ch"/>
+  <gd:phoneNumber rel="http://schemas.google.com/g/2005#other">+49-1270-18191872</gd:phoneNumber>
+  <gd:phoneNumber rel="http://schemas.google.com/g/2005#other">(0165) 571583823</gd:phoneNumber>
+  <gd:structuredPostalAddress rel="http://schemas.google.com/g/2005#other">
+   <gd:formattedAddress>Bergische Landstr. 31a
+63108
+Deutschland</gd:formattedAddress>
+   <gd:street>Bergische Landstr. 31a</gd:street>
+   <gd:postcode>63108</gd:postcode>
+   <gd:country>Deutschland</gd:country>
+  </gd:structuredPostalAddress>
+  <gContact:groupMembershipInfo deleted="false" href="http://www.google.com/m8/feeds/groups/renato.teste2%40gmail.com/base/6"/>
+ </entry>
+ <entry gd:etag="&quot;RXs8fTVSLit7I2A9XRVXFkgOQQw.&quot;">
+  <id>http://www.google.com/m8/feeds/contacts/renato.teste2%40gmail.com/base/7848b97f0879cfdc</id>
+  <updated>2015-06-18T19:11:24.575Z</updated>
+  <app:edited xmlns:app="http://www.w3.org/2007/app">2015-06-18T19:11:24.575Z</app:edited>
+  <category scheme="http://schemas.google.com/g/2005#kind" term="http://schemas.google.com/contact/2008#contact"/>
+  <title>Arved Menga</title>
+  <link rel="http://schemas.google.com/contacts/2008/rel#photo" type="image/*" href="https://www.google.com/m8/feeds/photos/media/renato.teste2%40gmail.com/7848b97f0879cfdc"/>
+  <link rel="self" type="application/atom+xml" href="https://www.google.com/m8/feeds/contacts/renato.teste2%40gmail.com/full/7848b97f0879cfdc"/>
+  <link rel="edit" type="application/atom+xml" href="https://www.google.com/m8/feeds/contacts/renato.teste2%40gmail.com/full/7848b97f0879cfdc"/>
+  <gd:name>
+   <gd:fullName>Arved Menga</gd:fullName>
+   <gd:givenName>Arved</gd:givenName>
+   <gd:familyName>Menga</gd:familyName>
+  </gd:name>
+  <gd:email rel="http://schemas.google.com/g/2005#other" address="menga@pomp.name" primary="true"/>
+  <gd:phoneNumber label="home" uri="tel:+49-5499-63405807">+49-5499-63405807</gd:phoneNumber>
+  <gd:phoneNumber label="cell">+49-1134-87938626</gd:phoneNumber>
+  <gd:structuredPostalAddress rel="http://schemas.google.com/g/2005#other">
+   <gd:formattedAddress>Gezelinallee 33
+West Miekeburg 62583
+Deutschland</gd:formattedAddress>
+   <gd:street>Gezelinallee 33</gd:street>
+   <gd:city>West Miekeburg</gd:city>
+   <gd:postcode>62583</gd:postcode>
+   <gd:country>Deutschland</gd:country>
+  </gd:structuredPostalAddress>
+  <gContact:groupMembershipInfo deleted="false" href="http://www.google.com/m8/feeds/groups/renato.teste2%40gmail.com/base/6"/>
+ </entry>
+ <entry gd:etag="&quot;RXs8fTVSLit7I2A9XRVXFkgOQQw.&quot;">
+  <id>http://www.google.com/m8/feeds/contacts/renato.teste2%40gmail.com/base/7da271258ea03b89</id>
+  <updated>2015-06-18T19:11:24.575Z</updated>
+  <app:edited xmlns:app="http://www.w3.org/2007/app">2015-06-18T19:11:24.575Z</app:edited>
+  <category scheme="http://schemas.google.com/g/2005#kind" term="http://schemas.google.com/contact/2008#contact"/>
+  <title>Arvid Herzenberg</title>
+  <link rel="http://schemas.google.com/contacts/2008/rel#photo" type="image/*" href="https://www.google.com/m8/feeds/photos/media/renato.teste2%40gmail.com/7da271258ea03b89"/>
+  <link rel="self" type="application/atom+xml" href="https://www.google.com/m8/feeds/contacts/renato.teste2%40gmail.com/full/7da271258ea03b89"/>
+  <link rel="edit" type="application/atom+xml" href="https://www.google.com/m8/feeds/contacts/renato.teste2%40gmail.com/full/7da271258ea03b89"/>
+  <gd:name>
+   <gd:fullName>Arvid Herzenberg</gd:fullName>
+   <gd:givenName>Arvid</gd:givenName>
+   <gd:familyName>Herzenberg</gd:familyName>
+  </gd:name>
+  <gd:email rel="http://schemas.google.com/g/2005#other" address="herzenberg@brutigam.com" primary="true"/>
+  <gd:phoneNumber label="home" uri="tel:+49-7780-75716285">+49-7780-75716285</gd:phoneNumber>
+  <gd:phoneNumber label="cell">+49-1402-29654218</gd:phoneNumber>
+  <gd:structuredPostalAddress rel="http://schemas.google.com/g/2005#other">
+   <gd:formattedAddress>Schäfershütte 124
+Kühneldorf 15713
+Deutschland</gd:formattedAddress>
+   <gd:street>Schäfershütte 124</gd:street>
+   <gd:city>Kühneldorf</gd:city>
+   <gd:postcode>15713</gd:postcode>
+   <gd:country>Deutschland</gd:country>
+  </gd:structuredPostalAddress>
+  <gContact:groupMembershipInfo deleted="false" href="http://www.google.com/m8/feeds/groups/renato.teste2%40gmail.com/base/6"/>
+ </entry>
+</feed>

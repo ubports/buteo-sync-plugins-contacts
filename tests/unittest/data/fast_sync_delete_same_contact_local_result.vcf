@@ -1,0 +1,34 @@
+BEGIN:VCARD
+VERSION:3.0
+UID:0
+N:FirstName;LasteName;;;
+FN:FirstName LasteName
+TEL:1234567890
+X-QTPROJECT-EXTENDED-DETAIL:X-REMOTE-ID;[\n    "qtcontacts:mock:id=remote-so
+ urce:5"\n]\n
+REV:2015-06-15T08:00:00
+END:VCARD
+BEGIN:VCARD
+VERSION:3.0
+UID:0
+N:teste3;teste3;;;
+FN:teste3 teste3
+X-QTPROJECT-FAVORITE:false;0
+TEL:3333333
+CATEGORIES:T
+X-QTPROJECT-EXTENDED-DETAIL:X-REMOTE-ID;[\n    "qtcontacts:mock:id=remote-so
+ urce:2"\n]\n
+REV:2015-06-15T08:00:00
+END:VCARD
+BEGIN:VCARD
+VERSION:3.0
+UID:2
+N:teste2;teste;;;
+FN:teste teste2
+X-QTPROJECT-FAVORITE:false;0
+TEL:111111
+CATEGORIES:T
+X-QTPROJECT-EXTENDED-DETAIL:X-REMOTE-ID;[\n    "qtcontacts:mock:id=remote-so
+ urce:4"\n]\n
+REV:2015-06-15T08:00:00
+END:VCARD
