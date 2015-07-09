@@ -666,33 +666,32 @@ private slots:
         aniversary.setSubType(QContactAnniversary::SubTypeWedding);
         aniversary.setEvent("My wedding");
         contact.saveDetail(&aniversary);
-        expectedXML << QStringLiteral("<gContact:event label=\"My wedding\" ref=\"wedding\" gd:when=\"%1\"/>")
-                       .arg(aniversary.originalDateTime().toString(Qt::ISODate));
+        expectedXML << QStringLiteral("<gContact:event rel=\"anniversary\" label=\"wedding\"><gd:when startTime=\"2015-10-04T12:30:00\"/>");
 
         aniversary = QContactAnniversary();
         aniversary.setOriginalDate(QDate(2015, 3, 20));
         aniversary.setSubType(QContactAnniversary::SubTypeHouse);
         aniversary.setEvent("My house event");
         contact.saveDetail(&aniversary);
-        expectedXML << QStringLiteral("<gContact:event label=\"My house event\" ref=\"house\" gd:when=\"%1\"/>")
-                       .arg(aniversary.originalDate().toString(Qt::ISODate));
+        expectedXML << QStringLiteral("<gContact:event rel=\"anniversary\" label=\"house\"><gd:when startTime=\"2015-03-20T00:00:00\"/>");
 
         // Birthday
         QContactBirthday birthday;
-        birthday.setDateTime(QDateTime(QDate(2015, 10, 4), QTime(12, 30)));
+        birthday.setDateTime(QDateTime(QDate(2015, 11, 4), QTime(12, 30)));
         contact.saveDetail(&birthday);
-        expectedXML << QStringLiteral("<gContact:birthday when=\"215-10-4\"/>");
+        expectedXML << QStringLiteral("<gContact:birthday when=\"2015-11-04\"/>");
 
-        birthday = QContactBirthday();
-        birthday.setDate(QDate(0, 4, 23));
-        contact.saveDetail(&birthday);
-        expectedXML << QStringLiteral("<gContact:birthday when=\"--4-23\"/>");
+// FIXME: QContacts api does not support birthday without year
+//        birthday = QContactBirthday();
+//        birthday.setDate(QDate(0, 4, 23));
+//        contact.saveDetail(&birthday);
+//        expectedXML << QStringLiteral("<gContact:birthday when=\"--04-23\"/>");
 
         // Gender
         QContactGender gender;
         gender.setGender(QContactGender::GenderMale);
         contact.saveDetail(&gender);
-        expectedXML << QStringLiteral("<gContact:gender value='male'/>");
+        expectedXML << QStringLiteral("<gContact:gender value=\"male\"/>");
 
         // Note
         QContactNote note;
@@ -725,6 +724,7 @@ private slots:
 
         GoogleContactStream encoder(false, QStringLiteral("test@gmail.com"));
         QByteArray xml = encoder.encode(batchPage);
+        qDebug() << "XML" << xml;
         foreach(QString line, expectedXML) {
             QVERIFY2(xml.contains(line.toUtf8()), qPrintable("Invalid parse for:" + line));
         }

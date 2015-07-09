@@ -1130,17 +1130,8 @@ void GoogleContactStream::encodeAvatar(const QContactAvatar &avatar, const QCont
 
 void GoogleContactStream::encodeGender(const QContactGender &gender)
 {
-    switch(gender.gender()) {
-        case QContactGender::GenderMale: {
-            mXmlWriter->writeEmptyElement ("gContact:gender");
-            mXmlWriter->writeAttribute ("value", "male");
-        } break;
-        case QContactGender::GenderFemale: {
-            mXmlWriter->writeEmptyElement ("gContact:gender");
-            mXmlWriter->writeAttribute ("value", "female");
-        } break;
-        default: return;
-    }
+    mXmlWriter->writeEmptyElement ("gContact:gender");
+    mXmlWriter->writeAttribute ("value", gender.gender() == QContactGender::GenderMale ? "male" : "female");
 }
 
 void GoogleContactStream::encodeNickname(const QContactNickname &nickname)
@@ -1163,17 +1154,11 @@ void GoogleContactStream::encodeAnniversary(const QContactAnniversary &anniversa
 
     if (!anniversary.event().isEmpty() && !anniversary.originalDate().isNull()) {
         mXmlWriter->writeStartElement ("gContact:event");
-        mXmlWriter->writeAttribute("rel", anniversaryTypes.value(anniversary.subType(),
-                                                                 QString::fromLatin1("wedding")));
-        mXmlWriter->writeAttribute("label", anniversary.event());
+        mXmlWriter->writeAttribute("rel", "anniversary");
+        mXmlWriter->writeAttribute("label", anniversaryTypes.value(anniversary.subType(),
+                                                                   QString::fromLatin1("wedding")));
         mXmlWriter->writeEmptyElement("gd:when");
-        QString date;
-        if (anniversary.originalDate().isValid()) {
-            date = anniversary.originalDate().toString(Qt::ISODate);
-        } else {
-            date = anniversary.originalDateTime().toString(Qt::ISODate);
-        }
-        mXmlWriter->writeAttribute("startTime", date);
+        mXmlWriter->writeAttribute("startTime", anniversary.originalDateTime().toString(Qt::ISODate));
         mXmlWriter->writeEndElement();
     }
 }
