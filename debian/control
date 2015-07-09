@@ -1,0 +1,25 @@
+Source: buteo-sync-plugins-contacts
+Section: libs
+Priority: optional
+Maintainer: Renato Araujo Oliveira Filho <renato.filho@canonical.com>
+Build-Depends: buteo-syncfw-qt5-dev,
+               cmake,
+               debhelper (>= 9),
+               pkg-config,
+               libaccounts-qt5-dev,
+               libsignon-qt5-dev,
+               qt5-default,
+               qtbase5-dev,
+               qtpim5-dev,
+               signon-plugin-oauth2-dev,
+Standards-Version: 3.9.5
+Homepage: https://launchpad.net/buteo-sync-plugins-contacts
+
+Package: buteo-sync-plugins-contacts-google
+Architecture: any
+Conflicts: evolution-data-server-online-accounts
+Provides: evolution-data-server-online-accounts
+Depends: ${misc:Depends},
+         ${shlibs:Depends},
+Description: Buteo google contact sync plugin
+ Buteo sync plugin for google contacts
