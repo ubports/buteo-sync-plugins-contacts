@@ -1,9 +1,10 @@
 Format: http://www.debian.org/doc/packaging-manuals/copyright-format/1.0/
+Upstream-Name: buteo-sync-plugins-contacts
+Source: https://launchpad.net/buteo-sync-plugins-contacts
 
 Files: *
 Copyright: 2013-2014 Jolla Ltd. and/or its subsidiary(-ies).
            2015 Canonical Ltd.
-
 License: LGPL-2.1+
  This library is free software: you can redistribute it and/or modify
  it under the terms of the GNU Lesser General Public License as published by
