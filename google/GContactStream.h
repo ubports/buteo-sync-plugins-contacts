@@ -59,6 +59,7 @@
 #include <QContactGeoLocation>
 #include <QContactFavorite>
 #include <QContactExtendedDetail>
+#include <QContactRingtone>
 
 QTCONTACTS_USE_NAMESPACE
 
@@ -119,6 +120,7 @@ private:
     QContactDetail handleEntryUpdated();
     QContactDetail handleEntryGroup();
     QContactDetail handleEntryExtendedProperty();
+    QContactDetail handleEntryEvent();
 
     // handle the id specially
     QContactDetail handleEntryId(QString *rawId);
@@ -171,6 +173,7 @@ private:
     void encodeGroup(const QContactExtendedDetail &group);
     void encodeFavorite(const QContactFavorite &favorite);
     void encodeExtendedProperty(const QContactExtendedDetail &detail, bool *isGroup);
+    void encodeRingTone(const QContactRingtone &ringTone);
 
     void encodeUnknownElements(const QStringList &unknownElements);
     QString encodeContext(const QList<int> context) const;

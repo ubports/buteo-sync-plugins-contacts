@@ -176,6 +176,15 @@ private Q_SLOTS:
         QVERIFY(syncP);
         m_client = new TestContactsClient("test-plugin",
                                           *syncP, 0);
+
+        QContact c;
+        QContactRingtone r;
+        r.setAudioRingtoneUrl(QUrl("http://audio.com"));
+        r.setVibrationRingtoneUrl(QUrl("http://vibrating.com"));
+        r.setVideoRingtoneUrl(QUrl("http://video.com"));
+        c.saveDetail(&r);
+
+        qDebug() << toVCard(c);
     }
 
     void cleanup()

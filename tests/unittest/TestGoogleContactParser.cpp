@@ -369,19 +369,118 @@ private slots:
         QContactExtendedDetail ex = UContactsCustomDetail::getCustomField(contact, UContactsCustomDetail::FieldDeletedAt);
         QVERIFY(ex.data().toDateTime().isValid());
 
-        //TODO: check for missing fields
         //TypeAnniversary,
-        //TypeBirthday,
+        // <gContact:event rel="anniversary" label="wedding">
+        //  <gd:when startTime="2005-06-06T17:00:00" endTime="2005-06-06T18:00:00-08:00"/>
+        // </gContact:event>
+        QList<QContactAnniversary> anniversaries = contact.details<QContactAnniversary>();
+        QCOMPARE(anniversaries.size(), 2);
+        QCOMPARE(anniversaries.at(0).subType(), QContactAnniversary::SubTypeWedding);
+        QCOMPARE(anniversaries.at(0).originalDateTime().toString(Qt::ISODate), QStringLiteral("2005-06-06T17:00:00"));
+        QCOMPARE(anniversaries.at(0).event(), QStringLiteral("This weekend"));
+
+        //<gContact:event rel="anniversary" label="memorial">
+        //  <gd:when startTime="2005-06-06" endTime="2005-06-08" valueString="This month"/>
+        //</gContact:event>
+        QCOMPARE(anniversaries.at(1).subType(), QContactAnniversary::SubTypeMemorial);
+        QCOMPARE(anniversaries.at(1).originalDateTime().toString(Qt::ISODate), QStringLiteral("2005-06-06T00:00:00"));
+        QCOMPARE(anniversaries.at(1).event(), QStringLiteral("This month"));
+
+        //TypeBirthday
+        QList<QContactBirthday> birthdays = contact.details<QContactBirthday>();
+        //<gContact:birthday when='1980-07-04'/>
+        QCOMPARE(birthdays.size(), 1);
+        QCOMPARE(birthdays.at(0).dateTime().toString(Qt::ISODate), QStringLiteral("1980-07-04T00:00:00"));
+
+        //FIXME: QContactBirthday does not support birthdays without year
+        //<gContact:birthday when='--12-25'/>
+
+        //TypeGender
+        //<gContact:gender value='female'/>
+        QList<QContactGender> genders = contact.details<QContactGender>();
+        QCOMPARE(genders.size(), 1);
+        QCOMPARE(genders.at(0).gender(), QContactGender::GenderFemale);
+
+        //TypeNote
+        QList<QContactNote> notes = contact.details<QContactNote>();
+        QCOMPARE(notes.size(), 2);
+
+        //<gContact:jot rel='home'>Lived in Orange County</gContact:jot>
+        QCOMPARE(notes.at(0).contexts().size(), 1);
+        QVERIFY(notes.at(0).contexts().contains(QContactDetail::ContextHome));
+        QCOMPARE(notes.at(0).note(), QStringLiteral("Lived in Orange County"));
+
+        //<gContact:jot rel='user'>Borrowed my copy of "Alice's Adventures in Wonderland"</gContact:jot>
+        QCOMPARE(notes.at(1).contexts().size(), 1);
+        QVERIFY(notes.at(1).contexts().contains(QContactDetail::ContextOther));
+        QCOMPARE(notes.at(1).note(), QStringLiteral("Borrowed my copy of \"Alice's Adventures in Wonderland\""));
+
+        //TypeUrl
+        // FIXME: QContactUrl does not support label
+        QList<QContactUrl> urls = contact.details<QContactUrl>();
+        QCOMPARE(urls.size(), 7);
+
+        //<gContact:website href='http://www.ubuntu.com' label='ubuntu' rel='home-page'/>
+        QCOMPARE(urls.at(0).contexts().size(), 1);
+        QVERIFY(urls.at(0).contexts().contains(QContactDetail::ContextOther));
+        QCOMPARE(urls.at(0).subType(), QContactUrl::SubTypeHomePage);
+        QCOMPARE(urls.at(0).url(), QStringLiteral("http://www.ubuntu.com"));
+
+        //<gContact:website href='http://blog.canonical.com/' label='Canonical blog' rel='blog'/>
+        QCOMPARE(urls.at(1).contexts().size(), 1);
+        QVERIFY(urls.at(1).contexts().contains(QContactDetail::ContextOther));
+        QCOMPARE(urls.at(1).subType(), QContactUrl::SubTypeBlog);
+        QCOMPARE(urls.at(1).url(), QStringLiteral("http://blog.canonical.com/"));
+
+        // <gContact:website href='https://launchpad.net/~user' label='lp' rel='profile'/>
+        // FIXME: QContactUrl does not contains type 'profile'
+        QCOMPARE(urls.at(2).contexts().size(), 1);
+        QVERIFY(urls.at(2).contexts().contains(QContactDetail::ContextOther));
+        QCOMPARE(urls.at(2).subType(), QContactUrl::SubTypeFavourite);
+        QCOMPARE(urls.at(2).url(), QStringLiteral("https://launchpad.net/~user"));
+
+        //<gContact:website href='http://www.home.com' label='My home' rel='home'/>
+        QCOMPARE(urls.at(3).contexts().size(), 1);
+        QVERIFY(urls.at(3).contexts().contains(QContactDetail::ContextHome));
+        QCOMPARE(urls.at(3).subType(), QContactUrl::SubTypeFavourite);
+        QCOMPARE(urls.at(3).url(), QStringLiteral("http://www.home.com"));
+
+        //<gContact:website href='http://www.work.com' label='My work' rel='work'/>
+        QCOMPARE(urls.at(4).contexts().size(), 1);
+        QVERIFY(urls.at(4).contexts().contains(QContactDetail::ContextWork));
+        QCOMPARE(urls.at(4).subType(), QContactUrl::SubTypeFavourite);
+        QCOMPARE(urls.at(4).url(), QStringLiteral("http://www.work.com"));
+
+        //<gContact:website href='http://www.other.com' label='Other web' rel='other'/>
+        QCOMPARE(urls.at(5).contexts().size(), 1);
+        QVERIFY(urls.at(5).contexts().contains(QContactDetail::ContextOther));
+        QCOMPARE(urls.at(5).subType(), QContactUrl::SubTypeFavourite);
+        QCOMPARE(urls.at(5).url(), QStringLiteral("http://www.other.com"));
+
+        //<gContact:website href='http://www.ftp.com' label='My ftp' rel='ftp'/>
+        // FIXME: QContactUrl does not contains type 'ftp'
+        QCOMPARE(urls.at(6).contexts().size(), 1);
+        QVERIFY(urls.at(6).contexts().contains(QContactDetail::ContextOther));
+        QCOMPARE(urls.at(6).subType(), QContactUrl::SubTypeFavourite);
+        QCOMPARE(urls.at(6).url(), QStringLiteral("http://www.ftp.com"));
+
+        //TypeHobby
+        //<gContact:hobby>Paragliding</gContact:hobby>
+        QList<QContactHobby> hobbies = contact.details<QContactHobby>();
+        QCOMPARE(hobbies.size(), 1);
+        QCOMPARE(hobbies.at(0).hobby(), QStringLiteral("Paragliding"));
+
+        //TypeRingtone
+        QList<QContactRingtone> ringtones = contact.details<QContactRingtone>();
+        QCOMPARE(ringtones.size(), 1);
+        QCOMPARE(ringtones.at(0).audioRingtoneUrl(), QUrl("file://my-ringtone.mp3"));
+
+        //TODO: check for missing fields
         //TypeFamily,
-        //TypeGender,
         //TypeGeoLocation,
         //TypeGlobalPresence,
-        //TypeGuid,
-        //TypeHobby,
         //TypeNickname,
-        //TypeNote,
         //TypePresence,
-        //TypeRingtone,
         //TypeSyncTarget,
         //TypeTag,
         //TypeType,
@@ -666,14 +765,17 @@ private slots:
         aniversary.setSubType(QContactAnniversary::SubTypeWedding);
         aniversary.setEvent("My wedding");
         contact.saveDetail(&aniversary);
-        expectedXML << QStringLiteral("<gContact:event rel=\"anniversary\" label=\"wedding\"><gd:when startTime=\"2015-10-04T12:30:00\"/>");
-
+        expectedXML << QStringLiteral("<gContact:event rel=\"anniversary\" label=\"wedding\">"
+                                        "<gd:when startTime=\"2015-10-04T12:30:00\" valueString=\"My wedding\"/>"
+                                      "</gContact:event>");
         aniversary = QContactAnniversary();
         aniversary.setOriginalDate(QDate(2015, 3, 20));
         aniversary.setSubType(QContactAnniversary::SubTypeHouse);
         aniversary.setEvent("My house event");
         contact.saveDetail(&aniversary);
-        expectedXML << QStringLiteral("<gContact:event rel=\"anniversary\" label=\"house\"><gd:when startTime=\"2015-03-20T00:00:00\"/>");
+        expectedXML << QStringLiteral("<gContact:event rel=\"anniversary\" label=\"house\">"
+                                        "<gd:when startTime=\"2015-03-20T00:00:00\" valueString=\"My house event\"/>"
+                                      "</gContact:event>");
 
         // Birthday
         QContactBirthday birthday;
@@ -696,9 +798,54 @@ private slots:
         // Note
         QContactNote note;
         note.setNote("This is a note");
+        note.setContexts(QList<int>() << QContactDetail::ContextWork);
         contact.saveDetail(&note);
-        expectedXML << QStringLiteral("<gContact:jot>This is a note</gContact:jot>");
+        expectedXML << QStringLiteral("<gContact:jot rel=\"work\">This is a note</gContact:jot>");
 
+        // Url
+        QContactUrl url;
+        url.setUrl("http://www.ubuntu.com");
+        url.setSubType(QContactUrl::SubTypeHomePage);
+        contact.saveDetail(&url);
+        expectedXML << QStringLiteral("<gContact:website rel=\"home-page\" href=\"http://www.ubuntu.com\"/>");
+
+        url = QContactUrl();
+        url.setUrl("http://blog.canonical.com");
+        url.setSubType(QContactUrl::SubTypeBlog);
+        contact.saveDetail(&url);
+        expectedXML << QStringLiteral("<gContact:website rel=\"blog\" href=\"http://blog.canonical.com\"/>");
+
+        url = QContactUrl();
+        url.setUrl("http://www.canonical.com");
+        url.setSubType(QContactUrl::SubTypeFavourite);
+        contact.saveDetail(&url);
+        expectedXML << QStringLiteral("<gContact:website rel=\"other\" href=\"http://www.canonical.com\"/>");
+
+        url = QContactUrl();
+        url.setUrl("http://www.home.com");
+        url.setSubType(QContactUrl::SubTypeFavourite);
+        url.setContexts(QList<int>() << QContactDetail::ContextHome);
+        contact.saveDetail(&url);
+        expectedXML << QStringLiteral("<gContact:website rel=\"home\" href=\"http://www.home.com\"/>");
+
+        url = QContactUrl();
+        url.setUrl("http://www.work.com");
+        url.setSubType(QContactUrl::SubTypeFavourite);
+        url.setContexts(QList<int>() << QContactDetail::ContextWork);
+        contact.saveDetail(&url);
+        expectedXML << QStringLiteral("<gContact:website rel=\"work\" href=\"http://www.work.com\"/>");
+
+        //TypeHobby
+        QContactHobby hobby;
+        hobby.setHobby("Paragliding");
+        contact.saveDetail(&hobby);
+        expectedXML << QStringLiteral("<gContact:hobby>Paragliding</gContact:hobby>");
+
+        //TypeRingtone
+        QContactRingtone ringtone;
+        ringtone.setAudioRingtoneUrl(QUrl("file://my-ringtone.mp3"));
+        contact.saveDetail(&ringtone);
+        expectedXML << QStringLiteral("<gd:extendedProperty name=\"SOUND\" value=\"file://my-ringtone.mp3\"/>");
 
         //TODO: check for missing fields
         //TypeAvatar,
@@ -706,16 +853,11 @@ private slots:
         //TypeGeoLocation,
         //TypeGlobalPresence,
         //TypeGuid,
-        //TypeHobby,
         //TypeNickname,
-        //TypeNote,
         //TypePresence,
-        //TypeRingtone,
         //TypeSyncTarget,
         //TypeTag,
-        //TypeTimestamp,
         //TypeType,
-        //TypeUrl,
         //TypeVersion
 
         QMultiMap<GoogleContactStream::UpdateType, QPair<QContact, QStringList> > batchPage;
@@ -724,7 +866,6 @@ private slots:
 
         GoogleContactStream encoder(false, QStringLiteral("test@gmail.com"));
         QByteArray xml = encoder.encode(batchPage);
-        qDebug() << "XML" << xml;
         foreach(QString line, expectedXML) {
             QVERIFY2(xml.contains(line.toUtf8()), qPrintable("Invalid parse for:" + line));
         }

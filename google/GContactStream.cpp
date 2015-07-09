@@ -124,13 +124,14 @@ void GoogleContactStream::initFunctionMap()
     mContactFunctionMap.insert("updated", &GoogleContactStream::handleEntryUpdated);
     //mContactFunctionMap.insert("app:edited", &GoogleContactStream::handleEntryUpdated);
     mContactFunctionMap.insert("gContact:birthday", &GoogleContactStream::handleEntryBirthday);
-    mContactFunctionMap.insert("gcontact::gender", &GoogleContactStream::handleEntryGender);
+    mContactFunctionMap.insert("gContact:gender", &GoogleContactStream::handleEntryGender);
     mContactFunctionMap.insert("gContact:hobby", &GoogleContactStream::handleEntryHobby);
     mContactFunctionMap.insert("gContact:nickname", &GoogleContactStream::handleEntryNickname);
     mContactFunctionMap.insert("gContact:occupation", &GoogleContactStream::handleEntryOccupation);
     mContactFunctionMap.insert("gContact:website", &GoogleContactStream::handleEntryWebsite);
     mContactFunctionMap.insert("gContact:groupMembershipInfo", &GoogleContactStream::handleEntryGroup);
-    mContactFunctionMap.insert("gd:jit", &GoogleContactStream::handleEntryJot);
+    mContactFunctionMap.insert("gContact:event", &GoogleContactStream::handleEntryEvent);
+    mContactFunctionMap.insert("gContact:jot", &GoogleContactStream::handleEntryJot);
     mContactFunctionMap.insert("gd:email", &GoogleContactStream::handleEntryEmail);
     mContactFunctionMap.insert("gd:im", &GoogleContactStream::handleEntryIm);
     mContactFunctionMap.insert("gd:name", &GoogleContactStream::handleEntryName);
@@ -364,12 +365,57 @@ QContactDetail GoogleContactStream::handleEntryExtendedProperty()
         QContactFavorite fav;
         fav.setFavorite(attributes.value("value").toString() == "true");
         return fav;
+    } else if (propName == "SOUND") {
+        QContactRingtone ring;
+        ring.setAudioRingtoneUrl(QUrl(attributes.value("value").toString()));
+        return ring;
     }
 
     // handle as generic type
     xd.setName(attributes.value("name").toString());
     xd.setData(attributes.value("value").toString());
     return xd;
+}
+
+QContactDetail GoogleContactStream::handleEntryEvent()
+{
+    Q_ASSERT(mXmlReader->isStartElement() &&
+             mXmlReader->name() == "gContact:event");
+
+//    <gContact:event rel="anniversary" label="memorial">
+//      <gd:when startTime="2005-06-06" endTime="2005-06-08" valueString="This month"/>
+//   </gContact:event>
+    static QMap<QString, QContactAnniversary::SubType> anniversaryTypes;
+    if (anniversaryTypes.isEmpty()) {
+        anniversaryTypes.insert(QString::fromLatin1("engagement"),
+                                QContactAnniversary::SubTypeEngagement);
+        anniversaryTypes.insert(QString::fromLatin1("employment"),
+                                QContactAnniversary::SubTypeEmployment);
+        anniversaryTypes.insert(QString::fromLatin1("memorial"),
+                                QContactAnniversary::SubTypeMemorial);
+        anniversaryTypes.insert(QString::fromLatin1("house"),
+                                QContactAnniversary::SubTypeHouse);
+        anniversaryTypes.insert(QString::fromLatin1("wedding"),
+                                QContactAnniversary::SubTypeWedding);
+    }
+    QXmlStreamAttributes attributes = mXmlReader->attributes();
+    if (attributes.value("rel") == "anniversary") {
+        QContactAnniversary anniversary;
+        anniversary.setSubType(anniversaryTypes.value(attributes.value("label").toString(),
+                                                      QContactAnniversary::SubTypeWedding));
+        mXmlReader->readNextStartElement();
+        if (mXmlReader->qualifiedName() == "gd:when") {
+            attributes = mXmlReader->attributes();
+            anniversary.setOriginalDateTime(QDateTime::fromString(attributes.value("startTime").toString(),
+                                                                  Qt::ISODate));
+            anniversary.setEvent(attributes.value("valueString").toString());
+            // FIXME: missing endTime
+            // QContactAnniversary API does not support endTime
+        }
+        return anniversary;
+    }
+
+    return QContactDetail();
 }
 
 QString GoogleContactStream::handleEntryUnknownElement()
@@ -396,11 +442,12 @@ QString GoogleContactStream::handleEntryUnknownElement()
 QList<int> GoogleContactStream::handleContext(const QString &rel) const
 {
     QList<int> contexts;
-    if (rel == QStringLiteral("http://schemas.google.com/g/2005#home")) {
+    QString name = rel.split("#").last();
+    if (name == QStringLiteral("home")) {
         contexts << QContactDetail::ContextHome;
-    } else if (rel == QStringLiteral("http://schemas.google.com/g/2005#work")) {
+    } else if (name == QStringLiteral("work")) {
         contexts << QContactDetail::ContextWork;
-    } else if (!rel.isEmpty()) {
+    } else if (!name.isEmpty()) {
         contexts << QContactDetail::ContextOther;
     }
     return contexts;
@@ -449,7 +496,13 @@ QContactDetail GoogleContactStream::handleEntryBirthday()
 
     QContactBirthday birthday;
     birthday.setDate(QDate::fromString(mXmlReader->attributes().value("when").toString(), Qt::ISODate));
-    return birthday;
+
+    if (birthday.dateTime().isValid()) {
+        return birthday;
+    } else {
+        LOG_WARNING("Birthday date not supported:" << mXmlReader->attributes().value("when").toString());
+        return QContactDetail();
+    }
 }
 
 QContactDetail GoogleContactStream::handleEntryGender()
@@ -501,7 +554,20 @@ QContactDetail GoogleContactStream::handleEntryWebsite()
     Q_ASSERT(mXmlReader->isStartElement() && mXmlReader->qualifiedName() == "gContact:website");
 
     QContactUrl url;
-    url.setUrl(mXmlReader->attributes().value("href").toString());
+    QXmlStreamAttributes attributes = mXmlReader->attributes();
+    QString rel = attributes.hasAttribute("rel")
+                ? attributes.value("rel").toString()
+                : QString();
+
+    if (rel == "home-page") {
+        url.setSubType(QContactUrl::SubTypeHomePage);
+    } else if (rel == "blog") {
+        url.setSubType(QContactUrl::SubTypeBlog);
+    } else {
+        url.setSubType(QContactUrl::SubTypeFavourite);
+    }
+    url.setContexts(handleContext(rel));
+    url.setUrl(attributes.value("href").toString());
     return url;
 }
 
@@ -509,7 +575,12 @@ QContactDetail GoogleContactStream::handleEntryJot()
 {
     Q_ASSERT(mXmlReader->isStartElement() && mXmlReader->qualifiedName() == "gContact:jot");
 
+    QString rel = mXmlReader->attributes().hasAttribute("rel")
+                ? mXmlReader->attributes().value("rel").toString()
+                : QString();
+
     QContactNote note;
+    note.setContexts(handleContext(rel));
     note.setNote(mXmlReader->readElementText());
     return note;
 }
@@ -830,7 +901,10 @@ void GoogleContactStream::encodeContactUpdate(const QContact &qContact,
             }   break;
             case QContactDetail::TypeExtendedDetail: {
                 encodeExtendedProperty(detail, &hasGroup);
-            }
+            }   break;
+            case QContactDetail::TypeRingtone: {
+                encodeRingTone(detail);
+            }   break;
             // TODO: handle the custom detail fields.
             default: {
             }   break;
@@ -1067,7 +1141,7 @@ void GoogleContactStream::encodeUrl(const QContactUrl &url)
                 mXmlWriter->writeAttribute("rel", "blog");
             } break;
             default: {
-                mXmlWriter->writeAttribute("rel", "other");
+                mXmlWriter->writeAttribute("rel", encodeContext(url.contexts()));
             } break;
         }
         mXmlWriter->writeAttribute("href", url.url());
@@ -1087,6 +1161,7 @@ GoogleContactStream::encodeNote(const QContactNote &note)
 {
     if (!note.note().isEmpty()) {
         mXmlWriter->writeStartElement("gContact:jot");
+        mXmlWriter->writeAttribute("rel", encodeContext(note.contexts()));
         mXmlWriter->writeCharacters(note.note());
         mXmlWriter->writeEndElement();
     }
@@ -1159,6 +1234,7 @@ void GoogleContactStream::encodeAnniversary(const QContactAnniversary &anniversa
                                                                    QString::fromLatin1("wedding")));
         mXmlWriter->writeEmptyElement("gd:when");
         mXmlWriter->writeAttribute("startTime", anniversary.originalDateTime().toString(Qt::ISODate));
+        mXmlWriter->writeAttribute("valueString", anniversary.event());
         mXmlWriter->writeEndElement();
     }
 }
@@ -1262,6 +1338,16 @@ void GoogleContactStream::encodeExtendedProperty(const QContactExtendedDetail &d
     }
 }
 
+void GoogleContactStream::encodeRingTone(const QContactRingtone &ringTone)
+{
+    if (!ringTone.audioRingtoneUrl().isEmpty()) {
+        QContactExtendedDetail det;
+        det.setName("SOUND");
+        det.setData(ringTone.audioRingtoneUrl());
+        encodeExtendedProperty(det, 0);
+    }
+}
+
 void GoogleContactStream::encodeUnknownElements(const QStringList &unknownElements)
 {
     // ugly hack to get the QXmlStreamWriter to write a pre-formatted element...
@@ -1293,6 +1379,7 @@ QString GoogleContactStream::encodeContext(const QList<int> context) const
     case QContactDetail::ContextWork:
         return "work";
     case QContactDetail::ContextOther:
+    default:
         return "other";
     }
 }

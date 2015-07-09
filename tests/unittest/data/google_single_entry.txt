@@ -125,5 +125,25 @@ Brazil</gd:formattedAddress>
   <gd:extendedProperty name="X-FAVORITE" value="true"/>
   <gd:extendedProperty name="X-PROPERTY" value="property-value"/>
   <gContact:groupMembershipInfo deleted="false" href="http://www.google.com/m8/feeds/groups/test%40gmail.com/base/6"/>
+  <gContact:event rel="anniversary" label="wedding">
+    <gd:when startTime="2005-06-06T17:00:00" endTime="2005-06-06T18:00:00" valueString="This weekend"/>
+  </gContact:event>
+  <gContact:event rel="anniversary" label="memorial">
+    <gd:when startTime="2005-06-06" endTime="2005-06-08" valueString="This month"/>
+  </gContact:event>
+  <gContact:birthday when='1980-07-04'/>
+  <gContact:birthday when='--12-25'/>
+  <gContact:gender value='female'/>
+  <gContact:jot rel='home'>Lived in Orange County</gContact:jot>
+  <gContact:jot rel='user'>Borrowed my copy of "Alice's Adventures in Wonderland"</gContact:jot>
+  <gContact:website href='http://www.ubuntu.com' label='ubuntu' rel='home-page'/>
+  <gContact:website href='http://blog.canonical.com/' label='Canonical blog' rel='blog'/>
+  <gContact:website href='https://launchpad.net/~user' label='lp' rel='profile'/>
+  <gContact:website href='http://www.home.com' label='My home' rel='home'/>
+  <gContact:website href='http://www.work.com' label='My work' rel='work'/>
+  <gContact:website href='http://www.other.com' label='Other web' rel='other'/>
+  <gContact:website href='http://www.ftp.com' label='My ftp' rel='ftp'/>
+  <gd:extendedProperty name="SOUND" value="file://my-ringtone.mp3"/>
+  <gContact:hobby>Paragliding</gContact:hobby>
  </entry>  
 </feed>
