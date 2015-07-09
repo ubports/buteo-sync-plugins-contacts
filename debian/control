@@ -3,7 +3,6 @@ Section: libs
 Priority: optional
 Maintainer: Renato Araujo Oliveira Filho <renato.filho@canonical.com>
 Build-Depends: buteo-syncfw-qt5-dev,
-               cdbs,
                cmake,
                debhelper (>= 9),
                pkg-config,
@@ -23,4 +22,4 @@ Provides: evolution-data-server-online-accounts
 Depends: ${misc:Depends},
          ${shlibs:Depends},
 Description: Buteo google contact sync plugin
- Buteo google contact sync plugin
+ Buteo sync plugin for google contacts
