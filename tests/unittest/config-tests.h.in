@@ -1,0 +1,10 @@
+#ifndef __CONFIG_TESTS_H__
+#define __CONFIG_TESTS_H__
+
+#include <QString>
+
+const QString PROFILE_TEST_FN                    ("@PROFILE_TEST_FN@");
+const QString TEST_DATA_DIR                      ("@TEST_DATA_DIR@");
+const QString MOCK_PLUGIN_PATH                   ("@MOCK_PLUGIN_PATH@");
+
+#endif
