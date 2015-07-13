@@ -66,7 +66,7 @@ public:
      * \param syncTarget The name of the collection used to store contacts
      * \return Returns true if initialized with sucess false otherwise
      */
-    bool init(const QString &syncTarget);
+    bool init(uint syncAccount, const QString &syncTarget);
 
     /*!
      * \brief releases the resources held.
@@ -239,6 +239,9 @@ private: // data
     // if there is more than one Manager we need to have a list of Managers
     QContactManager     *iMgr;      ///< A pointer to contact manager
     QString             mSyncTargetId;
+
+
+    void createSourceForAccount(uint accountId, const QString &label);
 };
 
 #endif /* CONTACTSBACKEND_H_ */

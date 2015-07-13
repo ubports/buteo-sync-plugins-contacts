@@ -110,7 +110,7 @@ UContactsClient::init()
     }
 
     d->mContactBackend = createContactsBackend(this);
-    if (!d->mContactBackend || !d->mContactBackend->init(d->mSyncTarget)) {
+    if (!d->mContactBackend || !d->mContactBackend->init(d->mAccountId, d->mSyncTarget)) {
         LOG_CRITICAL("Fail to create contact backend");
         goto init_fail;
     }

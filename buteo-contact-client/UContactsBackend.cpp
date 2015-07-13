@@ -67,7 +67,7 @@ UContactsBackend::~UContactsBackend()
 }
 
 bool
-UContactsBackend::init(const QString &syncTarget)
+UContactsBackend::init(uint syncAccount, const QString &syncTarget)
 {
     FUNCTION_CALL_TRACE;
 
@@ -79,7 +79,9 @@ UContactsBackend::init(const QString &syncTarget)
 
     QList<QContact> sources = iMgr->contacts(filter);
     Q_FOREACH(const QContact &contact, sources) {
-        if (contact.detail<QContactDisplayLabel>().label() == syncTarget) {
+        QContactExtendedDetail exd = UContactsCustomDetail::getCustomField(contact,
+                                                                           "ACCOUNT-ID");
+        if (!exd.isEmpty() && (exd.data().toUInt() == syncAccount)) {
             mSyncTargetId = contact.detail<QContactGuid>().guid();
             return true;
         }
@@ -95,13 +97,17 @@ UContactsBackend::init(const QString &syncTarget)
         label.setLabel(syncTarget);
         contact.saveDetail(&label);
 
-        // set the new source as default if there is only the local source
-        if (sources.size() == 1) {
-            QContactExtendedDetail isDefault;
-            isDefault.setName("IS-PRIMARY");
-            isDefault.setData(true);
-            contact.saveDetail(&isDefault);
-        }
+        // set the new source as default
+        QContactExtendedDetail isDefault;
+        isDefault.setName("IS-PRIMARY");
+        isDefault.setData(true);
+        contact.saveDetail(&isDefault);
+
+        // Link source with account
+        QContactExtendedDetail accountId;
+        accountId.setName("ACCOUNT-ID");
+        accountId.setData(syncAccount);
+        contact.saveDetail(&accountId);
 
         if (!iMgr->saveContact(&contact)) {
             qWarning() << "Fail to create contact source:" << syncTarget;
