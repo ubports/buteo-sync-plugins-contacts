@@ -44,6 +44,19 @@ private slots:
         GoogleContactStream parser(false);
         GoogleContactAtom *atom = parser.parse(xml.readAll());
         QVERIFY(atom);
+        QCOMPARE(atom->authorEmail(), QStringLiteral("test@gmail.com"));
+        QCOMPARE(atom->authorName(), QStringLiteral("Ubuntu"));
+        QCOMPARE(atom->updated(), QStringLiteral("2015-06-18T19:25:40.490Z"));
+        QCOMPARE(atom->categorySchema(), QStringLiteral("http://schemas.google.com/g/2005#kind"));
+        QCOMPARE(atom->categoryTerm(), QStringLiteral("http://schemas.google.com/contact/2008#contact"));
+        QCOMPARE(atom->totalResults(), 1);
+        QCOMPARE(atom->startIndex(), 1);
+        QCOMPARE(atom->itemsPerPage(), 10);
+        QCOMPARE(atom->id(), QStringLiteral("test@gmail.com"));
+        QCOMPARE(atom->generatorName(), QStringLiteral("Contacts"));
+        QCOMPARE(atom->generatorVersion(), QStringLiteral("1.0"));
+        QCOMPARE(atom->generatorUri(), QStringLiteral("http://www.google.com/m8/feeds"));
+        QCOMPARE(atom->title(), QStringLiteral("Contacts"));
 
         QList<QContact> entries = atom->deletedEntryContacts();
         QCOMPARE(entries.size(), 1);
@@ -53,9 +66,20 @@ private slots:
 
         // check each contat details
         // name
+        //<gd:name>
+        // <gd:fullName>Aaron Rossler</gd:fullName>
+        // <gd:givenName>Aaron</gd:givenName>
+        // <gd:familyName>Rossler</gd:familyName>
+        // <gd:additionalName>Mark</gd:additionalName>
+        // <gd:namePrefix>Sr.</gd:namePrefix>
+        // <gd:nameSuffix>Jr.</gd:nameSuffix>
+        //</gd:name>
         QContactName name = contact.detail<QContactName>();
         QCOMPARE(name.firstName(), QStringLiteral("Aaron"));
         QCOMPARE(name.lastName(), QStringLiteral("Rossler"));
+        QCOMPARE(name.middleName(), QStringLiteral("Mark"));
+        QCOMPARE(name.prefix(), QStringLiteral("Sr."));
+        QCOMPARE(name.suffix(), QStringLiteral("Jr."));
 
         // TODO: implement display label support
         // QContactDisplayLabel label = contact.detail<QContactDisplayLabel>();
@@ -78,7 +102,7 @@ private slots:
 
         // phone number
         QList<QContactPhoneNumber> phones = contact.details<QContactPhoneNumber>();
-        QCOMPARE(phones.size(), 7);
+        QCOMPARE(phones.size(), 14);
 
         // <gd:phoneNumber rel="http://schemas.google.com/g/2005#other">+55-8704-0000</gd:phoneNumber>
         QCOMPARE(phones.at(0).number(), QStringLiteral("+55-8704-0000"));
@@ -127,6 +151,52 @@ private slots:
         QVERIFY(phones.at(6).contexts().contains(QContactDetail::ContextWork));
         QCOMPARE(phones.at(6).subTypes().size(), 1);
         QVERIFY(phones.at(6).subTypes().contains(QContactPhoneNumber::SubTypeMobile));
+
+        // <gd:phoneNumber rel="http://schemas.google.com/g/2005#other_fax">+55-8704-0007</gd:phoneNumber>
+        QCOMPARE(phones.at(7).number(), QStringLiteral("+55-8704-0007"));
+        QCOMPARE(phones.at(7).contexts().size(), 1);
+        QVERIFY(phones.at(7).contexts().contains(QContactDetail::ContextOther));
+        QCOMPARE(phones.at(7).subTypes().size(), 1);
+        QVERIFY(phones.at(7).subTypes().contains(QContactPhoneNumber::SubTypeFax));
+
+        //<gd:phoneNumber rel="http://schemas.google.com/g/2005#page">+55-8704-0008</gd:phoneNumber>
+        qDebug() << phones.at(8);
+        QCOMPARE(phones.at(8).number(), QStringLiteral("+55-8704-0008"));
+        QCOMPARE(phones.at(8).contexts().size(), 1);
+        QVERIFY(phones.at(8).contexts().contains(QContactDetail::ContextHome));
+        QCOMPARE(phones.at(8).subTypes().size(), 1);
+        QVERIFY(phones.at(8).subTypes().contains(QContactPhoneNumber::SubTypePager));
+
+        //<gd:phoneNumber rel="http://schemas.google.com/g/2005#work_page">+55-8704-0009</gd:phoneNumber>
+        QCOMPARE(phones.at(9).number(), QStringLiteral("+55-8704-0009"));
+        QCOMPARE(phones.at(9).contexts().size(), 1);
+        QVERIFY(phones.at(9).contexts().contains(QContactDetail::ContextWork));
+        QCOMPARE(phones.at(9).subTypes().size(), 1);
+        QVERIFY(phones.at(9).subTypes().contains(QContactPhoneNumber::SubTypePager));
+
+       //<gd:phoneNumber rel="http://schemas.google.com/g/2005#tty_tdd">+55-8704-0010</gd:phoneNumber>
+        QCOMPARE(phones.at(10).number(), QStringLiteral("+55-8704-0010"));
+        QCOMPARE(phones.at(10).contexts().size(), 0);
+        QCOMPARE(phones.at(10).subTypes().size(), 1);
+        QVERIFY(phones.at(10).subTypes().contains(QContactPhoneNumber::SubTypeModem));
+
+        //<gd:phoneNumber rel="http://schemas.google.com/g/2005#car">+55-8704-0011</gd:phoneNumber>
+        QCOMPARE(phones.at(11).number(), QStringLiteral("+55-8704-0011"));
+        QCOMPARE(phones.at(11).contexts().size(), 0);
+        QCOMPARE(phones.at(11).subTypes().size(), 1);
+        QVERIFY(phones.at(11).subTypes().contains(QContactPhoneNumber::SubTypeCar));
+
+        //<gd:phoneNumber rel="http://schemas.google.com/g/2005#telex">+55-8704-0012</gd:phoneNumber>
+        QCOMPARE(phones.at(12).number(), QStringLiteral("+55-8704-0012"));
+        QCOMPARE(phones.at(12).contexts().size(), 0);
+        QCOMPARE(phones.at(12).subTypes().size(), 1);
+        QVERIFY(phones.at(12).subTypes().contains(QContactPhoneNumber::SubTypeBulletinBoardSystem));
+
+        //<gd:phoneNumber rel="http://schemas.google.com/g/2005#assistant">+55-8704-0013</gd:phoneNumber>
+        QCOMPARE(phones.at(13).number(), QStringLiteral("+55-8704-0013"));
+        QCOMPARE(phones.at(13).contexts().size(), 0);
+        QCOMPARE(phones.at(13).subTypes().size(), 1);
+        QVERIFY(phones.at(13).subTypes().contains(QContactPhoneNumber::SubTypeAssistant));
 
         // Address
         QList<QContactAddress> address = contact.details<QContactAddress>();
@@ -475,8 +545,27 @@ private slots:
         QCOMPARE(ringtones.size(), 1);
         QCOMPARE(ringtones.at(0).audioRingtoneUrl(), QUrl("file://my-ringtone.mp3"));
 
+        //TypeNickname
+        //<gContact:nickname>Dragon</gContact:nickname>
+        QList<QContactNickname> nicknames = contact.details<QContactNickname>();
+        QCOMPARE(nicknames.size(), 1);
+        QCOMPARE(nicknames.at(0).nickname(), QStringLiteral("Dragon"));
+
+        //TypeFamily
+        //<gContact:relation rel="spouse">Katherine</gContact:relation>
+        QList<QContactFamily> families = contact.details<QContactFamily>();
+        QCOMPARE(families.size(), 2);
+        qDebug() << families.at(0).spouse();
+        qDebug() << families.at(0).children();
+
+        QCOMPARE(families.at(0).spouse(), QStringLiteral("Katherine"));
+        QVERIFY(families.at(0).children().isEmpty());
+
+        //<gContact:relation rel="child">Mike</gContact:relation>
+        QCOMPARE(families.at(1).children(), QStringList() << QStringLiteral("Mike"));
+        QVERIFY(families.at(1).spouse().isEmpty());
+
         //TODO: check for missing fields
-        //TypeFamily,
         //TypeGeoLocation,
         //TypeGlobalPresence,
         //TypeNickname,
@@ -494,10 +583,19 @@ private slots:
 
         // name
         QContactName cName;
+        cName.setPrefix(QStringLiteral("Sr."));
         cName.setFirstName(QStringLiteral("Aaron"));
+        cName.setMiddleName(QStringLiteral("Mark"));
         cName.setLastName(QStringLiteral("Rossler"));
+        cName.setSuffix(QStringLiteral("Jr."));
         contact.saveDetail(&cName);
-        expectedXML << QStringLiteral("<gd:name><gd:givenName>Aaron</gd:givenName><gd:familyName>Rossler</gd:familyName></gd:name>");
+        expectedXML << QStringLiteral("<gd:name>"
+                                        "<gd:givenName>Aaron</gd:givenName>"
+                                        "<gd:additionalName>Mark</gd:additionalName>"
+                                        "<gd:familyName>Rossler</gd:familyName>"
+                                        "<gd:namePrefix>Sr.</gd:namePrefix>"
+                                        "<gd:nameSuffix>Jr.</gd:nameSuffix>"
+                                      "</gd:name>");
 
         // email
         QContactEmailAddress email;
@@ -567,6 +665,58 @@ private slots:
         phone.setSubTypes(QList<int>() << QContactPhoneNumber::SubTypeMobile);
         contact.saveDetail(&phone);
         expectedXML << QStringLiteral("<gd:phoneNumber rel=\"http://schemas.google.com/g/2005#work_mobile\">+55-8704-0006</gd:phoneNumber>");
+
+        phone = QContactPhoneNumber();
+        phone.setNumber(QStringLiteral("+55-8704-0007"));
+        phone.setContexts(QList<int>() << QContactDetail::ContextOther);
+        phone.setSubTypes(QList<int>() << QContactPhoneNumber::SubTypeFax);
+        contact.saveDetail(&phone);
+        expectedXML << QStringLiteral("<gd:phoneNumber rel=\"http://schemas.google.com/g/2005#other_fax\">+55-8704-0007</gd:phoneNumber>");
+
+        phone = QContactPhoneNumber();
+        phone.setNumber(QStringLiteral("+55-8704-0008"));
+        phone.setSubTypes(QList<int>() << QContactPhoneNumber::SubTypePager);
+        contact.saveDetail(&phone);
+        expectedXML << QStringLiteral("<gd:phoneNumber rel=\"http://schemas.google.com/g/2005#pager\">+55-8704-0008</gd:phoneNumber>");
+
+        phone = QContactPhoneNumber();
+        phone.setNumber(QStringLiteral("+55-8704-0009"));
+        phone.setContexts(QList<int>() << QContactDetail::ContextWork);
+        phone.setSubTypes(QList<int>() << QContactPhoneNumber::SubTypePager);
+        contact.saveDetail(&phone);
+        expectedXML << QStringLiteral("<gd:phoneNumber rel=\"http://schemas.google.com/g/2005#work_pager\">+55-8704-0009</gd:phoneNumber>");
+
+        phone = QContactPhoneNumber();
+        phone.setNumber(QStringLiteral("+55-8704-0010"));
+        phone.setSubTypes(QList<int>() << QContactPhoneNumber::SubTypeModem);
+        contact.saveDetail(&phone);
+        expectedXML << QStringLiteral("<gd:phoneNumber rel=\"http://schemas.google.com/g/2005#tty_tdd\">+55-8704-0010</gd:phoneNumber>");
+
+        phone = QContactPhoneNumber();
+        phone.setNumber(QStringLiteral("+55-8704-0011"));
+        phone.setSubTypes(QList<int>() << QContactPhoneNumber::SubTypeCar);
+        contact.saveDetail(&phone);
+        expectedXML << QStringLiteral("<gd:phoneNumber rel=\"http://schemas.google.com/g/2005#car\">+55-8704-0011</gd:phoneNumber>");
+
+        phone = QContactPhoneNumber();
+        phone.setNumber(QStringLiteral("+55-8704-0012"));
+        phone.setSubTypes(QList<int>() << QContactPhoneNumber::SubTypeBulletinBoardSystem);
+        contact.saveDetail(&phone);
+        expectedXML << QStringLiteral("<gd:phoneNumber rel=\"http://schemas.google.com/g/2005#telex\">+55-8704-0012</gd:phoneNumber>");
+
+        phone = QContactPhoneNumber();
+        phone.setNumber(QStringLiteral("+55-8704-0013"));
+        phone.setSubTypes(QList<int>() << QContactPhoneNumber::SubTypeAssistant);
+        contact.saveDetail(&phone);
+        expectedXML << QStringLiteral("<gd:phoneNumber rel=\"http://schemas.google.com/g/2005#assistant\">+55-8704-0013</gd:phoneNumber>");
+
+        phone = QContactPhoneNumber();
+        phone.setNumber(QStringLiteral("+55-8704-0009"));
+        phone.setContexts(QList<int>() << QContactDetail::ContextWork);
+        phone.setSubTypes(QList<int>() << QContactPhoneNumber::SubTypePager);
+        contact.saveDetail(&phone);
+        expectedXML << QStringLiteral("<gd:phoneNumber rel=\"http://schemas.google.com/g/2005#work_pager\">+55-8704-0009</gd:phoneNumber>");
+
 
         // Address
         QContactAddress address;
@@ -847,13 +997,33 @@ private slots:
         contact.saveDetail(&ringtone);
         expectedXML << QStringLiteral("<gd:extendedProperty name=\"SOUND\" value=\"file://my-ringtone.mp3\"/>");
 
+        //TypeNickname
+        QContactNickname nickname;
+        nickname.setNickname("Dragon");
+        contact.saveDetail(&nickname);
+        expectedXML << QStringLiteral("<gContact:nickname>Dragon</gContact:nickname>");
+
+        //TypeFamily
+        QContactFamily family;
+        family.setSpouse("Katherine");
+        family.setChildren(QStringList() << "Mike" << "Marvin");
+        contact.saveDetail(&family);
+        expectedXML << QStringLiteral("<gContact:relation rel=\"spouse\">Katherine</gContact:relation>");
+        expectedXML << QStringLiteral("<gContact:relation rel=\"child\">Mike</gContact:relation>");
+        expectedXML << QStringLiteral("<gContact:relation rel=\"child\">Marvin</gContact:relation>");
+
+        //TypeAvatar
+//        QContactAvatar avatar;
+//        avatar.setImageUrl(QUrl("http://www.canonical.com/ubuntu.png"));
+//        contact.saveDetail(&avatar);
+//        expectedXML << QStringLiteral("<link rel=\"http://schemas.google.com/contacts/2008/rel#photo\" "
+//                                        "type=\"image/*\" href=\"http://www.canonical.com/ubuntu.png\"/>");
+
         //TODO: check for missing fields
-        //TypeAvatar,
-        //TypeFamily,
+
         //TypeGeoLocation,
         //TypeGlobalPresence,
         //TypeGuid,
-        //TypeNickname,
         //TypePresence,
         //TypeSyncTarget,
         //TypeTag,
@@ -875,3 +1045,4 @@ private slots:
 QTEST_MAIN(GoogleContactParserTest)
 
 #include "TestGoogleContactParser.moc"
+

@@ -62,8 +62,8 @@ class GTransportPrivate
 {
 public:
     GTransportPrivate(QObject *parent)
-        : mNetworkReply(0),
-          mNetworkRequest(0),
+        : mNetworkRequest(0),
+          mNetworkReply(0),
           mNetworkMgr(new QNetworkAccessManager(parent))
     {
     }

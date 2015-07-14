@@ -142,6 +142,7 @@ bool UAbstractRemoteSource::rollback()
 
     d->m_operations.clear();
     d->m_batchMode = false;
+    return true;
 }
 
 void UAbstractRemoteSource::saveContacts(const QList<QContact> &contacts)

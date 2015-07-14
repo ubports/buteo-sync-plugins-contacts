@@ -105,11 +105,14 @@ void GoogleContactStream::initAtomFunctionMap()
     mAtomFunctionMap.insert("updated", &GoogleContactStream::handleAtomUpdated);
     mAtomFunctionMap.insert("category", &GoogleContactStream::handleAtomCategory);
     mAtomFunctionMap.insert("author", &GoogleContactStream::handleAtomAuthor);
+    mAtomFunctionMap.insert("id", &GoogleContactStream::handleAtomId);
     mAtomFunctionMap.insert("totalResults", &GoogleContactStream::handleAtomOpenSearch);
     mAtomFunctionMap.insert("startIndex", &GoogleContactStream::handleAtomOpenSearch);
     mAtomFunctionMap.insert("itemsPerPage", &GoogleContactStream::handleAtomOpenSearch);
     mAtomFunctionMap.insert("link", &GoogleContactStream::handleAtomLink);
     mAtomFunctionMap.insert("entry", &GoogleContactStream::handleAtomEntry);
+    mAtomFunctionMap.insert("generator", &GoogleContactStream::handleAtomGenerator);
+    mAtomFunctionMap.insert("title", &GoogleContactStream::handleAtomTitle);
 }
 
 void GoogleContactStream::initResponseFunctionMap()
@@ -132,6 +135,7 @@ void GoogleContactStream::initFunctionMap()
     mContactFunctionMap.insert("gContact:groupMembershipInfo", &GoogleContactStream::handleEntryGroup);
     mContactFunctionMap.insert("gContact:event", &GoogleContactStream::handleEntryEvent);
     mContactFunctionMap.insert("gContact:jot", &GoogleContactStream::handleEntryJot);
+    mContactFunctionMap.insert("gContact:relation", &GoogleContactStream::handleRelation);
     mContactFunctionMap.insert("gd:email", &GoogleContactStream::handleEntryEmail);
     mContactFunctionMap.insert("gd:im", &GoogleContactStream::handleEntryIm);
     mContactFunctionMap.insert("gd:name", &GoogleContactStream::handleEntryName);
@@ -139,6 +143,7 @@ void GoogleContactStream::initFunctionMap()
     mContactFunctionMap.insert("gd:phoneNumber", &GoogleContactStream::handleEntryPhoneNumber);
     mContactFunctionMap.insert("gd:structuredPostalAddress", &GoogleContactStream::handleEntryStructuredPostalAddress);
     mContactFunctionMap.insert("gd:extendedProperty", &GoogleContactStream::handleEntryExtendedProperty);
+
 }
 
 // ----------------------------------------
@@ -157,7 +162,8 @@ void GoogleContactStream::handleAtomCategory()
     QString scheme, term;
     if (attributes.hasAttribute("scheme")) {
         scheme = attributes.value("scheme").toString();
-    } else if (attributes.hasAttribute("term")) {
+    }
+    if (attributes.hasAttribute("term")) {
         term = attributes.value("term").toString();
     }
 
@@ -200,6 +206,35 @@ void GoogleContactStream::handleAtomLink()
     if (mXmlReader->attributes().hasAttribute("rel") && (mXmlReader->attributes().value("rel") == "next")) {
         mAtom->setNextEntriesUrl(mXmlReader->attributes().value("href").toString());
     }
+}
+
+void GoogleContactStream::handleAtomId()
+{
+    Q_ASSERT(mXmlReader->isStartElement() && mXmlReader->name() == "id");
+    mAtom->setId(mXmlReader->readElementText());
+}
+
+void GoogleContactStream::handleAtomGenerator()
+{
+    Q_ASSERT(mXmlReader->isStartElement() && mXmlReader->name() == "generator");
+
+    QXmlStreamAttributes attributes = mXmlReader->attributes();
+    QString name, version, uri;
+    if (attributes.hasAttribute("version")) {
+        version = attributes.value("version").toString();
+    }
+    if (attributes.hasAttribute("uri")) {
+        uri = attributes.value("uri").toString();
+    }
+    name = mXmlReader->readElementText();
+
+    mAtom->setGenerator(name, version, uri);
+}
+
+void GoogleContactStream::handleAtomTitle()
+{
+    Q_ASSERT(mXmlReader->isStartElement() && mXmlReader->name() == "title");
+    mAtom->setTitle(mXmlReader->readElementText());
 }
 
 void GoogleContactStream::handleAtomEntry()
@@ -416,6 +451,29 @@ QContactDetail GoogleContactStream::handleEntryEvent()
     }
 
     return QContactDetail();
+}
+
+QContactDetail GoogleContactStream::handleRelation()
+{
+    Q_ASSERT(mXmlReader->isStartElement() &&
+             mXmlReader->name() == "gContact:relation");
+
+    QXmlStreamAttributes attributes = mXmlReader->attributes();
+    QString rel = attributes.hasAttribute("rel")
+                ? attributes.value("rel").toString()
+                : QString();
+
+    QContactFamily family;
+    if (rel == "spouse") {
+        family.setSpouse(mXmlReader->readElementText());
+    } else if (rel == "child") {
+        family.setChildren(QStringList() << mXmlReader->readElementText());
+    } else {
+        LOG_WARNING("Family relation type not supported" << rel);
+        return QContactDetail();
+    }
+
+    return family;
 }
 
 QString GoogleContactStream::handleEntryUnknownElement()
@@ -1274,15 +1332,17 @@ void GoogleContactStream::encodeOnlineAccount(const QContactOnlineAccount &onlin
 void GoogleContactStream::encodeFamily(const QContactFamily &family)
 {
     if (family.spouse().length() > 0) {
-        mXmlWriter->writeEmptyElement("gContact:relation");
+        mXmlWriter->writeStartElement("gContact:relation");
         mXmlWriter->writeAttribute("rel", "spouse");
         mXmlWriter->writeCharacters(family.spouse());
+        mXmlWriter->writeEndElement();
     }
 
     Q_FOREACH (const QString member, family.children()) {
-        mXmlWriter->writeEmptyElement("gContact:relation");
+        mXmlWriter->writeStartElement("gContact:relation");
         mXmlWriter->writeAttribute("rel", "child");
         mXmlWriter->writeCharacters(member);
+        mXmlWriter->writeEndElement();
     }
 }
 

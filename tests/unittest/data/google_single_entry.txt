@@ -32,6 +32,9 @@
    <gd:fullName>Aaron Rossler</gd:fullName>
    <gd:givenName>Aaron</gd:givenName>
    <gd:familyName>Rossler</gd:familyName>
+   <gd:additionalName>Mark</gd:additionalName>
+   <gd:namePrefix>Sr.</gd:namePrefix>
+   <gd:nameSuffix>Jr.</gd:nameSuffix>
   </gd:name>
   <gd:email rel="http://schemas.google.com/g/2005#other" address="rossler@other.info"/>
   <gd:email rel="http://schemas.google.com/g/2005#home" address="rossler@home.info"/>
@@ -43,6 +46,13 @@
   <gd:phoneNumber rel="http://schemas.google.com/g/2005#home_fax">+55-8704-0004</gd:phoneNumber>
   <gd:phoneNumber rel="http://schemas.google.com/g/2005#mobile">+55-8704-0005</gd:phoneNumber>
   <gd:phoneNumber rel="http://schemas.google.com/g/2005#work_mobile">+55-8704-0006</gd:phoneNumber>
+  <gd:phoneNumber rel="http://schemas.google.com/g/2005#other_fax">+55-8704-0007</gd:phoneNumber>
+  <gd:phoneNumber rel="http://schemas.google.com/g/2005#pager">+55-8704-0008</gd:phoneNumber>
+  <gd:phoneNumber rel="http://schemas.google.com/g/2005#work_pager">+55-8704-0009</gd:phoneNumber>
+  <gd:phoneNumber rel="http://schemas.google.com/g/2005#tty_tdd">+55-8704-0010</gd:phoneNumber>
+  <gd:phoneNumber rel="http://schemas.google.com/g/2005#car">+55-8704-0011</gd:phoneNumber>
+  <gd:phoneNumber rel="http://schemas.google.com/g/2005#telex">+55-8704-0012</gd:phoneNumber>
+  <gd:phoneNumber rel="http://schemas.google.com/g/2005#assistant">+55-8704-0013</gd:phoneNumber>
   <gd:structuredPostalAddress rel="http://schemas.google.com/g/2005#other">
    <gd:formattedAddress>Other street 00
 00000
@@ -145,5 +155,8 @@ Brazil</gd:formattedAddress>
   <gContact:website href='http://www.ftp.com' label='My ftp' rel='ftp'/>
   <gd:extendedProperty name="SOUND" value="file://my-ringtone.mp3"/>
   <gContact:hobby>Paragliding</gContact:hobby>
+  <gContact:nickname>Dragon</gContact:nickname>  
+  <gContact:relation rel="spouse">Katherine</gContact:relation>
+  <gContact:relation rel="child">Mike</gContact:relation>
  </entry>  
 </feed>

@@ -96,6 +96,9 @@ private:
     void handleAtomAuthor();
     void handleAtomOpenSearch();
     void handleAtomLink();
+    void handleAtomId();
+    void handleAtomGenerator();
+    void handleAtomTitle();
     void handleAtomEntry();
 
     // Following are for the response received from the server in case of failures
@@ -121,6 +124,7 @@ private:
     QContactDetail handleEntryGroup();
     QContactDetail handleEntryExtendedProperty();
     QContactDetail handleEntryEvent();
+    QContactDetail handleRelation();
 
     // handle the id specially
     QContactDetail handleEntryId(QString *rawId);

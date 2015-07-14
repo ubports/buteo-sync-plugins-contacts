@@ -47,8 +47,8 @@ class UContactsClientPrivate
 public:
     UContactsClientPrivate(const QString &serviceName)
         : mAuth(0),
-          mRemoteSource(0),
           mContactBackend(0),
+          mRemoteSource(0),
           mServiceName(serviceName)
     {
     }
