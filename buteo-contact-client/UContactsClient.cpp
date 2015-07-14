@@ -109,17 +109,19 @@ UContactsClient::init()
         return false;
     }
 
-    d->mContactBackend = createContactsBackend(this);
-    if (!d->mContactBackend || !d->mContactBackend->init(d->mAccountId, d->mSyncTarget)) {
-        LOG_CRITICAL("Fail to create contact backend");
-        goto init_fail;
-    }
-
     d->mAuth = crateAuthenticator(this);
     if (!d->mAuth || !d->mAuth->init(d->mAccountId, d->mServiceName)) {
         LOG_CRITICAL("Fail to create auth object");
         goto init_fail;
     }
+
+    d->mContactBackend = createContactsBackend(this);
+    if (!d->mContactBackend || !d->mContactBackend->init(d->mAccountId,
+                                                         d->mAuth->accountDisplayName())) {
+        LOG_CRITICAL("Fail to create contact backend");
+        goto init_fail;
+    }
+
 
     // remote source must be initialized after mAuth because its uses the account name property
     d->mRemoteSource = createRemoteSource(this);
