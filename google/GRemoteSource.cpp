@@ -125,8 +125,9 @@ void GRemoteSource::fetchContacts(const QDateTime &since, bool includeDeleted, b
 
 void GRemoteSource::fetchAvatars(QList<QContact> *contacts)
 {
-    // keep downloade live  while GRemoreSource exists to avoid remove
+    // keep downloader object live while GRemoreSource exists to avoid remove
     // the temporary files used to store avatars
+    // The files will be removed when the object get destroyed
     GContactImageDownloader *downloader = new GContactImageDownloader(mAuthToken, this);
     QMap<QUrl, QPair<QContactAvatar, QContact*> > avatars;
 
@@ -144,9 +145,10 @@ void GRemoteSource::fetchAvatars(QList<QContact> *contacts)
     downloader->exec();
 
     QMap<QUrl, QUrl> downloaded = downloader->donwloaded();
-    foreach (const QUrl &avatarUrl, downloaded.keys()) {
+    foreach (const QUrl &avatarUrl, avatars.keys()) {
         QPair<QContactAvatar, QContact*> &p = avatars[avatarUrl];
         p.first.setImageUrl(downloaded.value(avatarUrl));
+        LOG_DEBUG("Set avatar image:" <<  p.first.imageUrl() << downloaded.value(avatarUrl));
         p.second->saveDetail(&p.first);
     }
 }

@@ -1316,7 +1316,7 @@ void GoogleContactStream::encodeExtendedProperty(const QContactExtendedDetail &d
     QString detailName = detail.value(QContactExtendedDetail::FieldName).toString();
 
     // Avoid duplicate info in the remote side
-    // These fields are used locally to store remove info
+    // These fields are used locally to store remote info
     if (blackList.isEmpty()) {
         blackList << "X-REMOTE-ID"
                   << "X-AVATAR-REV"
