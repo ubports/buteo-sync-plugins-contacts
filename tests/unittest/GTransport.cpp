@@ -146,6 +146,8 @@ GTransport::setProxy (QString proxyHost, QString proxyPort)
 {
     FUNCTION_CALL_TRACE;
     Q_D(GTransport);
+    setProperty("ProxyHost", proxyHost);
+    setProperty("ProxyPort", proxyPort);
 }
 
 void

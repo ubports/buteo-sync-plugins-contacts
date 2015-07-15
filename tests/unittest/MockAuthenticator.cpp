@@ -34,6 +34,8 @@ MockAuthenticator::~MockAuthenticator()
 
 bool MockAuthenticator::authenticate()
 {
+    // simulate authentication sucess
+    emit success();
     return true;
 }
 

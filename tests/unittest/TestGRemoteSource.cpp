@@ -115,10 +115,14 @@ private Q_SLOTS:
         QScopedPointer<GRemoteSource> src(new GRemoteSource());
         QVariantMap props;
         props.insert(Buteo::KEY_REMOTE_DATABASE, "http://google.com/contacts");
+        props.insert(Buteo::KEY_HTTP_PROXY_HOST, "http://proxy.com");
+        props.insert(Buteo::KEY_HTTP_PROXY_PORT, 8080);
         src->init(props);
 
         QCOMPARE(src->state(), 0);
         QCOMPARE(src->transport()->property("URL").toString(), QStringLiteral("http://google.com/contacts"));
+        QCOMPARE(src->transport()->property("ProxyHost").toString(), QStringLiteral("http://proxy.com"));
+        QCOMPARE(src->transport()->property("ProxyPort").toInt(), 8080);
     }
 
     void testFetchContacts()

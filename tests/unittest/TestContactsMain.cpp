@@ -198,7 +198,6 @@ private Q_SLOTS:
         QVERIFY(m_client->init());
         QVERIFY(m_client->m_authenticator);
         QVERIFY(m_client->m_authenticator->m_initialized);
-
         QVERIFY(m_client->m_remoteSource);
     }
 
@@ -361,8 +360,7 @@ private Q_SLOTS:
         QTRY_COMPARE(m_client->m_localSource->getAllContactIds().count(), localInitalCount);
 
         QSignalSpy syncFinishedSpy(m_client, SIGNAL(syncFinished(Sync::SyncStatus)));
-        // simulate authentication sucess
-        m_client->m_authenticator->success();
+        m_client->startSync();
 
         // remote source will be initialized after sucess
         QTRY_VERIFY(m_client->m_remoteSource->m_initialized);
@@ -381,6 +379,7 @@ private Q_SLOTS:
 
         QVERIFY(compareLines(toVCard(local), TEST_DATA_DIR + finalLocalFile));
         QVERIFY(compareLines(toVCard(remote), TEST_DATA_DIR + finalRemoteFile));
+        QVERIFY(m_client->cleanUp());
     }
 
     void testFetchWithPagination_data()
@@ -418,8 +417,7 @@ private Q_SLOTS:
                                   SIGNAL(contactsFetched(QList<QtContacts::QContact>,Sync::SyncStatus)));
         QSignalSpy syncFinishedSpy(m_client, SIGNAL(syncFinished(Sync::SyncStatus)));
 
-        // simulate authentication sucess
-        m_client->m_authenticator->success();
+        m_client->startSync();
 
         // we will receive one contactFetched for each page
         QTRY_COMPARE(contactFetched.count(), contactFetchedCount);
@@ -454,9 +452,7 @@ private Q_SLOTS:
                                                                   QStringList,Sync::SyncStatus)));
         QSignalSpy syncFinishedSpy(m_client, SIGNAL(syncFinished(Sync::SyncStatus)));
 
-
-        // simulate authentication sucess
-        m_client->m_authenticator->success();
+        m_client->startSync();
 
         // wait for sync finished signal
         QTRY_COMPARE(syncFinishedSpy.count(), 1);
@@ -475,6 +471,7 @@ private Q_SLOTS:
         QVERIFY(createdContacts.isEmpty());
         QVERIFY(changedContacts.isEmpty());
         QVERIFY(removedContacts.isEmpty());
+        QVERIFY(m_client->cleanUp());
     }
 };
 
