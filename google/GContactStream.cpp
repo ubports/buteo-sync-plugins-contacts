@@ -374,7 +374,9 @@ QString GoogleContactStream::handleEntryLink(QContactAvatar *avatar,
 {
     Q_ASSERT(mXmlReader->isStartElement() && mXmlReader->name() == "link");
 
-    if ((mXmlReader->attributes().value("rel") == "http://schemas.google.com/contacts/2008/rel#photo")) {
+    // if a contact does not have a photo, then the photo link element has no gd:etag attribute.
+    if ((mXmlReader->attributes().value("rel") == "http://schemas.google.com/contacts/2008/rel#photo") &&
+        mXmlReader->attributes().hasAttribute("gd:etag")) {
         // this is an avatar photo for the contact entry
         avatar->setImageUrl(mXmlReader->attributes().value("href").toString());
         *etag = mXmlReader->attributes().value("gd:etag").toString();

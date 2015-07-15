@@ -43,7 +43,6 @@ if(ENABLE_COVERAGE)
     include(${CMAKE_SOURCE_DIR}/cmake/lcov.cmake)
 endif()
 
-
 enable_testing()
 
 add_subdirectory(storage-change-notifier)
