@@ -9,6 +9,7 @@
     <key value="30" name="sync_since_days_past"/>
     <key value="true" name="use_accounts"/>
     <key value="true" name="sync_on_change"/>
+    <key value="60" name="sync_on_change_after" />
     <profile type="client" name="googlecontacts">
         <key value="two-way" name="Sync Direction"/>
         <key value="gdata" name="Sync Protocol"/>
