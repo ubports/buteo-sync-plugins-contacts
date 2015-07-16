@@ -20,8 +20,6 @@ set(GOOGLE_CONTACTS_LIB_SRCS
     GContactAtom.cpp
     GContactImageDownloader.h
     GContactImageDownloader.cpp
-    GContactImageUploader.h
-    GContactImageUploader.cpp
     GContactStream.h
     GContactStream.cpp
     GRemoteSource.h
@@ -61,6 +59,8 @@ set(GOOGLE_CONTACTS_CLIENT_SRCS
     # real implementation
     GTransport.h
     GTransport.cpp
+    GContactImageUploader.cpp
+    GContactImageUploader.h
     ${GOOGLE_CONTACT_BUTEO_SRCS}
 )
 

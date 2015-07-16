@@ -4,6 +4,8 @@
 #add_definitions(-DCLIENT_PLUGIN)
 
 # config file
+
+# used on avatar class to avoid network connection during tests
 set(PROFILE_TEST_FN "${CMAKE_CURRENT_SOURCE_DIR}/profile-test.xml")
 set(TEST_DATA_DIR "${CMAKE_CURRENT_SOURCE_DIR}/data/")
 configure_file("${CMAKE_CURRENT_SOURCE_DIR}/config-tests.h.in"
@@ -46,6 +48,8 @@ add_executable(test-gremotesource
     TestGRemoteSource.cpp
     ${buteo-contact-google_SOURCE_DIR}/GTransport.h
     GTransport.cpp
+    ${buteo-contact-google_SOURCE_DIR}/GContactImageUploader.h
+    GContactImageUploader.cpp
 )
 
 target_link_libraries(test-gremotesource
@@ -67,6 +71,8 @@ add_executable(test-google-contact-parser
     TestGoogleContactParser.cpp
     ${buteo-contact-google_SOURCE_DIR}/GTransport.h
     GTransport.cpp
+    ${buteo-contact-google_SOURCE_DIR}/GContactImageUploader.h
+    GContactImageUploader.cpp
 )
 
 target_link_libraries(test-google-contact-parser

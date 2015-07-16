@@ -186,6 +186,7 @@ void GRemoteSource::uploadAvatars(QList<QContact> *contacts)
     QMap<QString, GContactImageUploader::UploaderReply> result = uploader.result();
     for(int i =0; i < contacts->size(); i++) {
         QContact &c = (*contacts)[i];
+
         GContactImageUploader::UploaderReply reply = result.value(UContactsBackend::getRemoteId(c));
         if (!reply.newEtag.isEmpty()) {
             UContactsCustomDetail::setCustomField(c,
@@ -193,6 +194,13 @@ void GRemoteSource::uploadAvatars(QList<QContact> *contacts)
                                                   reply.newEtag);
         }
         if (!reply.newAvatarEtag.isEmpty()) {
+            QString localId = UContactsBackend::getLocalId(c);
+
+            // copy local url to new remote avatar
+            QContactAvatar avatar = c.detail<QContactAvatar>();
+            avatar.setImageUrl(mLocalIdToAvatar.value(localId).second);
+            c.saveDetail(&avatar);
+
             UContactsCustomDetail::setCustomField(c,
                                                   UContactsCustomDetail::FieldContactAvatarETag,
                                                   reply.newAvatarEtag);

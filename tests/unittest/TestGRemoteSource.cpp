@@ -289,6 +289,11 @@ private Q_SLOTS:
 
         QContact c;
         c.setId(QContactId::fromString("qtcontacts::memory:99999"));
+
+        QContactGuid guid;
+        guid.setGuid("2c79456ba52fb29ecab9afedc4068f3421b77779");
+        c.saveDetail(&guid);
+
         QContactTimestamp ts;
         ts.setLastModified(currentDateTime);
         c.saveDetail(&ts);
@@ -297,6 +302,11 @@ private Q_SLOTS:
         nm.setFirstName("Renato");
         nm.setLastName("Oliveira Filho");
         c.saveDetail(&nm);
+
+        QContactAvatar avatar;
+        avatar.setImageUrl(QUrl::fromLocalFile("/tmp/avatar.png"));
+        c.saveDetail(&avatar);
+
         UContactsCustomDetail::setCustomField(c, UContactsCustomDetail::FieldRemoteId, QVariant("012345"));
 
         QList<QContact> lc;
@@ -343,11 +353,27 @@ private Q_SLOTS:
         QCOMPARE(createdContacts.size(), 0);
         QCOMPARE(updatedContacts.size(), 1);
         QCOMPARE(removedContacts.size(), 0);
-        QCOMPARE(updatedContacts.at(0).detail<QContactGuid>().guid(),
-                 QStringLiteral("qtcontacts:galera::2c79456ba52fb29ecab9afedc4068f3421b77779"));
-        QCOMPARE(UContactsCustomDetail::getCustomField(updatedContacts.at(0), UContactsCustomDetail::FieldRemoteId).data().toString(),
-                 QStringLiteral("5b56e6f60f3d43d3"));
         QCOMPARE(syncStatus, Sync::SYNC_DONE);
+
+        QContact newContact(updatedContacts.at(0));
+
+        QList<QContactExtendedDetail> exDetails = newContact.details<QContactExtendedDetail>();
+        QCOMPARE(exDetails.size(), 4);
+
+        QCOMPARE(newContact.detail<QContactGuid>().guid(),
+                 QStringLiteral("qtcontacts:galera::2c79456ba52fb29ecab9afedc4068f3421b77779"));
+        QCOMPARE(UContactsCustomDetail::getCustomField(newContact, UContactsCustomDetail::FieldRemoteId).data().toString(),
+                 QStringLiteral("5b56e6f60f3d43d3"));
+        QCOMPARE(UContactsCustomDetail::getCustomField(newContact, UContactsCustomDetail::FieldContactETag).data().toString(),
+                 QStringLiteral("5b56e6f60f3d43d3-new"));
+
+        // check avatar
+        QList<QContactAvatar> avatars = newContact.details<QContactAvatar>();
+        QCOMPARE(avatars.size(), 1);
+        QCOMPARE(avatars.at(0).imageUrl(), QUrl::fromLocalFile("/tmp/avatar.png"));
+        QCOMPARE(UContactsCustomDetail::getCustomField(newContact, UContactsCustomDetail::FieldContactAvatarETag).data().toString(),
+                 QString("%1-avatar").arg("5b56e6f60f3d43d3"));
+
     }
 };
 
