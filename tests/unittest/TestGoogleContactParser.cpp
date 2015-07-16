@@ -881,12 +881,13 @@ private slots:
                                       "<gd:orgTitle>Tech Writer</gd:orgTitle>"
                                       "<gd:orgName>Google, Inc.</gd:orgName>"
                                       "<gd:orgDepartment>Software Development</gd:orgDepartment>"
+                                      "<gd:orgJobDescription>Writes documentation</gd:orgJobDescription>"
                                       "</gd:organization>");
 
         org = QContactOrganization();
         org.setName(QStringLiteral("My house"));
         org.setDepartment(QStringList() <<  QStringLiteral("Room"));
-        org.setRole(QStringLiteral("Clean the house"));
+        org.setRole(QStringLiteral("Clear the house"));
         org.setTitle(QStringLiteral("cleaner"));
         org.setContexts(QList<int>() << QContactDetail::ContextHome);
         contact.saveDetail(&org);
@@ -894,6 +895,7 @@ private slots:
                                       "<gd:orgTitle>cleaner</gd:orgTitle>"
                                       "<gd:orgName>My house</gd:orgName>"
                                       "<gd:orgDepartment>Room</gd:orgDepartment>"
+                                      "<gd:orgJobDescription>Clear the house</gd:orgJobDescription>"
                                       "</gd:organization>");
 
         // Extended Details

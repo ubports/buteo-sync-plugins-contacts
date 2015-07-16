@@ -1244,12 +1244,14 @@ void GoogleContactStream::encodeOrganization(const QContactOrganization &organiz
 {
     mXmlWriter->writeStartElement("gd:organization");
     mXmlWriter->writeAttribute("rel", "http://schemas.google.com/g/2005#" + encodeContext(organization.contexts()));
-    if (organization.title().length() > 0)
+    if (!organization.title().isEmpty())
         mXmlWriter->writeTextElement("gd:orgTitle", organization.title());
-    if (organization.name().length() > 0)
+    if (!organization.name().isEmpty())
         mXmlWriter->writeTextElement("gd:orgName", organization.name());
-    if (organization.department().length() > 0)
+    if (!organization.department().isEmpty())
         mXmlWriter->writeTextElement("gd:orgDepartment", organization.department().join(','));
+    if (!organization.role().isEmpty())
+        mXmlWriter->writeTextElement("gd:orgJobDescription", organization.role());
     mXmlWriter->writeEndElement();
 }
 
