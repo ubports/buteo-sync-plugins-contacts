@@ -295,11 +295,9 @@ void GoogleContactStream::handleAtomEntry()
                 if (isAvatar) {
                     // check if we have already a google avatar
                     entryContact.saveDetail(&googleAvatar);
-                    if (!etag.isEmpty()) {
-                        UContactsCustomDetail::setCustomField(entryContact,
-                                                              UContactsCustomDetail::FieldContactAvatarETag,
-                                                              etag);
-                    }
+                    UContactsCustomDetail::setCustomField(entryContact,
+                                                          UContactsCustomDetail::FieldContactAvatarETag,
+                                                          etag);
                 }
 
                 // Whether it's an avatar or not, we also store the element text.
@@ -373,14 +371,16 @@ QString GoogleContactStream::handleEntryLink(QContactAvatar *avatar,
                                              QString *etag)
 {
     Q_ASSERT(mXmlReader->isStartElement() && mXmlReader->name() == "link");
+    QXmlStreamAttributes attributes = mXmlReader->attributes();
 
     // if a contact does not have a photo, then the photo link element has no gd:etag attribute.
-    if ((mXmlReader->attributes().value("rel") == "http://schemas.google.com/contacts/2008/rel#photo") &&
-        mXmlReader->attributes().hasAttribute("gd:etag")) {
+    *isAvatar = ((attributes.value("rel") == "http://schemas.google.com/contacts/2008/rel#photo") &&
+                 attributes.hasAttribute("gd:etag"));
+
+    if (*isAvatar) {
         // this is an avatar photo for the contact entry
-        avatar->setImageUrl(mXmlReader->attributes().value("href").toString());
-        *etag = mXmlReader->attributes().value("gd:etag").toString();
-        *isAvatar = true;
+        avatar->setImageUrl(attributes.value("href").toString());
+        *etag = attributes.value("gd:etag").toString();
     }
 
     return handleEntryUnknownElement();

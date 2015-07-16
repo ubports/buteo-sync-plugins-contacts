@@ -3,7 +3,7 @@ VERSION:3.0
 REV:2015-06-18T16:13:40.822Z
 PHOTO;TYPE=URL:https://www.google.com/m8/feeds/photos/media/renato.teste2%40
  gmail.com/6c224c08aaf939e
-X-QTPROJECT-EXTENDED-DETAIL:X-AVATAR-REV;[\n    "6c224c08aaf939e123"\n]\n
+X-QTPROJECT-EXTENDED-DETAIL:X-AVATAR-REV;[\n    "6c224c08aaf912"\n]\n
 N:Knorr;Abby;;;
 EMAIL;TYPE=OTHER:knorr@lorenz.com
 TEL;TYPE=VOICE,OTHER:(07880) 6055638
@@ -17,8 +17,6 @@ END:VCARD
 BEGIN:VCARD
 VERSION:3.0
 REV:2015-06-18T20:30:37Z
-PHOTO;TYPE=URL:https://www.google.com/m8/feeds/photos/media/renato.teste2%40
- gmail.com/948ac108f03db45
 N:Rossler;Aaron;;;
 EMAIL;TYPE=OTHER:rossler@jegorovgruber.info
 TEL;TYPE=VOICE,OTHER:+49-2345-76447801
@@ -32,8 +30,6 @@ END:VCARD
 BEGIN:VCARD
 VERSION:3.0
 REV:2015-06-18T20:30:37Z
-PHOTO;TYPE=URL:https://www.google.com/m8/feeds/photos/media/renato.teste2%40
- gmail.com/2a00fea80ab5770b
 N:Grundmann;Abdullah;;;
 EMAIL;TYPE=OTHER:grundmann@timmermann.com
 TEL;TYPE=VOICE,OTHER:+49-160-9044582
@@ -47,8 +43,6 @@ END:VCARD
 BEGIN:VCARD
 VERSION:3.0
 REV:2015-06-18T20:30:37Z
-PHOTO;TYPE=URL:https://www.google.com/m8/feeds/photos/media/renato.teste2%40
- gmail.com/2b6a32d7085b9c93
 N:Fried;Ada;;;
 EMAIL;TYPE=OTHER:fried@schwerdtnerschupp.ch
 TEL;TYPE=VOICE,HOME:+49-148-1104290
@@ -62,8 +56,6 @@ END:VCARD
 BEGIN:VCARD
 VERSION:3.0
 REV:2015-06-18T20:30:37Z
-PHOTO;TYPE=URL:https://www.google.com/m8/feeds/photos/media/renato.teste2%40
- gmail.com/2de5c02a089277f6
 N:Lauckner;Arwen;;;
 EMAIL;TYPE=OTHER:lauckner@grau.de
 TEL;TYPE=VOICE,HOME:+49-6665-76654489
@@ -78,8 +70,6 @@ END:VCARD
 BEGIN:VCARD
 VERSION:3.0
 REV:2015-06-18T20:30:37Z
-PHOTO;TYPE=URL:https://www.google.com/m8/feeds/photos/media/renato.teste2%40
- gmail.com/359c71990888c005
 N:Klemme;Ashley;;;
 EMAIL;TYPE=OTHER:klemme@reuss.info
 TEL;TYPE=VOICE,OTHER:+49-976-1795496
@@ -94,8 +84,6 @@ END:VCARD
 BEGIN:VCARD
 VERSION:3.0
 REV:2015-06-18T20:30:37Z
-PHOTO;TYPE=URL:https://www.google.com/m8/feeds/photos/media/renato.teste2%40
- gmail.com/379274bc0b5963e0
 N:Tillack;Abby;;;
 EMAIL;TYPE=OTHER:tillack@seitz.de
 TEL;TYPE=FAX,WORK:+49-124-2345121
@@ -109,8 +97,6 @@ END:VCARD
 BEGIN:VCARD
 VERSION:3.0
 REV:2015-06-18T20:30:37Z
-PHOTO;TYPE=URL:https://www.google.com/m8/feeds/photos/media/renato.teste2%40
- gmail.com/3ffb9d0e0877f1b1
 N:Steinert;Adrian;;;
 EMAIL;TYPE=OTHER:steinert@holinski.info
 TEL;TYPE=VOICE,OTHER:+49-145-3500799
@@ -124,8 +110,6 @@ END:VCARD
 BEGIN:VCARD
 VERSION:3.0
 REV:2015-06-18T20:30:37Z
-PHOTO;TYPE=URL:https://www.google.com/m8/feeds/photos/media/renato.teste2%40
- gmail.com/5014925909af0d19
 N:Linke;Adam;;;
 EMAIL;TYPE=OTHER:linke@frantz.info
 TEL;TYPE=VOICE,OTHER:+49-4133-15890584
@@ -139,8 +123,6 @@ END:VCARD
 BEGIN:VCARD
 VERSION:3.0
 REV:2015-06-18T20:30:37Z
-PHOTO;TYPE=URL:https://www.google.com/m8/feeds/photos/media/renato.teste2%40
- gmail.com/54d62aa10a68c0a0
 N:Hadfield;Aurora;;;
 EMAIL;TYPE=OTHER:hadfield@prey.org
 TEL;TYPE=VOICE,HOME:+49-905-1913343
@@ -154,8 +136,6 @@ END:VCARD
 BEGIN:VCARD
 VERSION:3.0
 REV:2015-06-18T20:30:37Z
-PHOTO;TYPE=URL:https://www.google.com/m8/feeds/photos/media/renato.teste2%40
- gmail.com/604d67ec8adf79bc
 N:Hentschke;Aaron;;;
 EMAIL;TYPE=OTHER:hentschke@hildenbrand.org
 TEL;TYPE=CELL:+49-178-2572849
@@ -169,8 +149,6 @@ END:VCARD
 BEGIN:VCARD
 VERSION:3.0
 REV:2015-06-18T20:30:37Z
-PHOTO;TYPE=URL:https://www.google.com/m8/feeds/photos/media/renato.teste2%40
- gmail.com/763e9f2d08921a16
 N:Feld;Abdul;;;
 EMAIL;TYPE=OTHER:feld@prediger.org
 TEL;TYPE=VOICE,OTHER:+49-7197-68234855
@@ -184,8 +162,6 @@ END:VCARD
 BEGIN:VCARD
 VERSION:3.0
 REV:2015-06-18T20:30:37Z
-PHOTO;TYPE=URL:https://www.google.com/m8/feeds/photos/media/renato.teste2%40
- gmail.com/76af90190bfd1a3f
 N:Burkhard;Abby;;;
 EMAIL;TYPE=OTHER:burkhard@schlachtervogelgsang.ch
 TEL;TYPE=VOICE,OTHER:+49-1270-18191872
@@ -199,8 +175,6 @@ END:VCARD
 BEGIN:VCARD
 VERSION:3.0
 REV:2015-06-18T19:11:24.575Z
-PHOTO;TYPE=URL:https://www.google.com/m8/feeds/photos/media/renato.teste2%40
- gmail.com/7848b97f0879cfdc
 N:Menga;Arved;;;
 EMAIL;TYPE=OTHER:menga@pomp.name
 TEL;TYPE=VOICE,OTHER:+49-5499-63405807
@@ -214,8 +188,6 @@ END:VCARD
 BEGIN:VCARD
 VERSION:3.0
 REV:2015-06-18T20:30:37Z
-PHOTO;TYPE=URL:https://www.google.com/m8/feeds/photos/media/renato.teste2%40
- gmail.com/7da271258ea03b89
 N:Herzenberg;Arvid;;;
 EMAIL;TYPE=OTHER:herzenberg@brutigam.com
 TEL;TYPE=VOICE,OTHER:+49-7780-75716285
