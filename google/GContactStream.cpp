@@ -330,7 +330,6 @@ void GoogleContactStream::handleAtomEntry()
         // this entry was a group
         mAtom->addEntrySystemGroup(systemGroupId, systemGroupAtomId);
     } else {
-        qDebug() << "this entry was a contact" << isInGroup << "Deleted" << isDeleted;
         // this entry was a contact.
         // the etag is the "version identifier".  Save it into the QCOM detail.
         if (!response.eTag.isEmpty()) {

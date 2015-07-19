@@ -26,7 +26,7 @@
 
 #include "GConfig.h"
 
-const int GConfig::MAX_RESULTS = 50;
+const int GConfig::MAX_RESULTS = 30;
 const QString GConfig::SCOPE_URL = "https://www.google.com/m8/feeds/";
 const QString GConfig::GCONTACT_URL = SCOPE_URL + "/contacts/default/";
 
