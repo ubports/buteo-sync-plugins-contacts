@@ -1,5 +1,5 @@
 /*
- * This file is part of buteo-gcontact-plugins package
+ * This file is part of buteo-sync-plugins-goole package
  *
  * Copyright (C) 2015 Canonical Ltd
  *
@@ -84,14 +84,14 @@ signals:
     void contactsChanged(const QList<QtContacts::QContact> &contacts, Sync::SyncStatus status);
 
     /*!
-     * \brief This signal is emitted, when a remote contact is remove
+     * \brief This signal is emitted, when a remote contact is removed
      * \param ids A list with remoteId of removed contacts
      * \param status The operation status
      */
     void contactsRemoved(const QStringList &ids, Sync::SyncStatus status);
 
     /*!
-     * \brief This signal is emitted, when a batch operation finish
+     * \brief This signal is emitted, when a batch operation finishes
      * \param createdContacts A list of created contacts
      * \param updatedContacts A list of updated contacts
      * \param removedContacts A list with remoteId of removed contacts
@@ -116,4 +116,4 @@ private:
 
 Q_DECLARE_METATYPE(QList<QtContacts::QContact>)
 
-#endif
+#endif // UABSTRACTREMOTESOURCE_H

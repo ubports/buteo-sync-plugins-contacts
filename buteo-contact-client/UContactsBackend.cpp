@@ -1,5 +1,5 @@
 /*
- * This file is part of buteo-gcontact-plugins package
+ * This file is part of buteo-sync-plugins-goole package
  *
  * Copyright (C) 2013 Jolla Ltd. and/or its subsidiary(-ies).
  *               2015 Canonical Ltd
@@ -202,7 +202,7 @@ UContactsBackend::addContacts(QList<QContact>& aContactList,
         if (!id.isNull()) {
             c.setId(id);
         } else {
-            // make sure that all contacts retrieved is saved on the correct sync target
+            // make sure that all contacts retrieved are saved on the correct sync target
             QContactSyncTarget syncTarget = c.detail<QContactSyncTarget>();
             syncTarget.setSyncTarget(syncTargetId());
             c.saveDetail(&syncTarget);

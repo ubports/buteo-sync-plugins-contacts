@@ -1,5 +1,5 @@
 /*
- * This file is part of buteo-gcontact-plugins package
+ * This file is part of buteo-sync-plugins-goole package
  *
  * Copyright (C) 2013 Jolla Ltd. and/or its subsidiary(-ies).
  *               2015 Canonical Ltd
@@ -40,8 +40,6 @@
 
 using namespace Accounts;
 using namespace SignOn;
-
-const QString SYNC_SERVICE          ("google-contacts2");
 
 class UAuthPrivate
 {
@@ -131,12 +129,12 @@ UAuth::authenticate()
 
     Accounts::AccountService *accSrv = new Accounts::AccountService(d->mAccount, srv);
     if (!accSrv) {
-        LOG_WARNING(QString("error: Aaccount %1 has no valid account service")
+        LOG_WARNING(QString("error: Account %1 has no valid account service")
                 .arg(d->mAccount->displayName()));
         return false;
     }
     if (!accSrv->isEnabled()) {
-        LOG_WARNING(QString("error: Service %1 not enable for account %2.")
+        LOG_WARNING(QString("error: Service %1 not enabled for account %2.")
                 .arg(d->mServiceName)
                 .arg(d->mAccount->displayName()));
         return false;
