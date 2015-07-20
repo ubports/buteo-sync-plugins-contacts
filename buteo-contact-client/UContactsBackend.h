@@ -48,8 +48,7 @@ typedef QMultiMap<QString, QContactId> RemoteToLocalIdMap;
 
 //! \brief Harmattan Contact storage plugin backend interface class
 ///
-/// This class interfaces with the backend implementation of contact manager on harmattan
-/// device
+/// This class interfaces with the QtContact backend implementation
 class UContactsBackend : public QObject
 {
 
@@ -104,7 +103,7 @@ public:
     RemoteToLocalIdMap getAllDeletedContactIds(const QDateTime& aTimeStamp);
 
     /*!
-     * \brief Get contact data for a given gontact ID as a QContact object
+     * \brief Get contact data for a given contact ID as a QContact object
      * @param aContactId The ID of the contact
      * @return The data of the contact
      */

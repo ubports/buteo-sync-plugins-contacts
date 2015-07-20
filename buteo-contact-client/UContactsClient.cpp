@@ -200,19 +200,6 @@ UContactsClient::startSync()
         LOG_WARNING ("Ubuntu plugin is not ready to sync.");
         return false;
     }
-    /*
-      1. If no previous sync, go for slow-sync. Fetch all contacts
-         from server
-      2. Check if previous sync happened (from SyncLog). If yes,
-         fetch the time of last sync
-      3. Using the last sync time, retrieve all contacts from server
-         that were added/modified/deleted
-      4. Fetch all added/modified/deleted items from device
-      5. Check for conflicts. Take the default policy as "server-wins"
-      6. Save the list from the server to device
-      7. Push "client changes" - "conflicting items" to the server
-      8. Save the sync log
-     */
 
     Q_D(UContactsClient);
     LOG_DEBUG ("Init done. Continuing with sync");
@@ -251,7 +238,7 @@ UContactsClient::initConfig()
 
     QStringList databaseName = iProfile.keyValues(Buteo::KEY_DISPLAY_NAME);
     if (databaseName.isEmpty()) {
-        LOG_WARNING("\"Loal URI\" is missing on configuration file");
+        LOG_WARNING("\"displayname\" is missing on configuration file");
         return false;
     }
     d->mSyncTarget = databaseName.first();
@@ -275,6 +262,20 @@ UContactsClient::start()
     FUNCTION_CALL_TRACE;
     Q_D(UContactsClient);
 
+    /*
+      1. If no previous sync, go for slow-sync. Fetch all contacts
+         from server
+      2. Check if previous sync happened (from SyncLog). If yes,
+         fetch the time of last sync
+      3. Using the last sync time, retrieve all contacts from server
+         that were added/modified/deleted
+      4. Fetch all added/modified/deleted items from device
+      5. Check for conflicts. Take the default policy as "server-wins"
+      6. Save the list from the server to device
+      7. Push "client changes" - "conflicting items" to the server
+      8. Save the sync log
+     */
+
     // Remote source will be create after authentication since it needs some information
     // about the authentication (auth-token, etc..)
 
@@ -290,7 +291,7 @@ UContactsClient::start()
         QDateTime sinceDate = d->mSlowSync ? QDateTime() : lastSyncTime();
 
         LOG_DEBUG("load all contacts since" << sinceDate << sinceDate.isValid());
-        // load changed contact since the last sync date or all contacts if not
+        // load changed contact since the last sync date or all contacts if no
         // sync was done before
         loadLocalContacts(sinceDate);
 
@@ -308,11 +309,11 @@ UContactsClient::start()
         break;
     }
     case Buteo::SyncProfile::SYNC_DIRECTION_FROM_REMOTE:
-        // Not required
-        break;
+        LOG_WARNING("SYNC_DIRECTION_FROM_REMOTE: not implemented");
+        return false;
     case Buteo::SyncProfile::SYNC_DIRECTION_TO_REMOTE:
-        // Not required
-        break;
+        LOG_WARNING("SYNC_DIRECTION_TO_REMOTE: not implemented");
+        return false;
     case Buteo::SyncProfile::SYNC_DIRECTION_UNDEFINED:
         // Not required
     default:
@@ -382,8 +383,6 @@ UContactsClient::onContactsSavedForSlowSync(const QList<QtContacts::QContact> &c
                                             const QStringList &removedContacts,
                                             Sync::SyncStatus status)
 {
-    Q_UNUSED(updatedContacts)
-    Q_UNUSED(removedContacts)
     FUNCTION_CALL_TRACE;
     Q_D(UContactsClient);
 

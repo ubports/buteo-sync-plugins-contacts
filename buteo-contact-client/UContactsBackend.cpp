@@ -222,7 +222,6 @@ UContactsBackend::addContacts(QList<QContact>& aContactList,
 
     // QContactManager will populate errorMap only for errors, but we use this as a status map,
     // so populate NoError if there's no error.
-    // TODO QContactManager populates indices from the qContactList, but we populate keys, is this OK?
     for (int i = 0; i < aContactList.size(); i++)
     {
         UContactsStatus status;
@@ -259,7 +258,7 @@ UContactsBackend::modifyContacts(QList<QContact> *aContactList)
         // if the contact was created the remoteId will not exists on local database
         QContactId localId = entryExists(remoteId);
 
-        // int this case we should use the guid stored on contact
+        // nt this case we should use the guid stored on contact
         QContactGuid guid = newContact.detail<QContactGuid>();
 
         if (localId.isNull() && !guid.isEmpty()) {
@@ -326,7 +325,6 @@ UContactsBackend::deleteContacts(const QList<QContactId> &aContactIDList) {
 
     // QContactManager will populate errorMap only for errors, but we use this as a status map,
     // so populate NoError if there's no error.
-    // TODO QContactManager populates indices from the qContactList, but we populate keys, is this OK?
     for (int i = 0; i < aContactIDList.size(); i++) {
         QContactId contactId = aContactIDList.value(i);
         if( !errors.contains(i) )
@@ -535,7 +533,7 @@ UContactsBackend::purgecontacts()
 QContactFilter
 UContactsBackend::getSyncTargetFilter() const
 {
-    // user enterred contacts, i.e. all other contacts that are not sourcing
+    // user entered contacts, i.e. all other contacts that are not sourcing
     // from restricted backends or instant messaging service
     static QContactDetailFilter detailFilterDefaultSyncTarget;
 
