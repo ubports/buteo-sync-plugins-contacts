@@ -414,6 +414,12 @@ UContactsClient::onContactsSavedForSlowSync(const QList<QtContacts::QContact> &c
         if (status == Sync::SYNC_PROGRESS) {
             // sync still in progress
             return;
+        } else {
+           // WORKARDOUND: 'galera' contacts service take a while to fire contacts
+           // changed singal, this can cause a new sync due the storage change plugin
+           // lets wait 2 secs before fire sync finished signal
+           QTimer::singleShot(2000, this, SLOT(fireSyncFinishedSucessfully()));
+           return;
         }
     }
 
@@ -515,10 +521,22 @@ UContactsClient::onContactsSavedForFastSync(const QList<QtContacts::QContact> &c
         if (status == Sync::SYNC_PROGRESS) {
             // sync still in progress
             return;
+        } else {
+           // WORKARDOUND: 'galera' contacts service take a while to fire contacts
+           // changed singal, this can cause a new sync due the storage change plugin
+           // lets wait 2 secs before fire sync finished signal
+           QTimer::singleShot(2000, this, SLOT(fireSyncFinishedSucessfully()));
+           return;
         }
     }
 
     emit syncFinished(status);
+}
+
+void
+UContactsClient::fireSyncFinishedSucessfully()
+{
+    emit syncFinished(Sync::SYNC_DONE);
 }
 
 bool
