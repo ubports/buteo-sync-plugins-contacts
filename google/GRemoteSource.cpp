@@ -169,7 +169,7 @@ void GRemoteSource::uploadAvatars(QList<QContact> *contacts)
             if (avatar.second.isLocalFile() &&
                 (avatar.first.isEmpty() || (avatar.first != rEtag.data().toString()))) {
                 QString remoteId = UContactsBackend::getRemoteId(c);
-                LOG_TRACE("Uploade avatar:" << remoteId << avatar.second);
+                LOG_DEBUG("Uploade avatar:" << remoteId << avatar.second);
                 uploader.push(remoteId, avatar.second);
             } else if (!avatar.second.isLocalFile()) {
                 LOG_DEBUG("Contact avatar is not local" << avatar.second);
@@ -368,9 +368,9 @@ void GRemoteSource::emitTransactionCommited(const QList<QContact> &created,
                                             Sync::SyncStatus status)
 {
     FUNCTION_CALL_TRACE;
-    LOG_TRACE("ADDED:" << created.size() <<
-              "CHANGED" << changed.size() <<
-              "REMOVED" << removed.size());
+    LOG_INFO("ADDED:" << created.size() <<
+             "CHANGED" << changed.size() <<
+             "REMOVED" << removed.size());
 
     if (!created.isEmpty()) {
         emit contactsCreated(created, status);
@@ -442,7 +442,7 @@ GRemoteSource::networkRequestFinished()
         QByteArray data = mTransport->replyBody();
         LOG_TRACE(data);
         if (data.isNull () || data.isEmpty()) {
-            LOG_DEBUG ("Nothing returned from server");
+            LOG_INFO("Nothing returned from server");
             syncStatus = Sync::SYNC_CONNECTION_ERROR;
             goto operationFailed;
         }
@@ -477,7 +477,7 @@ GRemoteSource::networkRequestFinished()
                               "    reason: " << response.reason << "\n"
                               "    descr:  " << response.reasonDescription << "\n");
 
-                    //handleUploadError(response, mLocalIdToContact.value(response.operationId), &delContacts);
+                    handleUploadError(response, mLocalIdToContact.value(response.operationId), &delContacts);
                 } else {
                     LOG_DEBUG("RESPONSE" << response.contactGuid << response.type);
                     batchOperationRemoteToLocalId.insert(response.contactGuid, response.operationId);
@@ -485,7 +485,7 @@ GRemoteSource::networkRequestFinished()
                 }
             }
             if (errorOccurredInBatch) {
-                LOG_CRITICAL ("error occurred during batch operation with Google account");
+                LOG_CRITICAL("error occurred during batch operation with Google account");
                 syncStatus = Sync::SYNC_ERROR;
                 goto operationFailed;
                 return;
@@ -539,9 +539,9 @@ GRemoteSource::networkRequestFinished()
                 return;
             }
 
-            LOG_DEBUG("received information about" <<
-                      atom->entryContacts().size() << "add/mod contacts and " <<
-                      atom->deletedEntryContacts().size() << "del contacts");
+            LOG_INFO("received information about" <<
+                     atom->entryContacts().size() << "add/mod contacts and " <<
+                     atom->deletedEntryContacts().size() << "del contacts");
 
             QList<QContact> remoteContacts;
 
