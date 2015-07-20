@@ -142,7 +142,6 @@ private slots:
     void onAuthenticationError();
     void onStateChanged(Sync::SyncProgressDetail progress);
     void onSyncFinished(Sync::SyncStatus status);
-    void fireSyncFinishedSucessfully();
 
     /* slow sync */
     void onRemoteContactsFetchedForSlowSync(const QList<QtContacts::QContact> contacts,

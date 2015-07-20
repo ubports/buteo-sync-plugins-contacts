@@ -517,12 +517,12 @@ bool UContactsBackend::deleted(const QContact &contact)
 }
 
 void
-UContactsBackend::purgecontacts()
+UContactsBackend::purgecontacts(const QDateTime &date)
 {
     QDBusInterface iface(CPIM_SERVICE_NAME,
                          CPIM_ADDRESSBOOK_OBJECT_PATH,
                          CPIM_ADDRESSBOOK_IFACE_NAME);
-    QDBusReply<void> reply = iface.call("purgeContacts", QString(""), mSyncTargetId);
+    QDBusReply<void> reply = iface.call("purgeContacts", date.toString(Qt::ISODate), mSyncTargetId);
     if (reply.error().isValid()) {
         LOG_WARNING("Fail to purge contacts" << reply.error());
     } else {

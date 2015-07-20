@@ -130,6 +130,8 @@ UContactsClient::init()
         goto init_fail;
     }
 
+    d->mItemResults.insert(syncTargetId(), Buteo::DatabaseResults());
+
     // sign in.
     connect(d->mAuth, SIGNAL(success()), SLOT(start()));
     connect(d->mAuth, SIGNAL(failed()), SLOT(onAuthenticationError()));
@@ -244,7 +246,6 @@ UContactsClient::initConfig()
     d->mSyncTarget = databaseName.first();
     d->mSyncDirection = iProfile.syncDirection();
     d->mConflictResPolicy = iProfile.conflictResolutionPolicy();
-    d->mItemResults.insert(d->mSyncTarget, Buteo::DatabaseResults());
 
     return true;
 }
@@ -278,6 +279,8 @@ UContactsClient::start()
 
     // Remote source will be create after authentication since it needs some information
     // about the authentication (auth-token, etc..)
+
+    LOG_INFO("Sync Started at:" << QDateTime::currentDateTime().toUTC().toString(Qt::ISODate));
 
     if (!d->mRemoteSource->init(remoteSourceProperties())) {
         LOG_WARNING("Fail to init remote source");
@@ -411,12 +414,6 @@ UContactsClient::onContactsSavedForSlowSync(const QList<QtContacts::QContact> &c
         if (status == Sync::SYNC_PROGRESS) {
             // sync still in progress
             return;
-        } else {
-            // WORKARDOUND: 'galera' contacts service take a while to fire contacts
-            // changed singal, this can cause a new sync due the storage change plugin
-            // lets wait 2 secs before fire sync finished signal
-            QTimer::singleShot(2000, this, SLOT(fireSyncFinishedSucessfully()));
-            return;
         }
     }
 
@@ -517,12 +514,6 @@ UContactsClient::onContactsSavedForFastSync(const QList<QtContacts::QContact> &c
 
         if (status == Sync::SYNC_PROGRESS) {
             // sync still in progress
-            return;
-        } else {
-            // WORKARDOUND: 'galera' contacts service take a while to fir contacts
-            // changed singal, this can cause a new sync due the storage change plugin
-            // lets wait 2 secs before fire sync finished signal
-            QTimer::singleShot(2000, this, SLOT(fireSyncFinishedSucessfully()));
             return;
         }
     }
@@ -718,7 +709,7 @@ UContactsClient::onSyncFinished(Sync::SyncStatus aState)
         }
         case Sync::SYNC_DONE:
             // purge all deleted contacts
-            d->mContactBackend->purgecontacts();
+            d->mContactBackend->purgecontacts(lastSyncTime());
         case Sync::SYNC_ABORTED:
         {
             generateResults(true);
@@ -736,12 +727,6 @@ UContactsClient::onSyncFinished(Sync::SyncStatus aState)
         }
     }
 }
-
-void UContactsClient::fireSyncFinishedSucessfully()
-{
-    emit syncFinished(Sync::SYNC_DONE);
-}
-
 
 Buteo::SyncResults
 UContactsClient::getSyncResults() const
@@ -779,7 +764,7 @@ UContactsClient::lastSyncTime() const
     QDateTime lastTime = sp->lastSuccessfulSyncTime();
     if (!lastTime.isNull()) {
         // return UTC time used by google
-        return lastTime.addSecs(6).toUTC();
+        return lastTime.addSecs(3).toUTC();
     } else {
         return lastTime;
     }
@@ -915,11 +900,12 @@ UContactsClient::generateResults(bool aSuccessful)
     FUNCTION_CALL_TRACE;
     Q_D(UContactsClient);
 
+    d->mResults = Buteo::SyncResults();
     d->mResults.setMajorCode(aSuccessful ? Buteo::SyncResults::SYNC_RESULT_SUCCESS :
                                            Buteo::SyncResults::SYNC_RESULT_FAILED );
     d->mResults.setTargetId(iProfile.name());
     if (d->mItemResults.isEmpty()) {
-        LOG_DEBUG("No items transferred");
+        LOG_INFO("No items transferred");
     } else {
         QMapIterator<QString, Buteo::DatabaseResults> i(d->mItemResults);
         while (i.hasNext())
@@ -934,13 +920,14 @@ UContactsClient::generateResults(bool aSuccessful)
                                                                  r.iRemoteItemsDeleted,
                                                                  r.iRemoteItemsModified));
             d->mResults.addTargetResults(targetResults);
-            LOG_DEBUG("Items for" << targetResults.targetName() << ":");
-            LOG_DEBUG("LA:" << targetResults.localItems().added <<
-                      "LD:" << targetResults.localItems().deleted <<
-                      "LM:" << targetResults.localItems().modified <<
-                      "RA:" << targetResults.remoteItems().added <<
-                      "RD:" << targetResults.remoteItems().deleted <<
-                      "RM:" << targetResults.remoteItems().modified);
+            LOG_INFO("Sync finished at:" << d->mResults.syncTime().toUTC().toString(Qt::ISODate));
+            LOG_INFO("Items for" << targetResults.targetName() << ":");
+            LOG_INFO("LA:" << targetResults.localItems().added <<
+                     "LD:" << targetResults.localItems().deleted <<
+                     "LM:" << targetResults.localItems().modified <<
+                     "RA:" << targetResults.remoteItems().added <<
+                     "RD:" << targetResults.remoteItems().deleted <<
+                     "RM:" << targetResults.remoteItems().modified);
         }
     }
 }

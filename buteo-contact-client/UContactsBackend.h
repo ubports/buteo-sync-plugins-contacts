@@ -206,7 +206,7 @@ public:
     /*!
      * \brief Purge all deleted contacts from the server
      */
-    void purgecontacts();
+    void purgecontacts(const QDateTime &date);
 
     QContactManager *manager() const;
 
