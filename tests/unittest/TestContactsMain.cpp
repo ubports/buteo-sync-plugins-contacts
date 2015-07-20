@@ -166,7 +166,6 @@ private Q_SLOTS:
     void initTestCase()
     {
         QCoreApplication::addLibraryPath(MOCK_PLUGIN_PATH);
-        qDebug() << QContactManager::availableManagers();
         QVERIFY(QContactManager::availableManagers().contains("mock"));
     }
 
@@ -183,8 +182,6 @@ private Q_SLOTS:
         r.setVibrationRingtoneUrl(QUrl("http://vibrating.com"));
         r.setVideoRingtoneUrl(QUrl("http://video.com"));
         c.saveDetail(&r);
-
-        qDebug() << toVCard(c);
     }
 
     void cleanup()

@@ -230,7 +230,7 @@ UContactsBackend::addContacts(QList<QContact>& aContactList,
         if (!errorMap.contains(i)) {
             status.errorCode = QContactManager::NoError;
         } else {
-            qDebug() << "Contact with id " <<  aContactList.at(i).id() << " and index " << i <<" is in error";
+            LOG_WARNING("Contact with id " <<  aContactList.at(i).id() << " and index " << i <<" is in error");
             status.errorCode = errorMap.value(i);
         }
         aStatusMap->insert(i, status);
@@ -317,7 +317,6 @@ UContactsBackend::deleteContacts(const QList<QContactId> &aContactIDList) {
     QMap<int, QContactManager::Error> errors;
     QMap<int, UContactsStatus> statusMap;
 
-    qDebug() << "WILL REMOVE CONTACTS:" << aContactIDList;
     if(iMgr->removeContacts(aContactIDList , &errors)) {
         LOG_DEBUG("Successfully Removed all contacts ");
     }

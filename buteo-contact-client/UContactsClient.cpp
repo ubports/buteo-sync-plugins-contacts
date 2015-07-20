@@ -289,7 +289,7 @@ UContactsClient::start()
     {
         QDateTime sinceDate = d->mSlowSync ? QDateTime() : lastSyncTime();
 
-        qDebug() << "load all contacts since" << sinceDate << sinceDate.isValid();
+        LOG_DEBUG("load all contacts since" << sinceDate << sinceDate.isValid());
         // load changed contact since the last sync date or all contacts if not
         // sync was done before
         loadLocalContacts(sinceDate);
@@ -387,10 +387,10 @@ UContactsClient::onContactsSavedForSlowSync(const QList<QtContacts::QContact> &c
     FUNCTION_CALL_TRACE;
     Q_D(UContactsClient);
 
-    qDebug() << "AFTER UPLOAD(Slow sync):"
-             << "\n\tCreated on remote:" << createdContacts.size()
-             << "\n\tUpdated on remote:" << updatedContacts.size()
-             << "\n\tRemoved from remote:" << removedContacts.size();
+    LOG_DEBUG("AFTER UPLOAD(Slow sync):"
+                << "\n\tCreated on remote:" << createdContacts.size()
+                << "\n\tUpdated on remote:" << updatedContacts.size()
+                << "\n\tRemoved from remote:" << removedContacts.size());
 
     if ((status != Sync::SYNC_PROGRESS) && (status != Sync::SYNC_STARTED)) {
         disconnect(d->mRemoteSource);
@@ -413,7 +413,7 @@ UContactsClient::onContactsSavedForSlowSync(const QList<QtContacts::QContact> &c
             // sync still in progress
             return;
         } else {
-            // WORKARDOUND: 'galera' contacts service take a while to fir contacts
+            // WORKARDOUND: 'galera' contacts service take a while to fire contacts
             // changed singal, this can cause a new sync due the storage change plugin
             // lets wait 2 secs before fire sync finished signal
             QTimer::singleShot(2000, this, SLOT(fireSyncFinishedSucessfully()));
@@ -429,8 +429,6 @@ void UContactsClient::onRemoteContactsFetchedForFastSync(const QList<QContact> c
 {
     FUNCTION_CALL_TRACE;
     Q_D(UContactsClient);
-    qDebug() << "REMOTE CONTACTS" << contacts.size();
-
     if ((status != Sync::SYNC_PROGRESS) && (status != Sync::SYNC_STARTED)) {
         disconnect(d->mRemoteSource);
     }
@@ -487,10 +485,10 @@ UContactsClient::onContactsSavedForFastSync(const QList<QtContacts::QContact> &c
     FUNCTION_CALL_TRACE;
     Q_D(UContactsClient);
 
-    qDebug() << "AFTER UPLOAD(Fast sync):" << status
-             << "\n\tCreated on remote:" << createdContacts.size()
-             << "\n\tUpdated on remote:" << updatedContacts.size()
-             << "\n\tRemoved from remote:" << removedContacts.size();
+    LOG_DEBUG("AFTER UPLOAD(Fast sync):" << status
+                << "\n\tCreated on remote:" << createdContacts.size()
+                << "\n\tUpdated on remote:" << updatedContacts.size()
+                << "\n\tRemoved from remote:" << removedContacts.size());
 
     if ((status != Sync::SYNC_PROGRESS) && (status != Sync::SYNC_STARTED)) {
         disconnect(d->mRemoteSource);

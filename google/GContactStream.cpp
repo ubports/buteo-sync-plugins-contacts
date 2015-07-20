@@ -326,7 +326,6 @@ void GoogleContactStream::handleAtomEntry()
     }
 
     if (!systemGroupId.isEmpty()) {
-        qDebug() << "this entry was a group";
         // this entry was a group
         mAtom->addEntrySystemGroup(systemGroupId, systemGroupAtomId);
     } else {

@@ -555,8 +555,6 @@ private slots:
         //<gContact:relation rel="spouse">Katherine</gContact:relation>
         QList<QContactFamily> families = contact.details<QContactFamily>();
         QCOMPARE(families.size(), 2);
-        qDebug() << families.at(0).spouse();
-        qDebug() << families.at(0).children();
 
         QCOMPARE(families.at(0).spouse(), QStringLiteral("Katherine"));
         QVERIFY(families.at(0).children().isEmpty());
