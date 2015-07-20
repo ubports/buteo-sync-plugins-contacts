@@ -77,12 +77,16 @@ private:
     int mStartIndex;
     bool mFetchAvatars;
     QMap<QString, QPair<QString, QUrl> > mLocalIdToAvatar;
+    QMap<QString, QContact> mLocalIdToContact;
     QMultiMap<GoogleContactStream::UpdateType, QPair<QtContacts::QContact, QStringList> > mPendingBatchOps;
 
     void fetchAvatars(QList<QtContacts::QContact> *contacts);
     void uploadAvatars(QList<QContact> *contacts);
     void fetchRemoteContacts(const QDateTime &since, bool includeDeleted, int startIndex);
     void batchOperationContinue();
+    void handleUploadError(const GoogleContactAtom::BatchOperationResponse &response,
+                           const QContact &contact,
+                           QList<QContact> *removedContacts);
     void emitTransactionCommited(const QList<QtContacts::QContact> &created,
                                  const QList<QtContacts::QContact> &changed,
                                  const QList<QContact> &removed,

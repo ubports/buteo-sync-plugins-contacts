@@ -169,7 +169,7 @@ void GRemoteSource::uploadAvatars(QList<QContact> *contacts)
             if (avatar.second.isLocalFile() &&
                 (avatar.first.isEmpty() || (avatar.first != rEtag.data().toString()))) {
                 QString remoteId = UContactsBackend::getRemoteId(c);
-                LOG_DEBUG("Uploade avatar:" << remoteId << avatar.second);
+                LOG_TRACE("Uploade avatar:" << remoteId << avatar.second);
                 uploader.push(remoteId, avatar.second);
             } else if (!avatar.second.isLocalFile()) {
                 LOG_DEBUG("Contact avatar is not local" << avatar.second);
@@ -314,8 +314,12 @@ GRemoteSource::batchOperationContinue()
     }
     QMultiMap<GoogleContactStream::UpdateType, QPair<QContact, QStringList> > batchPage;
     QPair<QContact, QStringList> value;
+
+    mLocalIdToContact.clear();
+
     while (batchPage.size() < limit) {
         GoogleContactStream::UpdateType type;
+
         if (!mPendingBatchOps.values(GoogleContactStream::Add).isEmpty()) {
             type = GoogleContactStream::Add;
         } else if (!mPendingBatchOps.values(GoogleContactStream::Modify).isEmpty()) {
@@ -327,6 +331,10 @@ GRemoteSource::batchOperationContinue()
         value = mPendingBatchOps.values(type).first();
         mPendingBatchOps.remove(type, value);
         batchPage.insertMulti(type, value);
+
+        // keep contacts to handle error if necessary
+        mLocalIdToContact.insert(UContactsBackend::getLocalId(value.first),
+                                 value.first);
     }
 
     GoogleContactStream encoder(false, mAccountName);
@@ -338,10 +346,21 @@ GRemoteSource::batchOperationContinue()
     mTransport->setAuthToken(mAuthToken);
     mTransport->setData(encodedContacts);
     mTransport->addHeader("Content-Type", "application/atom+xml; charset=UTF-8; type=feed");
-    LOG_DEBUG ("POST DATA:" << encodedContacts);
+    LOG_TRACE("POST DATA:" << encodedContacts);
     mTransport->request(GTransport::POST);
 }
 
+void GRemoteSource::handleUploadError(const GoogleContactAtom::BatchOperationResponse &response,
+                                      const QContact &contact,
+                                      QList<QContact> *removedContacts)
+{
+    if ((response.code == "404") && (response.type == "upload")) {
+        // contact not found on remote side:
+        // In this case we will notify that the contact was removed
+        // This can happen if the remote contact was removed manually while the sync operation was running
+        removedContacts->append(contact);
+    }
+}
 
 void GRemoteSource::emitTransactionCommited(const QList<QContact> &created,
                                             const QList<QContact> &changed,
@@ -349,7 +368,7 @@ void GRemoteSource::emitTransactionCommited(const QList<QContact> &created,
                                             Sync::SyncStatus status)
 {
     FUNCTION_CALL_TRACE;
-    LOG_DEBUG("ADDED:" << created.size() <<
+    LOG_TRACE("ADDED:" << created.size() <<
               "CHANGED" << changed.size() <<
               "REMOVED" << removed.size());
 
@@ -421,7 +440,7 @@ GRemoteSource::networkRequestFinished()
     GTransport::HTTP_REQUEST_TYPE requestType = mTransport->requestType();
     if (mTransport->hasReply()) {
         QByteArray data = mTransport->replyBody();
-        LOG_DEBUG (data);
+        LOG_TRACE(data);
         if (data.isNull () || data.isEmpty()) {
             LOG_DEBUG ("Nothing returned from server");
             syncStatus = Sync::SYNC_CONNECTION_ERROR;
@@ -431,7 +450,7 @@ GRemoteSource::networkRequestFinished()
         GoogleContactStream parser(false);
         GoogleContactAtom *atom = parser.parse(data);
         if (!atom) {
-            LOG_CRITICAL ("NULL atom object. Something wrong with parsing");
+            LOG_CRITICAL("NULL atom object. Something wrong with parsing");
             goto operationFailed;
         }
 
@@ -439,22 +458,26 @@ GRemoteSource::networkRequestFinished()
             (requestType == GTransport::PUT)) {
             QList<QContact> addedContacts;
             QList<QContact> modContacts;
+            QList<QContact> delContacts;
 
-            LOG_DEBUG ("@@@PREVIOUS REQUEST TYPE=POST");
+            LOG_DEBUG("@@@PREVIOUS REQUEST TYPE=POST");
             QMap<QString, GoogleContactAtom::BatchOperationResponse> operationResponses = atom->batchOperationResponses();
             QMap<QString, QString> batchOperationRemoteIdToType;
             QMap<QString, QString> batchOperationRemoteToLocalId;
+
             bool errorOccurredInBatch = false;
             LOG_DEBUG("RESPONSE SIZE:" << operationResponses.size());
             foreach (const GoogleContactAtom::BatchOperationResponse &response, operationResponses) {
                 if (response.isError) {
                     errorOccurredInBatch = true;
-                    LOG_DEBUG("batch operation error:\n"
+                    LOG_CRITICAL("batch operation error:\n"
                               "    id:     " << response.operationId << "\n"
                               "    type:   " << response.type << "\n"
                               "    code:   " << response.code << "\n"
                               "    reason: " << response.reason << "\n"
                               "    descr:  " << response.reasonDescription << "\n");
+
+                    //handleUploadError(response, mLocalIdToContact.value(response.operationId), &delContacts);
                 } else {
                     LOG_DEBUG("RESPONSE" << response.contactGuid << response.type);
                     batchOperationRemoteToLocalId.insert(response.contactGuid, response.operationId);
@@ -488,7 +511,7 @@ GRemoteSource::networkRequestFinished()
                     modContacts << c;
                 }
             }
-            QList<QContact> delContacts = atom->deletedEntryContacts();
+            delContacts += atom->deletedEntryContacts();
 
             if (!atom->nextEntriesUrl().isEmpty()) {
                 syncStatus = Sync::SYNC_PROGRESS;
@@ -506,6 +529,7 @@ GRemoteSource::networkRequestFinished()
             if (syncStatus == Sync::SYNC_PROGRESS) {
                 batchOperationContinue();
             } else {
+                mLocalIdToContact.clear();
                 mLocalIdToAvatar.clear();
             }
         } else if (requestType == GTransport::GET) {
@@ -578,8 +602,7 @@ GRemoteSource::networkRequestFinished()
                 mState = GRemoteSource::STATE_IDLE;
             }
 
-            LOG_DEBUG("NOTIFY CONTACTS FETCHED:" << remoteContacts.size());
-
+            LOG_TRACE("NOTIFY CONTACTS FETCHED:" << remoteContacts.size());
             emit contactsFetched(remoteContacts, syncStatus);
 
             if (hasMore) {
