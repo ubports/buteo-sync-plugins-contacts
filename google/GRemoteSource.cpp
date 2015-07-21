@@ -350,16 +350,22 @@ GRemoteSource::batchOperationContinue()
     mTransport->request(GTransport::POST);
 }
 
-void GRemoteSource::handleUploadError(const GoogleContactAtom::BatchOperationResponse &response,
+bool GRemoteSource::handleUploadError(const GoogleContactAtom::BatchOperationResponse &response,
                                       const QContact &contact,
                                       QList<QContact> *removedContacts)
 {
-    if ((response.code == "404") && (response.type == "upload")) {
+    // try to solve the sync error
+    // return 'true' if the error was solved or 'false' if it fails to solve the error
+
+    if ((response.code == "404") && (response.type == "update")) {
         // contact not found on remote side:
         // In this case we will notify that the contact was removed
         // This can happen if the remote contact was removed manually while the sync operation was running
         removedContacts->append(contact);
+        return true;
     }
+
+    return false;
 }
 
 void GRemoteSource::emitTransactionCommited(const QList<QContact> &created,
@@ -469,7 +475,6 @@ GRemoteSource::networkRequestFinished()
             LOG_DEBUG("RESPONSE SIZE:" << operationResponses.size());
             foreach (const GoogleContactAtom::BatchOperationResponse &response, operationResponses) {
                 if (response.isError) {
-                    errorOccurredInBatch = true;
                     LOG_CRITICAL("batch operation error:\n"
                               "    id:     " << response.operationId << "\n"
                               "    type:   " << response.type << "\n"
@@ -477,7 +482,7 @@ GRemoteSource::networkRequestFinished()
                               "    reason: " << response.reason << "\n"
                               "    descr:  " << response.reasonDescription << "\n");
 
-                    handleUploadError(response, mLocalIdToContact.value(response.operationId), &delContacts);
+                    errorOccurredInBatch = errorOccurredInBatch || !handleUploadError(response, mLocalIdToContact.value(response.operationId), &delContacts);
                 } else {
                     LOG_DEBUG("RESPONSE" << response.contactGuid << response.type);
                     batchOperationRemoteToLocalId.insert(response.contactGuid, response.operationId);

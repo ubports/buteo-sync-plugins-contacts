@@ -83,6 +83,17 @@ private Q_SLOTS:
         mGooglePage++;
     }
 
+    void onSaveNotFoundContactsRequested(const QUrl &url, QByteArray *data)
+    {
+        Q_UNUSED(url);
+        // populate data with the contacts data
+        QFile fetchFile(TEST_DATA_DIR + QString("google_not_found_contact_response.txt"));
+        if (fetchFile.open(QIODevice::ReadOnly)) {
+            data->append(fetchFile.readAll());
+            fetchFile.close();
+        }
+    }
+
     void onCreateContactRequested(const QUrl &url, QByteArray *data)
     {
         Q_UNUSED(url);
@@ -374,6 +385,72 @@ private Q_SLOTS:
         QCOMPARE(UContactsCustomDetail::getCustomField(newContact, UContactsCustomDetail::FieldContactAvatarETag).data().toString(),
                  QString("%1-avatar").arg("5b56e6f60f3d43d3"));
 
+    }
+
+    void testSaveNotFoundContact()
+    {
+        QScopedPointer<GRemoteSource> src(new GRemoteSource());
+        QVariantMap props;
+        props.insert(Buteo::KEY_REMOTE_DATABASE, "http://google.com/contacts");
+        props.insert("AUTH-TOKEN", "1234567890");
+        props.insert("ACCOUNT-NAME", "renato_teste_2@gmail.com");
+        src->init(props);
+        connect(src->transport(),
+                SIGNAL(requested(QUrl,QByteArray*)),
+                SLOT(onSaveNotFoundContactsRequested(QUrl,QByteArray*)));
+
+        // prepare contacts
+        QList<QContact> contacts;
+
+        // Contact to Update
+        QContact c;
+        c.setId(QContactId::fromString("qtcontacts::memory:1"));
+
+        QContactGuid guid;
+        guid.setGuid("df8fd2e011e64624459c66f8d72417f7559d9c1d");
+        c.saveDetail(&guid);
+
+        UContactsCustomDetail::setCustomField(c,
+                                              UContactsCustomDetail::FieldRemoteId,
+                                              QStringLiteral("415f25f8a58b972"));
+        UContactsCustomDetail::setCustomField(c,
+                                              UContactsCustomDetail::FieldContactETag,
+                                              QStringLiteral("415f25f8a58b972-ETAG"));
+        contacts << c;
+
+        // Contact to create
+        c = QContact();
+        c.setId(QContactId::fromString("qtcontacts::memory:2"));
+
+        guid = QContactGuid();
+        guid.setGuid("f55c2eeb760ffd6843d2e98319d3544ff3e987b5");
+        c.saveDetail(&guid);
+
+        QContactName name;
+        name.setFirstName("My");
+        name.setLastName("Contact");
+        c.saveDetail(&name);
+
+        contacts << c;
+
+        QSignalSpy onTransactionCommited(src.data(),
+                                         SIGNAL(transactionCommited(QList<QtContacts::QContact>, QList<QtContacts::QContact>,QStringList,Sync::SyncStatus)));
+        src->transaction();
+        src->saveContacts(contacts);
+        src->commit();
+        QTRY_COMPARE(onTransactionCommited.count(), 1);
+
+        QList<QVariant> transactionCommitedArgs = onTransactionCommited.first();
+        QCOMPARE(transactionCommitedArgs.size(), 4);
+        QList<QContact> createdContacts = transactionCommitedArgs.at(0).value<QList<QtContacts::QContact> >();
+        QList<QContact> updatedContacts = transactionCommitedArgs.at(1).value<QList<QtContacts::QContact> >();
+        QStringList removedContacts = transactionCommitedArgs.at(2).value<QStringList >();
+        Sync::SyncStatus syncStatus = transactionCommitedArgs.at(3).value<Sync::SyncStatus>();
+
+        QCOMPARE(createdContacts.size(), 1);
+        QCOMPARE(updatedContacts.size(), 0);
+        QCOMPARE(removedContacts.size(), 1);
+        QCOMPARE(syncStatus, Sync::SYNC_DONE);
     }
 };
 

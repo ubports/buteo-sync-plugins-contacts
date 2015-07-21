@@ -84,7 +84,7 @@ private:
     void uploadAvatars(QList<QContact> *contacts);
     void fetchRemoteContacts(const QDateTime &since, bool includeDeleted, int startIndex);
     void batchOperationContinue();
-    void handleUploadError(const GoogleContactAtom::BatchOperationResponse &response,
+    bool handleUploadError(const GoogleContactAtom::BatchOperationResponse &response,
                            const QContact &contact,
                            QList<QContact> *removedContacts);
     void emitTransactionCommited(const QList<QtContacts::QContact> &created,
