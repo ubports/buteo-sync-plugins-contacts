@@ -646,10 +646,6 @@ GRemoteSource::networkError(int errorCode)
     FUNCTION_CALL_TRACE;
 
     Sync::SyncStatus syncStatus = Sync::SYNC_ERROR;
-
-    // TODO: If interested, check the value of error. But
-    // it is enough to say that it is a SYNC_CONNECTION_ERROR
-    //emit syncFinished (Sync::SYNC_CONNECTION_ERROR);
     switch (errorCode)
     {
     case 400:
