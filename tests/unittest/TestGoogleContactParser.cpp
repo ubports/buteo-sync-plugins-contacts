@@ -271,8 +271,8 @@ private slots:
         //  primary='true'
         //  rel='http://schemas.google.com/g/2005#home'/>
         QCOMPARE(accounts.at(0).accountUri(), QStringLiteral("Aaron@gmail.com"));
-        QCOMPARE(accounts.at(0).serviceProvider(), QStringLiteral(""));
-        QCOMPARE(accounts.at(0).protocol(), QContactOnlineAccount::ProtocolJabber);
+        QCOMPARE(accounts.at(0).serviceProvider(), QStringLiteral("GOOGLE_TALK"));
+        QCOMPARE(accounts.at(0).protocol(), QContactOnlineAccount::ProtocolUnknown);
         QVERIFY(accounts.at(0).capabilities().isEmpty());
         QVERIFY(accounts.at(0).subTypes().isEmpty());
         QCOMPARE(accounts.at(0).contexts().size(), 1);
@@ -777,10 +777,11 @@ private slots:
         QContactOnlineAccount account;
 
         account.setAccountUri(QStringLiteral("Aaron@gmail.com"));
-        account.setProtocol(QContactOnlineAccount::ProtocolJabber);
+        account.setProtocol(QContactOnlineAccount::ProtocolUnknown);
         account.setContexts(QList<int>() << QContactDetail::ContextHome);
+        account.setServiceProvider(QStringLiteral("GOOGLE_TALK"));
         contact.saveDetail(&account);
-        expectedXML << QStringLiteral("<gd:im protocol=\"http://schemas.google.com/g/2005#JABBER\""
+        expectedXML << QStringLiteral("<gd:im protocol=\"http://schemas.google.com/g/2005#GOOGLE_TALK\""
                                       " rel=\"http://schemas.google.com/g/2005#home\""
                                       " address=\"Aaron@gmail.com\"/>");
 

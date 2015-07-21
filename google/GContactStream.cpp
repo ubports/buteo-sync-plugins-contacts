@@ -264,10 +264,9 @@ void GoogleContactStream::handleAtomEntry()
             if (handler) {
                 QContactDetail convertedDetail = (*this.*handler)();
                 if (convertedDetail != QContactDetail()) {
-                    //LOG_WARNING("Handle not found for " << mXmlReader->qualifiedName().toString());
-                    // FIXME
-                    // convertedDetail.setValue(QContactDetail__FieldModifiable, true);
                     entryContact.saveDetail(&convertedDetail);
+                } else {
+                    LOG_WARNING("Handle not found for " << mXmlReader->qualifiedName().toString());
                 }
             } else if (mXmlReader->qualifiedName().toString() == QStringLiteral("gd:deleted")) {
                 isDeleted = true;
@@ -667,7 +666,6 @@ QContactDetail GoogleContactStream::handleEntryIm()
         protocolMap.insert("MSN", QContactOnlineAccount::ProtocolMsn);
         protocolMap.insert("YAHOO", QContactOnlineAccount::ProtocolYahoo);
         protocolMap.insert("SKYPE", QContactOnlineAccount::ProtocolSkype);
-        protocolMap.insert("GOOGLE_TALK", QContactOnlineAccount::ProtocolJabber);
         protocolMap.insert("ICQ", QContactOnlineAccount::ProtocolIcq);
         protocolMap.insert("JABBER", QContactOnlineAccount::ProtocolJabber);
         protocolMap.insert("QQ", QContactOnlineAccount::ProtocolQq);
