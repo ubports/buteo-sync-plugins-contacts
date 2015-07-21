@@ -970,6 +970,7 @@ void GoogleContactStream::encodeContactUpdate(const QContact &qContact,
         // Make sure that the contact has at least one group
         QContactExtendedDetail group;
         group.setName(UContactsCustomDetail::FieldGroupMembershipInfo);
+        // FIXME: this is default id for "My Contacts"
         group.setData("6");
         encodeGroup(group);
     }
