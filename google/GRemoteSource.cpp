@@ -563,7 +563,9 @@ GRemoteSource::networkRequestFinished()
                 QContactGuid guid =  c.detail<QContactGuid>();
                 UContactsBackend::setRemoteId(c, guid.guid());
                 c.removeDetail(&guid);
-                // FIXME
+                // FIXME: This code came from the meego implementation, until now we did not face
+                // any unsupported xml element. Keep the code here in case some unsupported element
+                // apper. Then we should store it some how on our backend.
                 //  m_unsupportedXmlElements[accountId].insert(
                 //          c.detail<QContactGuid>().guid(),
                 //          remoteAddModContacts[i].second);
