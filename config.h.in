@@ -3,8 +3,6 @@
 
 #include <QString>
 
-const QString GOOGLE_CONTACTS_CLIENT_ID          ("759250720802-4sii0me9963n9fdqdmi7cepn6ub8luoh.apps.googleusercontent.com");
-const QString GOOGLE_CONTACTS_CLIENT_SECRET      ("juFngKUcuhB7IRQqHtSLavqJ");
 const QString GOOGLE_ETAG_DETAIL                 ("X-GOOGLE-ETAG");
 const QString QCONTACTS_BACKEND_NAME             ("galera");
 

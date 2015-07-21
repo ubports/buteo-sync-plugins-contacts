@@ -159,13 +159,11 @@ UAuth::authenticate()
             SLOT(sessionResponse(SignOn::SessionData)), Qt::QueuedConnection);
     connect(d->mSession.data(), SIGNAL(error(SignOn::Error)),
             SLOT(error(SignOn::Error)), Qt::QueuedConnection);
-    accSrv->deleteLater();
 
     QVariantMap signonSessionData = authData.parameters();
-    signonSessionData.insert("ClientId", GOOGLE_CONTACTS_CLIENT_ID);
-    signonSessionData.insert("ClientSecret", GOOGLE_CONTACTS_CLIENT_SECRET);
     signonSessionData.insert("UiPolicy", SignOn::NoUserInteractionPolicy);
     d->mSession->process(signonSessionData, authData.mechanism());
+    accSrv->deleteLater();
     return true;
 }
 
