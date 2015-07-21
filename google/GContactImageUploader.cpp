@@ -34,6 +34,7 @@
 #include <QDomDocument>
 
 #define GOOGLE_URL          "https://www.google.com/m8/feeds/contacts/default/full"
+#define GOOGLE_PHOTO_URL    "https://www.google.com/m8/feeds/photos/media/%1/%2"
 
 GContactImageUploader::GContactImageUploader(const QString &authToken,
                                              const QString &accountId,
@@ -91,7 +92,7 @@ void GContactImageUploader::exec()
         mCurrentRemoteId = data.first;
 
         // upload photo
-        QString requestUrl = QString("https://www.google.com/m8/feeds/photos/media/%1/%2")
+        QString requestUrl = QString(GOOGLE_PHOTO_URL)
                 .arg(mAccountId)
                 .arg(mCurrentRemoteId);
         QNetworkRequest request(requestUrl);
