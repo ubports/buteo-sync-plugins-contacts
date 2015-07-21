@@ -1,5 +1,5 @@
 /*
- * This file is part of buteo-sync-plugins-goole package
+ * This file is part of buteo-sync-plugins-contacts package
  *
  * Copyright (C) 2013 Jolla Ltd. and/or its subsidiary(-ies).
  *               2015 Canonical Ltd
