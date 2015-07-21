@@ -95,11 +95,11 @@ void GContactImageUploader::exec()
                 .arg(mAccountId)
                 .arg(mCurrentRemoteId);
         QNetworkRequest request(requestUrl);
-        request.setRawHeader("GData-Version", "3.0");
-        request.setRawHeader(QString(QLatin1String("Authorization")).toUtf8(),
-                             QString(QLatin1String("Bearer ") + mAuthToken).toUtf8());
-        request.setRawHeader("Content-Type", "image/*");
-        request.setRawHeader("If-Match", "*");
+        request.setRawHeader(QStringLiteral("GData-Version").toUtf8(), QStringLiteral("3.0").toUtf8());
+        request.setRawHeader(QStringLiteral("Authorization").toUtf8(),
+                             QStringLiteral("Bearer %1").arg(mAuthToken).toUtf8());
+        request.setRawHeader(QStringLiteral("Content-Type").toUtf8(), QStringLiteral("image/*").toUtf8());
+        request.setRawHeader(QStringLiteral("If-Match").toUtf8(), QStringLiteral("*").toUtf8());
         networkAccessManager->put(request, imgData);
 
         // wait for the upload to finish
@@ -124,9 +124,9 @@ void GContactImageUploader::exec()
             .arg(GOOGLE_URL)
             .arg(startTime.toString(Qt::ISODate));
     QNetworkRequest request(requestUrl);
-    request.setRawHeader("GData-Version", "3.0");
-    request.setRawHeader(QString(QLatin1String("Authorization")).toUtf8(),
-                         QString(QLatin1String("Bearer ") + mAuthToken).toUtf8());
+    request.setRawHeader(QStringLiteral("GData-Version").toUtf8(), QStringLiteral("3.0").toUtf8());
+    request.setRawHeader(QStringLiteral("Authorization").toUtf8(),
+                         QStringLiteral("Bearer %1").arg(mAuthToken).toUtf8());
     networkAccessManager->get(request);
 
     // wait for the reply to finish

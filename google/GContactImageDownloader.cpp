@@ -68,9 +68,9 @@ void GContactImageDownloader::exec()
 
     while(!mQueue.isEmpty()) {
         QNetworkRequest request(mQueue.takeFirst());
-        request.setRawHeader("GData-Version", "3.0");
-        request.setRawHeader(QString(QLatin1String("Authorization")).toUtf8(),
-                             QString(QLatin1String("Bearer ") + mAuthToken).toUtf8());
+        request.setRawHeader(QStringLiteral("GData-Version").toUtf8(), QStringLiteral("3.0").toUtf8());
+        request.setRawHeader(QStringLiteral("Authorization").toUtf8(),
+                             QStringLiteral("Bearer %1").arg(mAuthToken).toUtf8());
         networkAccessManager->get(request);
 
         // wait for the download to finish

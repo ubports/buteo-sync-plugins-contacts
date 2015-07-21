@@ -283,8 +283,8 @@ GTransport::request(const HTTP_REQUEST_TYPE type)
         break;
     }
 
-    d->mNetworkRequest->setRawHeader(QString(QLatin1String("If-Match")).toUtf8(),
-                                     QString(QLatin1String("*")).toUtf8());
+    d->mNetworkRequest->setRawHeader(QStringLiteral("If-Match").toUtf8(),
+                                     QStringLiteral("*").toUtf8());
 
     QList<QByteArray> headerList = d->mNetworkRequest->rawHeaderList();
     for (int i=0; i<headerList.size (); i++) {
