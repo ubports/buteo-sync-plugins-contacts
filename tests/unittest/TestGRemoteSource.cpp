@@ -324,7 +324,9 @@ private Q_SLOTS:
         avatar.setImageUrl(QUrl::fromLocalFile("/tmp/avatar.png"));
         c.saveDetail(&avatar);
 
-        UContactsCustomDetail::setCustomField(c, UContactsCustomDetail::FieldRemoteId, QVariant("012345"));
+        UContactsCustomDetail::setCustomField(c,
+                                              UContactsCustomDetail::FieldRemoteId,
+                                              QVariant("012345"));
 
         QList<QContact> lc;
         lc << c;
@@ -397,6 +399,94 @@ private Q_SLOTS:
         QCOMPARE(UContactsCustomDetail::getCustomField(newContact, UContactsCustomDetail::FieldContactAvatarETag).data().toString(),
                  QString("%1-avatar").arg("5b56e6f60f3d43d3"));
 
+    }
+
+    void testModifyAContactWithoutChangeAvatar()
+    {
+        QScopedPointer<GRemoteSource> src(new GRemoteSource());
+        QVariantMap props;
+        props.insert(Buteo::KEY_REMOTE_DATABASE, "http://google.com/contacts");
+        props.insert("AUTH-TOKEN", "1234567890");
+        props.insert("ACCOUNT-NAME", "renato_teste_2@gmail.com");
+        src->init(props);
+        connect(src->transport(),
+                SIGNAL(requested(QUrl,QByteArray*)),
+                SLOT(onUpdatedContactRequested(QUrl,QByteArray*)));
+
+        // prepare contact
+        QContact c;
+        c.setId(QContactId::fromString("qtcontacts::memory:99999"));
+
+        QContactGuid guid;
+        guid.setGuid("2c79456ba52fb29ecab9afedc4068f3421b77779");
+        c.saveDetail(&guid);
+
+        QContactName nm;
+        nm.setFirstName("Renato");
+        nm.setLastName("Oliveira Filho");
+        c.saveDetail(&nm);
+
+        QContactAvatar avatar;
+        avatar.setImageUrl(QUrl::fromLocalFile("/tmp/avatar.png"));
+        c.saveDetail(&avatar);
+
+        UContactsCustomDetail::setCustomField(c,
+                                              UContactsCustomDetail::FieldContactAvatarETag,
+                                              QStringLiteral("\"TTt0ZQQ3Sit7I2BfHWQlUURPIEwjCVMZdT0.\""));
+        UContactsCustomDetail::setCustomField(c,
+                                              UContactsCustomDetail::FieldRemoteId,
+                                              QVariant("012345"));
+
+        // save contact
+        QList<QContact> lc;
+        lc << c;
+        QSignalSpy onTransactionCommited(src.data(),
+                                         SIGNAL(transactionCommited(QList<QtContacts::QContact>,
+                                                                    QList<QtContacts::QContact>,
+                                                                    QStringList,
+                                                                    QMap<QString,int>,
+                                                                    Sync::SyncStatus)));
+        src->transaction();
+        src->saveContacts(lc);
+        src->commit();
+
+        // wait for result
+        QTRY_COMPARE(onTransactionCommited.count(), 1);
+
+        // check result
+        QList<QVariant> transactionCommitedArgs = onTransactionCommited.first();
+        QCOMPARE(transactionCommitedArgs.size(), 5);
+        QList<QContact> createdContacts = transactionCommitedArgs.at(0).value<QList<QtContacts::QContact> >();
+        QList<QContact> updatedContacts = transactionCommitedArgs.at(1).value<QList<QtContacts::QContact> >();
+        QStringList removedContacts = transactionCommitedArgs.at(2).value<QStringList >();
+        QMap<QString, int> errorMap = transactionCommitedArgs.at(3).value<QMap<QString, int> >();
+        Sync::SyncStatus syncStatus = transactionCommitedArgs.at(4).value<Sync::SyncStatus>();
+
+        QCOMPARE(createdContacts.size(), 0);
+        QCOMPARE(updatedContacts.size(), 1);
+        QCOMPARE(removedContacts.size(), 0);
+        QCOMPARE(errorMap.size(), 0);
+        QCOMPARE(syncStatus, Sync::SYNC_DONE);
+
+        // chek if avatar still the same
+        QContact newContact(updatedContacts.at(0));
+
+        QList<QContactExtendedDetail> exDetails = newContact.details<QContactExtendedDetail>();
+        QCOMPARE(exDetails.size(), 4);
+
+        QCOMPARE(newContact.detail<QContactGuid>().guid(),
+                 QStringLiteral("qtcontacts:galera::2c79456ba52fb29ecab9afedc4068f3421b77779"));
+        QCOMPARE(UContactsCustomDetail::getCustomField(newContact, UContactsCustomDetail::FieldRemoteId).data().toString(),
+                 QStringLiteral("5b56e6f60f3d43d3"));
+        QCOMPARE(UContactsCustomDetail::getCustomField(newContact, UContactsCustomDetail::FieldContactETag).data().toString(),
+                 QStringLiteral("\"SXg5ejVSLit7I2A9XRVVEkwOTgQ.\""));
+        QCOMPARE(UContactsCustomDetail::getCustomField(newContact, UContactsCustomDetail::FieldContactAvatarETag).data().toString(),
+                 QStringLiteral("\"TTt0ZQQ3Sit7I2BfHWQlUURPIEwjCVMZdT0.\""));
+
+        // check avatar url
+        QList<QContactAvatar> avatars = newContact.details<QContactAvatar>();
+        QCOMPARE(avatars.size(), 1);
+        QCOMPARE(avatars.at(0).imageUrl(), QUrl::fromLocalFile("/tmp/avatar.png"));
     }
 
     void testSaveNotFoundContact()

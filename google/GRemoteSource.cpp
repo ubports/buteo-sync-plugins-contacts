@@ -159,16 +159,25 @@ void GRemoteSource::uploadAvatars(QList<QContact> *contacts)
 
     foreach(const QContact &c, *contacts) {
         QString localId = UContactsBackend::getLocalId(c);
+        LOG_DEBUG("Will upload avatar for:" << localId);
         if (mLocalIdToAvatar.contains(localId)) {
             QContactExtendedDetail rEtag =
                     UContactsCustomDetail::getCustomField(c,
                                                           UContactsCustomDetail::FieldContactAvatarETag);
 
             QPair<QString, QUrl> avatar = mLocalIdToAvatar.value(localId);
+            LOG_DEBUG("Current avatar:"
+                      << "\n\tlocal-etag:" << avatar.first
+                      << "\n\tremote-etag:" << rEtag.data().toString()
+                      << "\n\tlocal-url:" << avatar.second);
+
             // check if the remote etag has changed
             if (avatar.second.isLocalFile() &&
                 (avatar.first.isEmpty() || (avatar.first != rEtag.data().toString()))) {
                 QString remoteId = UContactsBackend::getRemoteId(c);
+                LOG_DEBUG("Avatar revision changed:"
+                          << "\n\tRemote version:" << rEtag.data().toString()
+                          << "\n\tLocal version:" << avatar.first);
                 LOG_DEBUG("Uploade avatar:" << remoteId << avatar.second);
                 uploader.push(remoteId, avatar.second);
             } else if (!avatar.second.isLocalFile()) {
@@ -188,23 +197,26 @@ void GRemoteSource::uploadAvatars(QList<QContact> *contacts)
         QContact &c = (*contacts)[i];
 
         GContactImageUploader::UploaderReply reply = result.value(UContactsBackend::getRemoteId(c));
+
+        // update contact e-tag if necessary
         if (!reply.newEtag.isEmpty()) {
             UContactsCustomDetail::setCustomField(c,
                                                   UContactsCustomDetail::FieldContactETag,
                                                   reply.newEtag);
         }
+
+        // update avatar e-tag if necessary
         if (!reply.newAvatarEtag.isEmpty()) {
-            QString localId = UContactsBackend::getLocalId(c);
-
-            // copy local url to new remote avatar
-            QContactAvatar avatar = c.detail<QContactAvatar>();
-            avatar.setImageUrl(mLocalIdToAvatar.value(localId).second);
-            c.saveDetail(&avatar);
-
             UContactsCustomDetail::setCustomField(c,
                                                   UContactsCustomDetail::FieldContactAvatarETag,
                                                   reply.newAvatarEtag);
         }
+
+        QString localId = UContactsBackend::getLocalId(c);
+        // copy local url to new remote avatar
+        QContactAvatar avatar = c.detail<QContactAvatar>();
+        avatar.setImageUrl(mLocalIdToAvatar.value(localId).second);
+        c.saveDetail(&avatar);
     }
 }
 
@@ -479,6 +491,7 @@ GRemoteSource::networkRequestFinished()
             }
 
             QList<QPair<QContact, QStringList> > remoteAddModContacts = atom->entryContacts();
+            LOG_DEBUG("Number of changed contacts:" << remoteAddModContacts.size());
             for (int i = 0; i < remoteAddModContacts.size(); i++) {
                 QContact &c = remoteAddModContacts[i].first;
                 QContactGuid guid = c.detail<QContactGuid>();
@@ -499,6 +512,7 @@ GRemoteSource::networkRequestFinished()
                 }
             }
             delContacts += atom->deletedEntryContacts();
+            LOG_DEBUG("Number of deleted contacts:" << delContacts.size());
 
             if (!atom->nextEntriesUrl().isEmpty()) {
                 syncStatus = Sync::SYNC_PROGRESS;
