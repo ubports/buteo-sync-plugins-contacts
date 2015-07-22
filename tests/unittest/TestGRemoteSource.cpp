@@ -236,7 +236,11 @@ private Q_SLOTS:
         lc << c;
 
         QSignalSpy onTransactionCommited(src.data(),
-                                         SIGNAL(transactionCommited(QList<QtContacts::QContact>, QList<QtContacts::QContact>,QStringList,Sync::SyncStatus)));
+                                         SIGNAL(transactionCommited(QList<QtContacts::QContact>,
+                                                                    QList<QtContacts::QContact>,
+                                                                    QStringList,
+                                                                    QMap<QString,int>,
+                                                                    Sync::SyncStatus)));
         QSignalSpy onContactCreated(src.data(),
                                     SIGNAL(contactsCreated(QList<QtContacts::QContact>,Sync::SyncStatus)));
 
@@ -265,11 +269,12 @@ private Q_SLOTS:
         QTRY_COMPARE(onTransactionCommited.count(), 1);
 
         QList<QVariant> transactionCommitedArgs = onTransactionCommited.first();
-        QCOMPARE(transactionCommitedArgs.size(), 4);
+        QCOMPARE(transactionCommitedArgs.size(), 5);
         QList<QContact> createdContacts = transactionCommitedArgs.at(0).value<QList<QtContacts::QContact> >();
         QList<QContact> updatedContacts = transactionCommitedArgs.at(1).value<QList<QtContacts::QContact> >();
         QStringList removedContacts = transactionCommitedArgs.at(2).value<QStringList >();
-        Sync::SyncStatus syncStatus = transactionCommitedArgs.at(3).value<Sync::SyncStatus>();
+        QMap<QString, int> errorMap = transactionCommitedArgs.at(3).value<QMap<QString, int> >();
+        Sync::SyncStatus syncStatus = transactionCommitedArgs.at(4).value<Sync::SyncStatus>();
 
         QCOMPARE(createdContacts.size(), 1);
         QCOMPARE(createdContacts.at(0).detail<QContactGuid>().guid(),
@@ -279,6 +284,7 @@ private Q_SLOTS:
 
         QCOMPARE(updatedContacts.size(), 0);
         QCOMPARE(removedContacts.size(), 0);
+        QCOMPARE(errorMap.size(), 0);
         QCOMPARE(syncStatus, Sync::SYNC_DONE);
     }
 
@@ -324,7 +330,11 @@ private Q_SLOTS:
         lc << c;
 
         QSignalSpy onTransactionCommited(src.data(),
-                                         SIGNAL(transactionCommited(QList<QtContacts::QContact>, QList<QtContacts::QContact>,QStringList,Sync::SyncStatus)));
+                                         SIGNAL(transactionCommited(QList<QtContacts::QContact>,
+                                                                    QList<QtContacts::QContact>,
+                                                                    QStringList,
+                                                                    QMap<QString,int>,
+                                                                    Sync::SyncStatus)));
         QSignalSpy onContactChanged(src.data(),
                                     SIGNAL(contactsChanged(QList<QtContacts::QContact>,Sync::SyncStatus)));
 
@@ -355,15 +365,17 @@ private Q_SLOTS:
         QTRY_COMPARE(onTransactionCommited.count(), 1);
 
         QList<QVariant> transactionCommitedArgs = onTransactionCommited.first();
-        QCOMPARE(transactionCommitedArgs.size(), 4);
+        QCOMPARE(transactionCommitedArgs.size(), 5);
         QList<QContact> createdContacts = transactionCommitedArgs.at(0).value<QList<QtContacts::QContact> >();
         QList<QContact> updatedContacts = transactionCommitedArgs.at(1).value<QList<QtContacts::QContact> >();
         QStringList removedContacts = transactionCommitedArgs.at(2).value<QStringList >();
-        Sync::SyncStatus syncStatus = transactionCommitedArgs.at(3).value<Sync::SyncStatus>();
+        QMap<QString, int> errorMap = transactionCommitedArgs.at(3).value<QMap<QString, int> >();
+        Sync::SyncStatus syncStatus = transactionCommitedArgs.at(4).value<Sync::SyncStatus>();
 
         QCOMPARE(createdContacts.size(), 0);
         QCOMPARE(updatedContacts.size(), 1);
         QCOMPARE(removedContacts.size(), 0);
+        QCOMPARE(errorMap.size(), 0);
         QCOMPARE(syncStatus, Sync::SYNC_DONE);
 
         QContact newContact(updatedContacts.at(0));
@@ -434,23 +446,33 @@ private Q_SLOTS:
         contacts << c;
 
         QSignalSpy onTransactionCommited(src.data(),
-                                         SIGNAL(transactionCommited(QList<QtContacts::QContact>, QList<QtContacts::QContact>,QStringList,Sync::SyncStatus)));
+                                         SIGNAL(transactionCommited(QList<QtContacts::QContact>,
+                                                                    QList<QtContacts::QContact>,
+                                                                    QStringList,
+                                                                    QMap<QString,int>,
+                                                                    Sync::SyncStatus)));
         src->transaction();
         src->saveContacts(contacts);
         src->commit();
         QTRY_COMPARE(onTransactionCommited.count(), 1);
 
         QList<QVariant> transactionCommitedArgs = onTransactionCommited.first();
-        QCOMPARE(transactionCommitedArgs.size(), 4);
+        QCOMPARE(transactionCommitedArgs.size(), 5);
         QList<QContact> createdContacts = transactionCommitedArgs.at(0).value<QList<QtContacts::QContact> >();
         QList<QContact> updatedContacts = transactionCommitedArgs.at(1).value<QList<QtContacts::QContact> >();
         QStringList removedContacts = transactionCommitedArgs.at(2).value<QStringList >();
-        Sync::SyncStatus syncStatus = transactionCommitedArgs.at(3).value<Sync::SyncStatus>();
+        QMap<QString, int> errorMap = transactionCommitedArgs.at(3).value< QMap<QString,int> >();
+        Sync::SyncStatus syncStatus = transactionCommitedArgs.at(4).value<Sync::SyncStatus>();
 
         QCOMPARE(createdContacts.size(), 1);
         QCOMPARE(updatedContacts.size(), 0);
-        QCOMPARE(removedContacts.size(), 1);
+        QCOMPARE(removedContacts.size(), 0);
+        QCOMPARE(errorMap.size(), 1);
         QCOMPARE(syncStatus, Sync::SYNC_DONE);
+
+        // check if the repported error is correct
+        QCOMPARE(errorMap.begin().key(), QStringLiteral("qtcontacts:galera::df8fd2e011e64624459c66f8d72417f7559d9c1d"));
+        QCOMPARE(errorMap.begin().value(), (int) QContactManager::DoesNotExistError);
     }
 };
 

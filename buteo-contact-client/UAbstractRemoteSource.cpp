@@ -106,6 +106,7 @@ bool UAbstractRemoteSource::commit()
         transactionCommited(QList<QContact>(),
                             QList<QContact>(),
                             QStringList(),
+                            QMap<QString, int>(),
                             Sync::SYNC_DONE);
         return true;
     }

@@ -366,10 +366,14 @@ UContactsClient::onRemoteContactsFetchedForSlowSync(const QList<QContact> contac
             connect(d->mRemoteSource,
                     SIGNAL(transactionCommited(QList<QtContacts::QContact>,
                                                QList<QtContacts::QContact>,
-                                               QStringList,Sync::SyncStatus)),
+                                               QStringList,
+                                               QMap<QString, int>,
+                                               Sync::SyncStatus)),
                     SLOT(onContactsSavedForSlowSync(QList<QtContacts::QContact>,
                                                     QList<QtContacts::QContact>,
-                                                    QStringList,Sync::SyncStatus)));
+                                                    QStringList,
+                                                    QMap<QString, int>,
+                                                    Sync::SyncStatus)));
 
             d->mRemoteSource->transaction();
             d->mRemoteSource->saveContacts(toUpload);
@@ -384,6 +388,7 @@ void
 UContactsClient::onContactsSavedForSlowSync(const QList<QtContacts::QContact> &createdContacts,
                                             const QList<QtContacts::QContact> &updatedContacts,
                                             const QStringList &removedContacts,
+                                            const QMap<QString, int> errorMap,
                                             Sync::SyncStatus status)
 {
     FUNCTION_CALL_TRACE;
@@ -392,7 +397,8 @@ UContactsClient::onContactsSavedForSlowSync(const QList<QtContacts::QContact> &c
     LOG_DEBUG("AFTER UPLOAD(Slow sync):"
                 << "\n\tCreated on remote:" << createdContacts.size()
                 << "\n\tUpdated on remote:" << updatedContacts.size()
-                << "\n\tRemoved from remote:" << removedContacts.size());
+                << "\n\tRemoved from remote:" << removedContacts.size()
+                << "\n\tError reported:" << errorMap.size());
 
     if ((status != Sync::SYNC_PROGRESS) && (status != Sync::SYNC_STARTED)) {
         disconnect(d->mRemoteSource);
@@ -404,6 +410,7 @@ UContactsClient::onContactsSavedForSlowSync(const QList<QtContacts::QContact> &c
         changedContacts += createdContacts;
         changedContacts += updatedContacts;
         updateIdsToLocal(changedContacts);
+        handleError(errorMap);
 
         // sync report
         addProcessedItem(Sync::ITEM_ADDED,
@@ -461,10 +468,14 @@ void UContactsClient::onRemoteContactsFetchedForFastSync(const QList<QContact> c
             connect(d->mRemoteSource,
                     SIGNAL(transactionCommited(QList<QtContacts::QContact>,
                                                QList<QtContacts::QContact>,
-                                               QStringList,Sync::SyncStatus)),
+                                               QStringList,
+                                               QMap<QString, int>,
+                                               Sync::SyncStatus)),
                     SLOT(onContactsSavedForFastSync(QList<QtContacts::QContact>,
                                                     QList<QtContacts::QContact>,
-                                                    QStringList,Sync::SyncStatus)));
+                                                    QStringList,
+                                                    QMap<QString, int>,
+                                                    Sync::SyncStatus)));
 
             d->mRemoteSource->transaction();
             d->mRemoteSource->saveContacts(contactsToUpload);
@@ -480,6 +491,7 @@ void
 UContactsClient::onContactsSavedForFastSync(const QList<QtContacts::QContact> &createdContacts,
                                             const QList<QtContacts::QContact> &updatedContacts,
                                             const QStringList &removedContacts,
+                                            const QMap<QString, int> errorMap,
                                             Sync::SyncStatus status)
 {
     Q_UNUSED(updatedContacts)
@@ -490,7 +502,8 @@ UContactsClient::onContactsSavedForFastSync(const QList<QtContacts::QContact> &c
     LOG_DEBUG("AFTER UPLOAD(Fast sync):" << status
                 << "\n\tCreated on remote:" << createdContacts.size()
                 << "\n\tUpdated on remote:" << updatedContacts.size()
-                << "\n\tRemoved from remote:" << removedContacts.size());
+                << "\n\tRemoved from remote:" << removedContacts.size()
+                << "\n\tError reported:" << errorMap.size());
 
     if ((status != Sync::SYNC_PROGRESS) && (status != Sync::SYNC_STARTED)) {
         disconnect(d->mRemoteSource);
@@ -503,6 +516,10 @@ UContactsClient::onContactsSavedForFastSync(const QList<QtContacts::QContact> &c
         changedContacts += updatedContacts;
 
         updateIdsToLocal(changedContacts);
+        handleError(errorMap);
+
+        // we need to call delete again because of error handling
+        d->mContactBackend->deleteContacts(removedContacts);
 
         // sync report
         addProcessedItem(Sync::ITEM_ADDED,
@@ -537,6 +554,31 @@ void
 UContactsClient::fireSyncFinishedSucessfully()
 {
     emit syncFinished(Sync::SYNC_DONE);
+}
+
+void UContactsClient::handleError(const QMap<QString, int> &errorMap)
+{
+    Q_D(UContactsClient);
+    QStringList contactToRemove;
+
+    QMap<QString, int>::const_iterator i = errorMap.begin();
+    while(i != errorMap.end()) {
+        switch(i.value()) {
+        case QContactManager::DoesNotExistError:
+            // if the contact does not exists on remote side we will remove it locally
+            LOG_DEBUG("Romoving contact locally due the remote error:" << i.key());
+            contactToRemove << i.key();
+            break;
+        default:
+            LOG_WARNING("Unexpected error:" << i.value());
+            break;
+        }
+        i++;
+    }
+
+    if (!contactToRemove.isEmpty()) {
+        d->mContactBackend->deleteContacts(contactToRemove);
+    }
 }
 
 bool

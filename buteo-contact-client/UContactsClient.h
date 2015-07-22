@@ -143,6 +143,8 @@ private slots:
     void onStateChanged(Sync::SyncProgressDetail progress);
     void onSyncFinished(Sync::SyncStatus status);
     void fireSyncFinishedSucessfully();
+    void handleError(const QMap<QString, int> &errorMap);
+
 
     /* slow sync */
     void onRemoteContactsFetchedForSlowSync(const QList<QtContacts::QContact> contacts,
@@ -150,6 +152,7 @@ private slots:
     void onContactsSavedForSlowSync(const QList<QtContacts::QContact> &createdContacts,
                                     const QList<QtContacts::QContact> &updatedContacts,
                                     const QStringList &removedContacts,
+                                    const QMap<QString, int> errorList,
                                     Sync::SyncStatus status);
     /* fast sync */
     void onRemoteContactsFetchedForFastSync(const QList<QtContacts::QContact> contacts,
@@ -157,6 +160,7 @@ private slots:
     void onContactsSavedForFastSync(const QList<QtContacts::QContact> &createdContacts,
                                     const QList<QtContacts::QContact> &updatedContacts,
                                     const QStringList &removedContacts,
+                                    const QMap<QString, int> errorMap,
                                     Sync::SyncStatus status);
 
 };

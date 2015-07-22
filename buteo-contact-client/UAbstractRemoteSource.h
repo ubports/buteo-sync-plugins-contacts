@@ -95,11 +95,15 @@ signals:
      * \param createdContacts A list of created contacts
      * \param updatedContacts A list of updated contacts
      * \param removedContacts A list with remoteId of removed contacts
+     * \param errorMap A map with the list of errors found during the batch operation
+     * the key value contains the contact local id and the value is a int based
+     * on QContactManager::Error enum
      * \param status The operation status
      */
     void transactionCommited(const QList<QtContacts::QContact> &createdContacts,
                              const QList<QtContacts::QContact> &updatedContacts,
                              const QStringList &removedContacts,
+                             const QMap<QString, int> &errorMap,
                              Sync::SyncStatus status);
 
 protected:

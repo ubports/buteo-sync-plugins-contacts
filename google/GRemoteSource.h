@@ -84,12 +84,11 @@ private:
     void uploadAvatars(QList<QContact> *contacts);
     void fetchRemoteContacts(const QDateTime &since, bool includeDeleted, int startIndex);
     void batchOperationContinue();
-    bool handleUploadError(const GoogleContactAtom::BatchOperationResponse &response,
-                           const QContact &contact,
-                           QList<QContact> *removedContacts);
+    int parseErrorReponse(const GoogleContactAtom::BatchOperationResponse &response);
     void emitTransactionCommited(const QList<QtContacts::QContact> &created,
                                  const QList<QtContacts::QContact> &changed,
                                  const QList<QContact> &removed,
+                                 const QMap<QString, int> &errorMap,
                                  Sync::SyncStatus status);
 
 };

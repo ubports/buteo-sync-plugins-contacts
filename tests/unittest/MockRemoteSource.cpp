@@ -212,7 +212,11 @@ void MockRemoteSource::batch(const QList<QContact> &contactsToCreate,
     }
     m_manager->removeContacts(removedIds);
 
-    emit transactionCommited(createdContacts, updatedContacts, removedContacts, Sync::SYNC_DONE);
+    emit transactionCommited(createdContacts,
+                             updatedContacts,
+                             removedContacts,
+                             QMap<QString, int>(),
+                             Sync::SYNC_DONE);
 }
 
 void MockRemoteSource::onContactChanged(const QList<QContactId> &)

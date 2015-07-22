@@ -446,7 +446,9 @@ private Q_SLOTS:
         QSignalSpy remoteTransactionSignal(m_client->m_remoteSource.data(),
                                        SIGNAL(transactionCommited(QList<QtContacts::QContact>,
                                                                   QList<QtContacts::QContact>,
-                                                                  QStringList,Sync::SyncStatus)));
+                                                                  QStringList,
+                                                                  QMap<QString, int>,
+                                                                  Sync::SyncStatus)));
         QSignalSpy syncFinishedSpy(m_client, SIGNAL(syncFinished(Sync::SyncStatus)));
 
         m_client->startSync();
@@ -462,12 +464,14 @@ private Q_SLOTS:
         // trasaction commit will be fired once with empty list
         QCOMPARE(remoteTransactionSignal.count(), 1);
         QList<QVariant> arguments = remoteTransactionSignal.takeFirst();
-        QMap<QString,QString> createdContacts = arguments.at(0).value<QMap<QString,QString> >();
-        QMap<QString,QString> changedContacts = arguments.at(0).value<QMap<QString,QString> >();
-        QStringList removedContacts = arguments.at(0).value<QStringList>();
+        QList<QtContacts::QContact> createdContacts = arguments.at(0).value<QList<QtContacts::QContact> >();
+        QList<QtContacts::QContact> changedContacts = arguments.at(1).value<QList<QtContacts::QContact> >();
+        QStringList removedContacts = arguments.at(2).value<QStringList>();
+        QMap<QString, int> errorMap = arguments.at(3).value<QMap<QString, int> >();
         QVERIFY(createdContacts.isEmpty());
         QVERIFY(changedContacts.isEmpty());
         QVERIFY(removedContacts.isEmpty());
+        QVERIFY(errorMap.isEmpty());
         QVERIFY(m_client->cleanUp());
     }
 };

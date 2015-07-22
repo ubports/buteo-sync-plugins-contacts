@@ -141,6 +141,7 @@ void GContactImageUploader::onRequestFinished(QNetworkReply *reply)
             LOG_WARNING("Fail to retrieve new etags:" << reply->errorString());
         } else {
             QByteArray data = reply->readAll();
+            LOG_TRACE("After avatar upload query result:" << data);
             QMap<QString, GContactImageUploader::UploaderReply> entries = parseEntryList(data);
             foreach(const QString &remoteId, entries.keys()) {
                 if (mResults.contains(remoteId)) {
@@ -155,7 +156,7 @@ void GContactImageUploader::onRequestFinished(QNetworkReply *reply)
             LOG_WARNING("Fail to upload avatar:" << reply->errorString());
             emit uploadError(mCurrentRemoteId, reply->errorString());
         } else {
-            LOG_DEBUG("Avatar upload result" << reply->readAll());
+            LOG_TRACE("Avatar upload result" << reply->readAll());
         }
         mCurrentRemoteId.clear();
     }
