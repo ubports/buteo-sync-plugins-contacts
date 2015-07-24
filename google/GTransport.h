@@ -74,9 +74,6 @@ public:
     HTTP_REQUEST_TYPE requestType();
     void reset();
 
-    // Include "X-HTTP-Method-Override: DELETE" in the delete POST method to avoid blocking of HTTP DELETE message by firewalls
-    //const void DELETE( const QString contactId );
-
     typedef enum
     {
         HTTP_OK = 200,

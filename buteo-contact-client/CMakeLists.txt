@@ -27,9 +27,11 @@ include_directories(
 )
 
 target_link_libraries(${UBUNTU_CONTACTS_CLIENT}
+    Qt5::Core
+    Qt5::Network
+    Qt5::DBus
+    Qt5::Contacts
     ${ACCOUNTS_LIBRARIES}
     ${BUTEOSYNCFW_LIBRARIES}
     ${LIBSIGNON_LIBRARIES}
 )
-
-qt5_use_modules(${UBUNTU_CONTACTS_CLIENT} Core DBus Network Contacts)
