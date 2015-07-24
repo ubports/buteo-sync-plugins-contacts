@@ -1,9 +1,11 @@
 /*
- * This file is part of buteo-gcontact-plugin package
+ * This file is part of buteo-sync-plugins-contacts package
  *
  * Copyright (C) 2013 Jolla Ltd. and/or its subsidiary(-ies).
+ *               2015 Canonical Ltd
  *
  * Contributors: Sateesh Kavuri <sateesh.kavuri@gmail.com>
+ *               Renato Araujo Oliveira Filho <renato.filho@canonical.com>
  *
  * This library is free software; you can redistribute it and/or
  * modify it under the terms of the GNU Lesser General Public License
@@ -19,4 +21,4 @@
  * Foundation, Inc., 51 Franklin St, Fifth Floor, Boston, MA
  * 02110-1301 USA
  *
- */
+ *
