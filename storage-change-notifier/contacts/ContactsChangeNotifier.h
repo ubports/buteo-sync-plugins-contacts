@@ -40,7 +40,7 @@ public:
      */
     ContactsChangeNotifier();
 
-    /*! \brief constructor
+    /*! \brief destructor
      */
     ~ContactsChangeNotifier();
 
