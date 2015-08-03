@@ -468,7 +468,7 @@ private Q_SLOTS:
         QCOMPARE(errorMap.size(), 0);
         QCOMPARE(syncStatus, Sync::SYNC_DONE);
 
-        // chek if avatar still the same
+        // check if avatar still the same
         QContact newContact(updatedContacts.at(0));
 
         QList<QContactExtendedDetail> exDetails = newContact.details<QContactExtendedDetail>();
@@ -560,7 +560,7 @@ private Q_SLOTS:
         QCOMPARE(errorMap.size(), 1);
         QCOMPARE(syncStatus, Sync::SYNC_DONE);
 
-        // check if the repported error is correct
+        // check if the reported error is correct
         QCOMPARE(errorMap.begin().key(), QStringLiteral("qtcontacts:galera::df8fd2e011e64624459c66f8d72417f7559d9c1d"));
         QCOMPARE(errorMap.begin().value(), (int) QContactManager::DoesNotExistError);
     }

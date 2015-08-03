@@ -242,3 +242,8 @@ GTransport::reset()
 {
     Q_D(GTransport);
 }
+
+void GTransport::setGroupFilter(const QString &account, const QString &groupId)
+{
+    setProperty("GroupFilter", QString("%1@%2").arg(account).arg(groupId));
+}

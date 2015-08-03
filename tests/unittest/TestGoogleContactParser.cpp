@@ -64,7 +64,7 @@ private slots:
         QContact contact = entries.at(0);
         QVERIFY(!contact.isEmpty());
 
-        // check each contat details
+        // check each contact details
         // name
         //<gd:name>
         // <gd:fullName>Aaron Rossler</gd:fullName>
@@ -910,7 +910,7 @@ private slots:
         contact.saveDetail(&fav);
         expectedXML << QStringLiteral("<gd:extendedProperty name=\"X-FAVORITE\" value=\"true\"/>");
 
-        // Anniversay
+        // Anniversary
         QContactAnniversary aniversary;
         aniversary.setOriginalDateTime(QDateTime(QDate(2015, 10, 4), QTime(12, 30)));
         aniversary.setSubType(QContactAnniversary::SubTypeWedding);

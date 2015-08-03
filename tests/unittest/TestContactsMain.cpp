@@ -359,7 +359,7 @@ private Q_SLOTS:
         QSignalSpy syncFinishedSpy(m_client, SIGNAL(syncFinished(Sync::SyncStatus)));
         m_client->startSync();
 
-        // remote source will be initialized after sucess
+        // remote source will be initialized after success
         QTRY_VERIFY(m_client->m_remoteSource->m_initialized);
 
         // wait for sync finish and check sync result
@@ -390,7 +390,7 @@ private Q_SLOTS:
         QTest::newRow("page small than contact list")   << 10
                                                         << 2;
 
-        QTest::newRow("page division exaclty")          << 5
+        QTest::newRow("page division exactly")          << 5
                                                         << 3;
     }
 
@@ -461,7 +461,7 @@ private Q_SLOTS:
         QCOMPARE(remoteRemovedSignal.count(), 0);
         QCOMPARE(remoteCreatedSignal.count(), 0);
 
-        // trasaction commit will be fired once with empty list
+        // transaction commit will be fired once with empty list
         QCOMPARE(remoteTransactionSignal.count(), 1);
         QList<QVariant> arguments = remoteTransactionSignal.takeFirst();
         QList<QtContacts::QContact> createdContacts = arguments.at(0).value<QList<QtContacts::QContact> >();
