@@ -36,6 +36,7 @@
 const int MAX_RESULTS = 10;
 const QString SCOPE_URL("https://www.google.com/m8/feeds/");
 const QString GCONTACT_URL(SCOPE_URL + "/contacts/default/");
+const QString GCONTACT_GROUP_FEED_URL = "http://www.google.com/m8/feeds/groups";
 
 const QString GDATA_VERSION_TAG = "GData-Version";
 const QString GDATA_VERSION = "3.1";
@@ -53,6 +54,7 @@ const QString ORDERBY_TAG("orderby");
 const QString SHOW_DELETED_TAG("showdeleted");
 const QString REQUIRE_ALL_DELETED("requirealldeleted");
 const QString SORTORDER_TAG("sortorder");
+const QString GROUP_QUERY_TAG("group");
 
 const QString PHOTO_TAG("photos");
 const QString MEDIA_TAG("media");
@@ -236,8 +238,6 @@ GTransport::setProxy (QString proxyHost, QString proxyPort)
     d->mNetworkMgr->setProxy(proxy);
 }
 
-
-
 void
 GTransport::request(const HTTP_REQUEST_TYPE type)
 {
@@ -387,6 +387,24 @@ GTransport::setShowDeleted()
         urlQuery.addQueryItem(SHOW_DELETED_TAG, "true");
         d->mUrl.setQuery(urlQuery);
     }
+}
+
+void GTransport::setGroupFilter(const QString &account, const QString &groupId)
+{
+    FUNCTION_CALL_TRACE;
+    Q_D(GTransport);
+
+    QUrlQuery urlQuery(d->mUrl);
+    if (urlQuery.hasQueryItem(GROUP_QUERY_TAG)) {
+        urlQuery.removeQueryItem(GROUP_QUERY_TAG);
+    }
+
+    QString groupIdValue = QString("%1/%2/base/%3")
+            .arg(GCONTACT_GROUP_FEED_URL)
+            .arg(QString(QUrl::toPercentEncoding(account)))
+            .arg(groupId);
+    urlQuery.addQueryItem(GROUP_QUERY_TAG, groupIdValue);
+    d->mUrl.setQuery(urlQuery);
 }
 
 bool GTransport::showDeleted() const

@@ -69,6 +69,7 @@ public:
     void setUpdatedMin(const QDateTime datetime);
     void setMaxResults(unsigned int limit);
     void setShowDeleted();
+    void setGroupFilter(const QString &account, const QString &groupId);
     bool showDeleted() const;
     void setStartIndex(const int index);
     HTTP_REQUEST_TYPE requestType();

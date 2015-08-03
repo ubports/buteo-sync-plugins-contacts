@@ -24,6 +24,7 @@
  **
  ****************************************************************************/
 
+#include "GConfig.h"
 #include "GContactStream.h"
 #include "GContactAtom.h"
 #include "UContactsCustomDetail.h"
@@ -970,8 +971,7 @@ void GoogleContactStream::encodeContactUpdate(const QContact &qContact,
         // Make sure that the contact has at least one group
         QContactExtendedDetail group;
         group.setName(UContactsCustomDetail::FieldGroupMembershipInfo);
-        // FIXME: this is default id for "My Contacts"
-        group.setData("6");
+        group.setData(GConfig::GROUP_MY_CONTACTS_ID);
         encodeGroup(group);
     }
 
@@ -1353,8 +1353,7 @@ void GoogleContactStream::encodeGroup(const QContactExtendedDetail &group)
     QString groupId = group.data().toString();
     QString accountName = mAccountEmail.isEmpty() ? QStringLiteral("default") : mAccountEmail;
     if (groupId.isEmpty()) {
-        // FIXME: this is default id for "My Contacts"
-        groupId = "6";
+        groupId = GConfig::GROUP_MY_CONTACTS_ID;
     }
 
      mXmlWriter->writeEmptyElement("gContact:groupMembershipInfo");

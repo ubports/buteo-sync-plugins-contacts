@@ -45,6 +45,7 @@ const QString GConfig::ORDERBY_TAG = "orderby";
 const QString GConfig::SHOW_DELETED_TAG = "showdeleted";
 const QString GConfig::REQUIRE_ALL_DELETED = "requirealldeleted";
 const QString GConfig::SORTORDER_TAG = "sortorder";
+const QString GConfig::GROUP_MY_CONTACTS_ID = "6";
 
 const QString GConfig::PHOTO_TAG = "photos";
 const QString GConfig::MEDIA_TAG = "media";

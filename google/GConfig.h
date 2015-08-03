@@ -42,6 +42,9 @@ public:
     static const QString G_ETAG_HEADER;
     static const QString G_AUTH_HEADER;
 
+    /* My Contacts Group */
+    static const QString GROUP_MY_CONTACTS_ID;
+
     /* Query parameters */
     static const QString QUERY_TAG;
     static const QString MAX_RESULTS_TAG;

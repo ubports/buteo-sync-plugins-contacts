@@ -42,7 +42,6 @@
 #include <QtContacts/QContactGuid>
 #include <QtContacts/QContact>
 
-
 QTCONTACTS_USE_NAMESPACE
 
 GRemoteSource::GRemoteSource(QObject *parent)
@@ -421,6 +420,10 @@ GRemoteSource::fetchRemoteContacts(const QDateTime &since, bool includeDeleted, 
     if (includeDeleted) {
         mTransport->setShowDeleted();
     }
+
+    // TODO: only fetch contacts from "My Contacts" group for now
+    // we should implement support for all groups
+    mTransport->setGroupFilter(mAccountName, GConfig::GROUP_MY_CONTACTS_ID);
 
     mTransport->setGDataVersionHeader();
     mTransport->addHeader(QByteArray("Authorization"),
