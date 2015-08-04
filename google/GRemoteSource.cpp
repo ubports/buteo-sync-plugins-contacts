@@ -607,11 +607,19 @@ GRemoteSource::networkRequestFinished()
                 mState = GRemoteSource::STATE_IDLE;
             }
 
-            LOG_TRACE("NOTIFY CONTACTS FETCHED:" << remoteContacts.size());
-            emit contactsFetched(remoteContacts, syncStatus);
+            // progress
+            qreal progress = -1.0;
+            if (hasMore && (atom->totalResults() > 0)) {
+                progress = (mStartIndex / (qreal) atom->totalResults());
+            } else if (!hasMore) {
+                progress = 1.0;
+            }
+
+            LOG_TRACE("NOTIFY CONTACTS FETCHED:" << remoteContacts.size() << "Progress" << progress);
+            emit contactsFetched(remoteContacts, syncStatus, progress);
 
             if (hasMore) {
-                LOG_DEBUG("FETCH MORE CONTACTS FROM INDEX:" << mStartIndex);
+                LOG_TRACE("FETCH MORE CONTACTS FROM INDEX:" << mStartIndex);
                 fetchRemoteContacts(QDateTime(),
                                     mTransport->showDeleted(),
                                     mStartIndex);
@@ -624,7 +632,7 @@ GRemoteSource::networkRequestFinished()
 operationFailed:
     switch(mState) {
     case GRemoteSource::STATE_FETCHING_CONTACTS:
-        contactsFetched(QList<QContact>(), syncStatus);
+        contactsFetched(QList<QContact>(), syncStatus, -1.0);
         break;
     case GRemoteSource::STATE_BATCH_RUNNING:
         emitTransactionCommited(QList<QContact>(),
@@ -671,7 +679,7 @@ GRemoteSource::networkError(int errorCode)
 
     switch(mState) {
     case GRemoteSource::STATE_FETCHING_CONTACTS:
-        contactsFetched(QList<QContact>(), syncStatus);
+        contactsFetched(QList<QContact>(), syncStatus, -1.0);
         break;
     case GRemoteSource::STATE_BATCH_RUNNING:
         emitTransactionCommited(QList<QContact>(),

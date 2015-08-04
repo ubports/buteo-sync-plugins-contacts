@@ -127,11 +127,12 @@ void MockRemoteSource::fetchContacts(const QDateTime &since, bool includeDeleted
         while(!localContacts.isEmpty()) {
             int pageSize = qMin(localContacts.size(), m_pageSize);
             emit contactsFetched(localContacts.mid(0, pageSize),
-                                 localContacts.size() > pageSize ? Sync::SYNC_PROGRESS : Sync::SYNC_DONE);
+                                 localContacts.size() > pageSize ? Sync::SYNC_PROGRESS : Sync::SYNC_DONE,
+                                 -1.0);
             localContacts = localContacts.mid(pageSize);
         }
     } else {
-        emit contactsFetched(localContacts, Sync::SYNC_DONE);
+        emit contactsFetched(localContacts, Sync::SYNC_DONE, -1.0);
     }
 }
 

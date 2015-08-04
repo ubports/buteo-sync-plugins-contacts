@@ -66,6 +66,7 @@ public:
     // sync report
     QMap<QString, Buteo::DatabaseResults> mItemResults;
     Buteo::SyncResults          mResults;
+    qreal                       mProgress;
     // sync profile
     QString mSyncTarget;
     qint32 mAccountId;
@@ -96,6 +97,8 @@ UContactsClient::init()
 {
     FUNCTION_CALL_TRACE;
     Q_D(UContactsClient);
+
+    d->mProgress = 0.0;
 
     if (lastSyncTime().isNull()) {
         d->mSlowSync = true;
@@ -139,8 +142,8 @@ UContactsClient::init()
     // syncStateChanged to signal changes from CONNECTING, RECEIVING
     // SENDING, DISCONNECTING, CLOSED
     connect(this,
-            SIGNAL(stateChanged(Sync::SyncProgressDetail)),
-            SLOT(onStateChanged(Sync::SyncProgressDetail)));
+            SIGNAL(stateChanged(int)),
+            SLOT(onStateChanged(int)));
 
     // Take necessary action when sync is finished
     connect(this,
@@ -206,6 +209,7 @@ UContactsClient::startSync()
     Q_D(UContactsClient);
     LOG_DEBUG ("Init done. Continuing with sync");
 
+    stateChanged(Sync::SYNC_PROGRESS_INITIALISING);
     return d->mAuth->authenticate();
 }
 
@@ -281,6 +285,7 @@ UContactsClient::start()
     // about the authentication (auth-token, etc..)
 
     LOG_INFO("Sync Started at:" << QDateTime::currentDateTime().toUTC().toString(Qt::ISODate));
+    stateChanged(Sync::SYNC_PROGRESS_RECEIVING_ITEMS);
 
     if (!d->mRemoteSource->init(remoteSourceProperties())) {
         LOG_WARNING("Fail to init remote source");
@@ -301,12 +306,12 @@ UContactsClient::start()
         // load remote contacts
         if (d->mSlowSync) {
             connect(d->mRemoteSource,
-                    SIGNAL(contactsFetched(QList<QtContacts::QContact>,Sync::SyncStatus)),
-                    SLOT(onRemoteContactsFetchedForSlowSync(QList<QtContacts::QContact>,Sync::SyncStatus)));
+                    SIGNAL(contactsFetched(QList<QtContacts::QContact>,Sync::SyncStatus,qreal)),
+                    SLOT(onRemoteContactsFetchedForSlowSync(QList<QtContacts::QContact>,Sync::SyncStatus,qreal)));
         } else {
             connect(d->mRemoteSource,
-                    SIGNAL(contactsFetched(QList<QtContacts::QContact>,Sync::SyncStatus)),
-                    SLOT(onRemoteContactsFetchedForFastSync(QList<QtContacts::QContact>,Sync::SyncStatus)));
+                    SIGNAL(contactsFetched(QList<QtContacts::QContact>,Sync::SyncStatus,qreal)),
+                    SLOT(onRemoteContactsFetchedForFastSync(QList<QtContacts::QContact>,Sync::SyncStatus, qreal)));
         }
         d->mRemoteSource->fetchContacts(sinceDate, !d->mSlowSync, true);
         break;
@@ -349,7 +354,8 @@ UContactsClient::prepareContactsToUpload(UContactsBackend *backend,
 
 void
 UContactsClient::onRemoteContactsFetchedForSlowSync(const QList<QContact> contacts,
-                                                    Sync::SyncStatus status)
+                                                    Sync::SyncStatus status,
+                                                    qreal progress)
 {
     FUNCTION_CALL_TRACE;
     Q_D(UContactsClient);
@@ -362,6 +368,7 @@ UContactsClient::onRemoteContactsFetchedForSlowSync(const QList<QContact> contac
         storeToLocalForSlowSync(contacts);
 
         if (status == Sync::SYNC_DONE) {
+            stateChanged(Sync::SYNC_PROGRESS_SENDING_ITEMS);
             QList<QContact> toUpload = prepareContactsToUpload(d->mContactBackend, d->mAllLocalContactIds);
             connect(d->mRemoteSource,
                     SIGNAL(transactionCommited(QList<QtContacts::QContact>,
@@ -378,6 +385,8 @@ UContactsClient::onRemoteContactsFetchedForSlowSync(const QList<QContact> contac
             d->mRemoteSource->transaction();
             d->mRemoteSource->saveContacts(toUpload);
             d->mRemoteSource->commit();
+        } else {
+            stateChanged(qRound(progress * 100));
         }
     } else {
         emit syncFinished(status);
@@ -422,11 +431,12 @@ UContactsClient::onContactsSavedForSlowSync(const QList<QtContacts::QContact> &c
             // sync still in progress
             return;
         } else {
-           // WORKARDOUND: 'galera' contacts service take a while to fire contacts
-           // changed singal, this can cause a new sync due the storage change plugin
-           // lets wait 2 secs before fire sync finished signal
-           QTimer::singleShot(2000, this, SLOT(fireSyncFinishedSucessfully()));
-           return;
+            stateChanged(Sync::SYNC_PROGRESS_FINALISING);
+            // WORKARDOUND: 'galera' contacts service take a while to fire contacts
+            // changed singal, this can cause a new sync due the storage change plugin
+            // lets wait 2 secs before fire sync finished signal
+            QTimer::singleShot(2000, this, SLOT(fireSyncFinishedSucessfully()));
+            return;
         }
     }
 
@@ -434,7 +444,8 @@ UContactsClient::onContactsSavedForSlowSync(const QList<QtContacts::QContact> &c
 }
 
 void UContactsClient::onRemoteContactsFetchedForFastSync(const QList<QContact> contacts,
-                                                         Sync::SyncStatus status)
+                                                         Sync::SyncStatus status,
+                                                         qreal progress)
 {
     FUNCTION_CALL_TRACE;
     Q_D(UContactsClient);
@@ -447,6 +458,7 @@ void UContactsClient::onRemoteContactsFetchedForFastSync(const QList<QContact> c
         storeToLocalForFastSync(contacts);
 
         if (status == Sync::SYNC_DONE) {
+            stateChanged(Sync::SYNC_PROGRESS_SENDING_ITEMS);
             QList<QContact> contactsToUpload;
             QList<QContact> contactsToRemove;
 
@@ -481,6 +493,8 @@ void UContactsClient::onRemoteContactsFetchedForFastSync(const QList<QContact> c
             d->mRemoteSource->saveContacts(contactsToUpload);
             d->mRemoteSource->removeContacts(contactsToRemove);
             d->mRemoteSource->commit();
+        } else {
+            stateChanged(qRound(progress*100));
         }
     } else {
         emit syncFinished(status);
@@ -539,11 +553,12 @@ UContactsClient::onContactsSavedForFastSync(const QList<QtContacts::QContact> &c
             // sync still in progress
             return;
         } else {
-           // WORKARDOUND: 'galera' contacts service take a while to fire contacts
-           // changed singal, this can cause a new sync due the storage change plugin
-           // lets wait 2 secs before fire sync finished signal
-           QTimer::singleShot(2000, this, SLOT(fireSyncFinishedSucessfully()));
-           return;
+            stateChanged(Sync::SYNC_PROGRESS_FINALISING);
+            // WORKARDOUND: 'galera' contacts service take a while to fire contacts
+            // changed singal, this can cause a new sync due the storage change plugin
+            // lets wait 2 secs before fire sync finished signal
+            QTimer::singleShot(2000, this, SLOT(fireSyncFinishedSucessfully()));
+            return;
         }
     }
 
@@ -726,27 +741,10 @@ UContactsClient::loadLocalContacts(const QDateTime &since)
 }
 
 void
-UContactsClient::onStateChanged(Sync::SyncProgressDetail aState)
+UContactsClient::onStateChanged(int aState)
 {
     FUNCTION_CALL_TRACE;
-
-    switch(aState) {
-    case Sync::SYNC_PROGRESS_SENDING_ITEMS: {
-        emit syncProgressDetail(getProfileName(), Sync::SYNC_PROGRESS_SENDING_ITEMS);
-        break;
-    }
-    case Sync::SYNC_PROGRESS_RECEIVING_ITEMS: {
-        emit syncProgressDetail(getProfileName(), Sync::SYNC_PROGRESS_RECEIVING_ITEMS);
-        break;
-    }
-    case Sync::SYNC_PROGRESS_FINALISING: {
-        emit syncProgressDetail(getProfileName(), Sync::SYNC_PROGRESS_FINALISING);
-        break;
-    }
-    default:
-        //do nothing
-        break;
-    };
+    emit syncProgressDetail(getProfileName(), aState);
 }
 
 void
@@ -952,6 +950,8 @@ UContactsClient::addProcessedItem(Sync::TransferType modificationType,
             results.iRemoteItemsDeleted += count;
         }
     }
+
+    emit transferProgress(getProfileName(), database, modificationType, "text/vcard", count);
 }
 
 void

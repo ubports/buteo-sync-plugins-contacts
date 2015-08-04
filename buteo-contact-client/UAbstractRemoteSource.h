@@ -67,7 +67,9 @@ public:
     virtual void removeContacts(const QList<QtContacts::QContact> &contacts);
 
 signals:
-    void contactsFetched(const QList<QtContacts::QContact> &contacts, Sync::SyncStatus status);
+    void contactsFetched(const QList<QtContacts::QContact> &contacts,
+                         Sync::SyncStatus status,
+                         qreal progress);
 
     /*!
      * \brief This signal is emitted, when a remote contact is created

@@ -103,7 +103,7 @@ protected:
     virtual const QDateTime lastSyncTime() const;
 
 signals:
-    void stateChanged(Sync::SyncProgressDetail progress);
+    void stateChanged(int progress);
     void itemProcessed(Sync::TransferType type,
                        Sync::TransferDatabase db,
                        int committedItems);
@@ -140,7 +140,7 @@ private:
 private slots:
     bool start();
     void onAuthenticationError();
-    void onStateChanged(Sync::SyncProgressDetail progress);
+    void onStateChanged(int progress);
     void onSyncFinished(Sync::SyncStatus status);
     void fireSyncFinishedSucessfully();
     void handleError(const QMap<QString, int> &errorMap);
@@ -148,7 +148,8 @@ private slots:
 
     /* slow sync */
     void onRemoteContactsFetchedForSlowSync(const QList<QtContacts::QContact> contacts,
-                                            Sync::SyncStatus status);
+                                            Sync::SyncStatus status,
+                                            qreal progress);
     void onContactsSavedForSlowSync(const QList<QtContacts::QContact> &createdContacts,
                                     const QList<QtContacts::QContact> &updatedContacts,
                                     const QStringList &removedContacts,
@@ -156,7 +157,8 @@ private slots:
                                     Sync::SyncStatus status);
     /* fast sync */
     void onRemoteContactsFetchedForFastSync(const QList<QtContacts::QContact> contacts,
-                                            Sync::SyncStatus status);
+                                            Sync::SyncStatus status,
+                                            qreal progress);
     void onContactsSavedForFastSync(const QList<QtContacts::QContact> &createdContacts,
                                     const QList<QtContacts::QContact> &updatedContacts,
                                     const QStringList &removedContacts,
