@@ -147,7 +147,7 @@ private Q_SLOTS:
         props.insert("AUTH-TOKEN", "1234567890");
         src->init(props);
 
-        QSignalSpy contactsFetched(src.data(), SIGNAL(contactsFetched(QList<QtContacts::QContact>,Sync::SyncStatus)));
+        QSignalSpy contactsFetched(src.data(), SIGNAL(contactsFetched(QList<QtContacts::QContact>,Sync::SyncStatus, qreal)));
         connect(src->transport(), SIGNAL(requested(QUrl,QByteArray*)), SLOT(onFetchContactsRequested(QUrl,QByteArray*)));
         src->fetchContacts(QDateTime(), false, false);
 
