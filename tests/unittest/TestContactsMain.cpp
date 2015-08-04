@@ -411,7 +411,7 @@ private Q_SLOTS:
 
 
         QSignalSpy contactFetched(m_client->m_remoteSource.data(),
-                                  SIGNAL(contactsFetched(QList<QtContacts::QContact>,Sync::SyncStatus)));
+                                  SIGNAL(contactsFetched(QList<QtContacts::QContact>,Sync::SyncStatus, qreal)));
         QSignalSpy syncFinishedSpy(m_client, SIGNAL(syncFinished(Sync::SyncStatus)));
 
         m_client->startSync();
