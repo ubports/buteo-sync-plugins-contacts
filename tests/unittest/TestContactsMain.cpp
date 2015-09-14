@@ -354,6 +354,8 @@ private Q_SLOTS:
         // prepare local source
         importContactsFromVCardFile(m_client->m_localSource->manager(),
                                     TEST_DATA_DIR + localFile, createdAt);
+        QTRY_COMPARE(m_client->m_localSource->manager()->contactIds().count(), localInitalCount);
+        m_client->m_localSource->reloadCache();
         QTRY_COMPARE(m_client->m_localSource->getAllContactIds().count(), localInitalCount);
 
         QSignalSpy syncFinishedSpy(m_client, SIGNAL(syncFinished(Sync::SyncStatus)));

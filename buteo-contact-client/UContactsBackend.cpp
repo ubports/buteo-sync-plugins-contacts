@@ -83,7 +83,7 @@ UContactsBackend::init(uint syncAccount, const QString &syncTarget)
                                                                            "ACCOUNT-ID");
         if (!exd.isEmpty() && (exd.data().toUInt() == syncAccount)) {
             mSyncTargetId = contact.detail<QContactGuid>().guid();
-            preloadRemoteIdMap();
+            reloadCache();
             return true;
         }
     }
@@ -230,6 +230,11 @@ UContactsBackend::addContacts(QList<QContact>& aContactList,
         status.id = i;
         if (!errorMap.contains(i)) {
             status.errorCode = QContactManager::NoError;
+
+            // update remote id map
+            const QContact &c = aContactList.at(i);
+            QString remoteId = getRemoteId(c);
+            mRemoteIdToLocalId.insert(remoteId, c.id());
         } else {
             LOG_WARNING("Contact with id " <<  aContactList.at(i).id() << " and index " << i <<" is in error");
             status.errorCode = errorMap.value(i);
@@ -281,11 +286,19 @@ UContactsBackend::modifyContacts(QList<QContact> *aContactList)
     // so populate NoError if there's no error.
     // TODO QContactManager populates indices from the aContactList, but we populate keys, is this OK?
     for (int i = 0; i < aContactList->size(); i++) {
-        QContactId contactId = aContactList->at(i).id();
+        const QContact &c = aContactList->at(i);
+        QContactId contactId = c.id();
         if( !errors.contains(i) ) {
             LOG_DEBUG("No error for contact with id " << contactId << " and index " << i);
             status.errorCode = QContactManager::NoError;
             statusMap.insert(i, status);
+
+            // update remote it map
+            QString oldRemoteId = mRemoteIdToLocalId.key(c.id());
+            mRemoteIdToLocalId.remove(oldRemoteId);
+
+            QString remoteId = getRemoteId(c);
+            mRemoteIdToLocalId.insert(remoteId, c.id());
         } else {
             LOG_DEBUG("contact with id " << contactId << " and index " << i <<" is in error");
             QContactManager::Error errorCode = errors.value(i);
@@ -328,12 +341,16 @@ UContactsBackend::deleteContacts(const QList<QContactId> &aContactIDList) {
     // QContactManager will populate errorMap only for errors, but we use this as a status map,
     // so populate NoError if there's no error.
     for (int i = 0; i < aContactIDList.size(); i++) {
-        QContactId contactId = aContactIDList.value(i);
+        const QContactId &contactId = aContactIDList.at(i);
         if( !errors.contains(i) )
         {
             LOG_DEBUG("No error for contact with id " << contactId << " and index " << i);
             status.errorCode = QContactManager::NoError;
             statusMap.insert(i, status);
+
+            // remove from remote id map
+            QString remoteId = mRemoteIdToLocalId.key(contactId);
+            mRemoteIdToLocalId.remove(remoteId);
         }
         else
         {
@@ -429,13 +446,6 @@ UContactsBackend::getContact(const QString& remoteId)
     if (!cId.isNull()) {
         return iMgr->contact(cId);
     }
-
-    // query manager by remote-id (slow)
-    QContactIntersectionFilter remoteIdFilter = getRemoteIdFilter(remoteId);
-    QList<QContact> contactList = iMgr->contacts(remoteIdFilter & getSyncTargetFilter());
-    if (contactList.size() > 0) {
-        return contactList.at(0);
-    }
     return QContact();
 }
 
@@ -447,16 +457,7 @@ UContactsBackend::entryExists(const QString remoteId)
     }
 
     // check cache
-    if (mRemoteIdToLocalId.contains(remoteId)) {
-        return mRemoteIdToLocalId.value(remoteId);
-    }
-
-    QContactFilter ridFilter = getRemoteIdFilter(remoteId);
-    QList<QContactId> idList = iMgr->contactIds(ridFilter & getSyncTargetFilter());
-    if (idList.size () > 0)
-        return idList.first ();
-    else
-        return QContactId();
+    return mRemoteIdToLocalId.value(remoteId);
 }
 
 QString
@@ -479,32 +480,17 @@ UContactsBackend::localIds(const QStringList remoteIds)
     return localIdList;
 }
 
-QContactFilter
-UContactsBackend::getRemoteIdFilter(const QString &remoteId) const
+void UContactsBackend::reloadCache()
 {
-    QContactIntersectionFilter remoteFilter;
-
-    QContactDetailFilter xDetailNameFilter;
-    xDetailNameFilter.setDetailType(QContactExtendedDetail::Type,
-                                    QContactExtendedDetail::FieldName);
-    xDetailNameFilter.setValue(UContactsCustomDetail::FieldRemoteId);
-
-    QContactDetailFilter xDetailValueFilter;
-    xDetailValueFilter.setDetailType(QContactExtendedDetail::Type,
-                                     QContactExtendedDetail::FieldData);
-    xDetailValueFilter.setValue(remoteId);
-
-    remoteFilter << xDetailNameFilter
-                 << xDetailValueFilter;
-    return remoteFilter;
-}
-
-void UContactsBackend::preloadRemoteIdMap()
-{
+    FUNCTION_CALL_TRACE;
     QContactFetchHint hint;
     QList<QContactSortOrder> sortOrder;
-    QContactDetailFilter sourceFilter = getSyncTargetFilter();
+    QContactFilter sourceFilter;
+    if (!mSyncTargetId.isEmpty()) {
+        sourceFilter = getSyncTargetFilter();
+    }
 
+    mRemoteIdToLocalId.clear();
     hint.setDetailTypesHint(QList<QContactDetail::DetailType>() << QContactExtendedDetail::Type);
     Q_FOREACH(const QContact &c,  iMgr->contacts(sourceFilter, sortOrder, hint)) {
         QString remoteId = getRemoteId(c);

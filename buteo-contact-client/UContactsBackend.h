@@ -208,6 +208,12 @@ public:
      */
     void purgecontacts(const QDateTime &date);
 
+    /*!
+     * \brief Reload contact id cache
+     */
+    void reloadCache();
+
+
     QContactManager *manager() const;
 
 private: // functions
@@ -231,8 +237,6 @@ private: // functions
      */
     QContactFilter getSyncTargetFilter() const;
 
-    QContactFilter getRemoteIdFilter(const QString &remoteId) const;
-
 private: // data
 
     // if there is more than one Manager we need to have a list of Managers
@@ -242,7 +246,6 @@ private: // data
 
 
     void createSourceForAccount(uint accountId, const QString &label);
-    void preloadRemoteIdMap();
 };
 
 #endif /* CONTACTSBACKEND_H_ */
