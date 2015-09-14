@@ -83,6 +83,7 @@ UContactsBackend::init(uint syncAccount, const QString &syncTarget)
                                                                            "ACCOUNT-ID");
         if (!exd.isEmpty() && (exd.data().toUInt() == syncAccount)) {
             mSyncTargetId = contact.detail<QContactGuid>().guid();
+            preloadRemoteIdMap();
             return true;
         }
     }
@@ -124,6 +125,7 @@ bool
 UContactsBackend::uninit()
 {
     FUNCTION_CALL_TRACE;
+    mRemoteIdToLocalId.clear();
 
     return true;
 }
@@ -422,7 +424,13 @@ UContactsBackend::getContact(const QString& remoteId)
     Q_ASSERT (iMgr);
     LOG_DEBUG("Remote id to be searched for = " << remoteId);
 
-    //FIXME: use guid field when supported by address-book-service
+    // use contact id if possible
+    QContactId cId = entryExists(remoteId);
+    if (!cId.isNull()) {
+        return iMgr->contact(cId);
+    }
+
+    // query manager by remote-id (slow)
     QContactIntersectionFilter remoteIdFilter = getRemoteIdFilter(remoteId);
     QList<QContact> contactList = iMgr->contacts(remoteIdFilter & getSyncTargetFilter());
     if (contactList.size() > 0) {
@@ -436,6 +444,11 @@ UContactsBackend::entryExists(const QString remoteId)
 {
     if (remoteId.isEmpty()) {
         return QContactId();
+    }
+
+    // check cache
+    if (mRemoteIdToLocalId.contains(remoteId)) {
+        return mRemoteIdToLocalId.value(remoteId);
     }
 
     QContactFilter ridFilter = getRemoteIdFilter(remoteId);
@@ -484,6 +497,21 @@ UContactsBackend::getRemoteIdFilter(const QString &remoteId) const
     remoteFilter << xDetailNameFilter
                  << xDetailValueFilter;
     return remoteFilter;
+}
+
+void UContactsBackend::preloadRemoteIdMap()
+{
+    QContactFetchHint hint;
+    QList<QContactSortOrder> sortOrder;
+    QContactDetailFilter sourceFilter = getSyncTargetFilter();
+
+    hint.setDetailTypesHint(QList<QContactDetail::DetailType>() << QContactExtendedDetail::Type);
+    Q_FOREACH(const QContact &c,  iMgr->contacts(sourceFilter, sortOrder, hint)) {
+        QString remoteId = getRemoteId(c);
+        if (!remoteId.isEmpty()) {
+            mRemoteIdToLocalId.insert(remoteId, c.id());
+        }
+    }
 }
 
 QString

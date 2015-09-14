@@ -1,4 +1,4 @@
-﻿/*
+/*
  * This file is part of buteo-sync-plugins-contacts package
  *
  * Copyright (C) 2013 Jolla Ltd. and/or its subsidiary(-ies).
@@ -238,9 +238,11 @@ private: // data
     // if there is more than one Manager we need to have a list of Managers
     QContactManager     *iMgr;      ///< A pointer to contact manager
     QString             mSyncTargetId;
+    QMap<QString, QContactId> mRemoteIdToLocalId;
 
 
     void createSourceForAccount(uint accountId, const QString &label);
+    void preloadRemoteIdMap();
 };
 
 #endif /* CONTACTSBACKEND_H_ */
