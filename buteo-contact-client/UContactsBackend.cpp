@@ -558,7 +558,7 @@ UContactsBackend::getSyncTargetFilter() const
                                                     QContactSyncTarget::FieldSyncTarget + 1);
         detailFilterDefaultSyncTarget.setValue(mSyncTargetId);
     } else if (mSyncTargetId.isEmpty()) {
-        detailFilterDefaultSyncTarget = QContactFilter();
+        return QContactFilter();
     }
 
     if (invisibleFilter.value().isNull()) {
