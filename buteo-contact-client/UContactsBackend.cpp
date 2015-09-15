@@ -550,6 +550,7 @@ UContactsBackend::getSyncTargetFilter() const
     // user entered contacts, i.e. all other contacts that are not sourcing
     // from restricted backends or instant messaging service
     static QContactDetailFilter detailFilterDefaultSyncTarget;
+    static QContactDetailFilter invisibleFilter;
 
     if (!mSyncTargetId.isEmpty() &&
         detailFilterDefaultSyncTarget.value().isNull()) {
@@ -557,11 +558,16 @@ UContactsBackend::getSyncTargetFilter() const
                                                     QContactSyncTarget::FieldSyncTarget + 1);
         detailFilterDefaultSyncTarget.setValue(mSyncTargetId);
     } else if (mSyncTargetId.isEmpty()) {
-        return QContactFilter();
+        detailFilterDefaultSyncTarget = QContactFilter();
     }
 
-    // return the union
-    return detailFilterDefaultSyncTarget;
+    if (invisibleFilter.value().isNull()) {
+        invisibleFilter.setDetailType(QContactExtendedDetail::Type,
+                                      QContactExtendedDetail::FieldName);
+        invisibleFilter.setValue("X-SHOW-INVISIBLE");
+    }
+
+    return (detailFilterDefaultSyncTarget & invisibleFilter);
 }
 
 
