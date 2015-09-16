@@ -52,9 +52,11 @@ static const QString CPIM_ADDRESSBOOK_OBJECT_PATH  ("/com/canonical/pim/AddressB
 static const QString CPIM_ADDRESSBOOK_IFACE_NAME   ("com.canonical.pim.AddressBook");
 
 UContactsBackend::UContactsBackend(const QString &managerName, QObject* parent)
-    : QObject (parent),
-      iMgr(new QContactManager(managerName))
+    : QObject (parent)
 {
+    QMap<QString, QString> parameters;
+    parameters.insert("show-invisible", "true");
+    iMgr = new QContactManager(managerName, parameters);
     FUNCTION_CALL_TRACE;
 }
 
@@ -550,7 +552,6 @@ UContactsBackend::getSyncTargetFilter() const
     // user entered contacts, i.e. all other contacts that are not sourcing
     // from restricted backends or instant messaging service
     static QContactDetailFilter detailFilterDefaultSyncTarget;
-    static QContactDetailFilter invisibleFilter;
 
     if (!mSyncTargetId.isEmpty() &&
         detailFilterDefaultSyncTarget.value().isNull()) {
@@ -561,13 +562,7 @@ UContactsBackend::getSyncTargetFilter() const
         return QContactFilter();
     }
 
-    if (invisibleFilter.value().isNull()) {
-        invisibleFilter.setDetailType(QContactExtendedDetail::Type,
-                                      QContactExtendedDetail::FieldName);
-        invisibleFilter.setValue("X-SHOW-INVISIBLE");
-    }
-
-    return (detailFilterDefaultSyncTarget & invisibleFilter);
+    return detailFilterDefaultSyncTarget;
 }
 
 
