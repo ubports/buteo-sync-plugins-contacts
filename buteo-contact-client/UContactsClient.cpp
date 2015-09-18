@@ -119,8 +119,7 @@ UContactsClient::init()
     }
 
     d->mContactBackend = createContactsBackend(this);
-    if (!d->mContactBackend || !d->mContactBackend->init(d->mAccountId,
-                                                         d->mAuth->accountDisplayName())) {
+    if (!d->mContactBackend) {
         LOG_CRITICAL("Fail to create contact backend");
         goto init_fail;
     }
@@ -289,6 +288,11 @@ UContactsClient::start()
 
     if (!d->mRemoteSource->init(remoteSourceProperties())) {
         LOG_WARNING("Fail to init remote source");
+        return false;
+    }
+
+    if (!d->mContactBackend->init(d->mAccountId, d->mAuth->accountDisplayName())) {
+        LOG_WARNING("Fail to init contact backend");
         return false;
     }
 
