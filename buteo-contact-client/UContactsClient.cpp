@@ -49,7 +49,8 @@ public:
         : mAuth(0),
           mContactBackend(0),
           mRemoteSource(0),
-          mServiceName(serviceName)
+          mServiceName(serviceName),
+          mAborted(false)
     {
     }
 
@@ -57,6 +58,7 @@ public:
     UContactsBackend*           mContactBackend;
     UAbstractRemoteSource*      mRemoteSource;
     bool                        mSlowSync;
+    bool                        mAborted;
     QString                     mServiceName;
     // local database information
     QSet<QContactId>            mAllLocalContactIds;
@@ -99,6 +101,7 @@ UContactsClient::init()
     Q_D(UContactsClient);
 
     d->mProgress = 0.0;
+    d->mAborted = false;
 
     if (lastSyncTime().isNull()) {
         d->mSlowSync = true;
@@ -218,6 +221,7 @@ UContactsClient::abortSync(Sync::SyncStatus aStatus)
     FUNCTION_CALL_TRACE;
     Q_D(UContactsClient);
 
+    d->mAborted = true;
     d->mRemoteSource->abort();
     emit syncFinished(Sync::SYNC_ABORTED);
 }
@@ -284,6 +288,11 @@ UContactsClient::start()
     // about the authentication (auth-token, etc..)
 
     LOG_INFO("Sync Started at:" << QDateTime::currentDateTime().toUTC().toString(Qt::ISODate));
+    if (d->mAborted) {
+        LOG_WARNING("Sync aborted");
+        return false;
+    }
+
     stateChanged(Sync::SYNC_PROGRESS_RECEIVING_ITEMS);
 
     if (!d->mRemoteSource->init(remoteSourceProperties())) {
@@ -363,6 +372,12 @@ UContactsClient::onRemoteContactsFetchedForSlowSync(const QList<QContact> contac
 {
     FUNCTION_CALL_TRACE;
     Q_D(UContactsClient);
+
+    if (d->mAborted) {
+        LOG_WARNING("Sync aborted");
+        return;
+    }
+
     if ((status != Sync::SYNC_PROGRESS) && (status != Sync::SYNC_STARTED)) {
         disconnect(d->mRemoteSource);
     }
@@ -406,6 +421,11 @@ UContactsClient::onContactsSavedForSlowSync(const QList<QtContacts::QContact> &c
 {
     FUNCTION_CALL_TRACE;
     Q_D(UContactsClient);
+
+    if (d->mAborted) {
+        LOG_WARNING("Sync aborted");
+        return;
+    }
 
     LOG_DEBUG("AFTER UPLOAD(Slow sync):"
                 << "\n\tCreated on remote:" << createdContacts.size()
@@ -453,6 +473,12 @@ void UContactsClient::onRemoteContactsFetchedForFastSync(const QList<QContact> c
 {
     FUNCTION_CALL_TRACE;
     Q_D(UContactsClient);
+
+    if (d->mAborted) {
+        LOG_WARNING("Sync aborted");
+        return;
+    }
+
     if ((status != Sync::SYNC_PROGRESS) && (status != Sync::SYNC_STARTED)) {
         disconnect(d->mRemoteSource);
     }
@@ -516,6 +542,11 @@ UContactsClient::onContactsSavedForFastSync(const QList<QtContacts::QContact> &c
     Q_UNUSED(removedContacts)
     FUNCTION_CALL_TRACE;
     Q_D(UContactsClient);
+
+    if (d->mAborted) {
+        LOG_WARNING("Sync aborted");
+        return;
+    }
 
     LOG_DEBUG("AFTER UPLOAD(Fast sync):" << status
                 << "\n\tCreated on remote:" << createdContacts.size()

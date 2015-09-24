@@ -106,7 +106,8 @@ bool GRemoteSource::init(const QVariantMap &properties)
 
 void GRemoteSource::abort()
 {
-    //TODO: Abort
+    disconnect(mTransport.data());
+    mState = STATE_ABORTED;
 }
 
 void GRemoteSource::fetchContacts(const QDateTime &since, bool includeDeleted, bool fetchAvatar)
@@ -314,6 +315,11 @@ GRemoteSource::batchOperationContinue()
 {
     FUNCTION_CALL_TRACE;
 
+    if (mState == GRemoteSource::STATE_ABORTED) {
+        LOG_WARNING("Operation aborted");
+        return;
+    }
+
     int limit = qMin(mPendingBatchOps.size(), GConfig::MAX_RESULTS);
     // no pending batch ops
     if (limit < 1)  {
@@ -402,6 +408,10 @@ void
 GRemoteSource::fetchRemoteContacts(const QDateTime &since, bool includeDeleted, int startIndex)
 {
     FUNCTION_CALL_TRACE;
+    if (mState == GRemoteSource::STATE_ABORTED) {
+        LOG_WARNING("Operation aborted");
+        return;
+    }
     /**
      o Get last sync time
      o Get etag value from local file system (this is a soft etag)
@@ -441,6 +451,11 @@ void
 GRemoteSource::networkRequestFinished()
 {
     FUNCTION_CALL_TRACE;
+
+    if (mState == GRemoteSource::STATE_ABORTED) {
+        LOG_WARNING("Operation aborted");
+        return;
+    }
 
     // o Error - if network error, set the sync results with the code
     // o Call uninit

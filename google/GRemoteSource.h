@@ -66,6 +66,7 @@ private:
         STATE_IDLE = 0,
         STATE_FETCHING_CONTACTS,
         STATE_BATCH_RUNNING,
+        STATE_ABORTED
     };
 
     QScopedPointer<GTransport> mTransport;
