@@ -1,0 +1,9 @@
+#ifndef __CONFIG_H__
+#define __CONFIG_H__
+
+#include <QString>
+
+const QString GOOGLE_ETAG_DETAIL                 ("X-GOOGLE-ETAG");
+const QString QCONTACTS_BACKEND_NAME             ("galera");
+
+#endif

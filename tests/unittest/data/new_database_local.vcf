@@ -1,0 +1,7 @@
+BEGIN:VCARD
+VERSION:3.0
+UID:0
+N:FirstName;LasteName;;;
+FN:FirstName LasteName
+TEL:1234567890
+END:VCARD

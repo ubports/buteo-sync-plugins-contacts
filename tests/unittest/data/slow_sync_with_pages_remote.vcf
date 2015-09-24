@@ -1,0 +1,143 @@
+BEGIN:VCARD
+VERSION:3.0
+FN:Aaron Hentschke
+N:Hentschke;Aaron;;;
+EMAIL;TYPE=INTERNET:hentschke@hildenbrand.org
+TEL;TYPE=CELL:+49-178-2572849
+TEL;TYPE=WORK:(05530) 8188983
+ADR;TYPE=HOME:;;Moosweg 33c;;;81232;Deutschland
+END:VCARD
+BEGIN:VCARD
+VERSION:3.0
+FN:Aaron Rossler
+N:Rossler;Aaron;;;
+EMAIL;TYPE=INTERNET:rossler@jegorovgruber.info
+TEL:+49-2345-76447801
+TEL:+49-1266-53332172
+ADR:;;Kandinskystr. 50c;;;85459;Deutschland
+END:VCARD
+BEGIN:VCARD
+VERSION:3.0
+FN:Abby Burkhard
+N:Burkhard;Abby;;;
+EMAIL;TYPE=INTERNET:burkhard@schlachtervogelgsang.ch
+TEL:+49-1270-18191872
+TEL:(0165) 571583823
+ADR:;;Bergische Landstr. 31a;;;63108;Deutschland
+END:VCARD
+BEGIN:VCARD
+VERSION:3.0
+FN:Abby Knorr
+N:Knorr;Abby;;;
+EMAIL;TYPE=INTERNET:knorr@lorenz.com
+TEL:(07880) 6055638
+TEL:+49-183-3155687
+ADR:;;Im Kirberg 119;;;42864;Deutschland
+END:VCARD
+BEGIN:VCARD
+VERSION:3.0
+FN:Abby Tillack
+N:Tillack;Abby;;;
+EMAIL;TYPE=INTERNET:tillack@seitz.de
+TEL;TYPE=WORK;TYPE=FAX:+49-124-2345121
+TEL;TYPE=HOME;TYPE=FAX:(0935) 490770932
+ADR;TYPE=WORK:;;Tannenbergstr. 24b;;;45683;Deutschland
+END:VCARD
+BEGIN:VCARD
+VERSION:3.0
+FN:Abdul Feld
+N:Feld;Abdul;;;
+EMAIL;TYPE=INTERNET:feld@prediger.org
+TEL:+49-7197-68234855
+TEL:+49-198-5948206
+ADR:;;Albin-Edelmann-Str. 98c;;;37466;Deutschland
+END:VCARD
+BEGIN:VCARD
+VERSION:3.0
+FN:Abdullah Grundmann
+N:Grundmann;Abdullah;;;
+EMAIL;TYPE=INTERNET:grundmann@timmermann.com
+TEL:+49-160-9044582
+TEL:+49-654-1090618
+ADR:;;Halligstr. 5;;;82489;Deutschland
+END:VCARD
+BEGIN:VCARD
+VERSION:3.0
+FN:Ada Fried
+N:Fried;Ada;;;
+EMAIL;TYPE=INTERNET:fried@schwerdtnerschupp.ch
+TEL;TYPE=HOME:+49-148-1104290
+TEL;TYPE=HOME:(0188) 113931757
+ADR:;;Sürderstr. 1;;;89919;Deutschland
+END:VCARD
+BEGIN:VCARD
+VERSION:3.0
+FN:Adam Linke
+N:Linke;Adam;;;
+EMAIL;TYPE=INTERNET:linke@frantz.info
+TEL:+49-4133-15890584
+TEL:+49-135-6314318
+ADR:;;Fichtenweg 63;;;62240;Deutschland
+END:VCARD
+BEGIN:VCARD
+VERSION:3.0
+FN:Adrian Steinert
+N:Steinert;Adrian;;;
+EMAIL;TYPE=INTERNET:steinert@holinski.info
+TEL:+49-145-3500799
+TEL:(08312) 0553652
+ADR:;;Freudenthal 84c;;;52287;Deutschland
+END:VCARD
+BEGIN:VCARD
+VERSION:3.0
+FN:Arved Menga
+N:Menga;Arved;;;
+EMAIL;TYPE=INTERNET:menga@pomp.name
+item1.TEL:+49-5499-63405807
+item1.X-ABLabel:home
+item2.TEL:+49-1134-87938626
+item2.X-ABLabel:cell
+ADR:;;Gezelinallee 33;West Miekeburg;;62583;Deutschland
+END:VCARD
+BEGIN:VCARD
+VERSION:3.0
+FN:Arvid Herzenberg
+N:Herzenberg;Arvid;;;
+EMAIL;TYPE=INTERNET:herzenberg@brutigam.com
+item1.TEL:+49-7780-75716285
+item1.X-ABLabel:home
+item2.TEL:+49-1402-29654218
+item2.X-ABLabel:cell
+ADR:;;Schäfershütte 124;Kühneldorf;;15713;Deutschland
+END:VCARD
+BEGIN:VCARD
+VERSION:3.0
+FN:Arwen Lauckner
+N:Lauckner;Arwen;;;
+EMAIL;TYPE=INTERNET:lauckner@grau.de
+item1.TEL:+49-6665-76654489
+item1.X-ABLabel:home
+item2.TEL:+49-162-5456933
+item2.X-ABLabel:cell
+ADR;TYPE=HOME:;;Karl-Bückart-Str. 92a;Bad Lucyland;;35195;Deutschland
+END:VCARD
+BEGIN:VCARD
+VERSION:3.0
+FN:Ashley Klemme
+N:Klemme;Ashley;;;
+EMAIL;TYPE=INTERNET:klemme@reuss.info
+item1.TEL:+49-976-1795496
+item1.X-ABLabel:home
+item2.TEL:+49-1605-24722953
+item2.X-ABLabel:cell
+ADR:;;Gierener Weg 42a;Neu Yvenscheid;;40412;Deutschland
+END:VCARD
+BEGIN:VCARD
+VERSION:3.0
+FN:Aurora Hadfield
+N:Hadfield;Aurora;;;
+EMAIL;TYPE=INTERNET:hadfield@prey.org
+TEL;TYPE=HOME:+49-905-1913343
+TEL;TYPE=CELL:+49-182-8748386
+ADR;TYPE=HOME:;;Weinhäuser Str. 4;Süd Bennet;;66856;Deutschland
+END:VCARD

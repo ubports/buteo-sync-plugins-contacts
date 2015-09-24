@@ -1,0 +1,28 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<feed xmlns="http://www.w3.org/2005/Atom" xmlns:batch="http://schemas.google.com/gdata/batch" xmlns:gContact="http://schemas.google.com/contact/2008" xmlns:gd="http://schemas.google.com/g/2005">
+ <id>https://www.google.com/m8/feeds/contacts/renato.teste2%40gmail.com/full/batch/1436214908674000</id>
+ <updated>2015-07-06T20:35:08.674Z</updated>
+ <title type="text">Batch Feed</title>
+ <entry gd:etag="&quot;SXg5ejVSLit7I2A9XRVVEkwOTgQ.&quot;">
+  <batch:id>qtcontacts:galera::2c79456ba52fb29ecab9afedc4068f3421b77779</batch:id>
+  <batch:operation type="update"/>
+  <batch:status code="200" reason="Success"/>
+  <id>http://www.google.com/m8/feeds/contacts/renato_teste_2%40gmail.com/base/5b56e6f60f3d43d3</id>
+  <updated>2015-07-06T20:35:08.622Z</updated>
+  <app:edited xmlns:app="http://www.w3.org/2007/app">2015-07-06T20:35:08.622Z</app:edited>
+  <category scheme="http://schemas.google.com/g/2005#kind" term="http://schemas.google.com/contact/2008#contact"/>
+  <title>Re Moreira</title>
+  <link rel="http://schemas.google.com/contacts/2008/rel#photo" type="image/*" href="https://www.google.com/m8/feeds/photos/media/renato.teste2%40gmail.com/5b56e6f60f3d43d3" gd:etag="&quot;TTt0ZQQ3Sit7I2BfHWQlUURPIEwjCVMZdT0.&quot;"/>
+  <link rel="self" type="application/atom+xml" href="https://www.google.com/m8/feeds/contacts/renato.teste2%40gmail.com/full/5b56e6f60f3d43d3"/>
+  <link rel="edit" type="application/atom+xml" href="https://www.google.com/m8/feeds/contacts/renato.teste2%40gmail.com/full/5b56e6f60f3d43d3"/>
+  <gd:name>
+   <gd:fullName>Re Moreira</gd:fullName>
+   <gd:givenName>Re</gd:givenName>
+   <gd:familyName>Moreira</gd:familyName>
+  </gd:name>
+  <gd:phoneNumber rel="http://schemas.google.com/g/2005#mobile">1111-111-1</gd:phoneNumber>
+  <gd:phoneNumber rel="http://schemas.google.com/g/2005#work_mobile">222-2222</gd:phoneNumber>
+  <gContact:website href="https://plus.google.com/107466330197166195342" rel="home-page"/>
+  <gContact:groupMembershipInfo deleted="false" href="http://www.google.com/m8/feeds/groups/renato.teste2%40gmail.com/base/6"/>
+ </entry>
+</feed>

@@ -1,0 +1,162 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<feed gd:etag="&quot;QXoyeDVSLyt7I2A9XRVXFkgPQgA.&quot;" xmlns="http://www.w3.org/2005/Atom" xmlns:batch="http://schemas.google.com/gdata/batch" xmlns:gContact="http://schemas.google.com/contact/2008" xmlns:gd="http://schemas.google.com/g/2005" xmlns:openSearch="http://a9.com/-/spec/opensearch/1.1/">
+ <id>test@gmail.com</id>
+ <updated>2015-06-18T19:25:40.490Z</updated>
+ <category scheme="http://schemas.google.com/g/2005#kind" term="http://schemas.google.com/contact/2008#contact"/>
+ <title>Contacts</title>
+ <link rel="alternate" type="text/html" href="https://www.google.com/"/>
+ <link rel="http://schemas.google.com/g/2005#feed" type="application/atom+xml" href="https://www.google.com/m8/feeds/contacts/test%40gmail.com/full"/>
+ <link rel="http://schemas.google.com/g/2005#post" type="application/atom+xml" href="https://www.google.com/m8/feeds/contacts/test%40gmail.com/full"/>
+ <link rel="http://schemas.google.com/g/2005#batch" type="application/atom+xml" href="https://www.google.com/m8/feeds/contacts/test%40gmail.com/full/batch"/>
+ <link rel="self" type="application/atom+xml" href="https://www.google.com/m8/feeds/contacts/test%40gmail.com/full?max-results=10"/>
+ <link rel="next" type="application/atom+xml" href="https://www.google.com/m8/feeds/contacts/test%40gmail.com/full?max-results=10&amp;start-index=11"/>
+ <author>
+  <name>Ubuntu</name>
+  <email>test@gmail.com</email>
+ </author>
+ <generator version="1.0" uri="http://www.google.com/m8/feeds">Contacts</generator>
+ <openSearch:totalResults>1</openSearch:totalResults>
+ <openSearch:startIndex>1</openSearch:startIndex>
+ <openSearch:itemsPerPage>10</openSearch:itemsPerPage>
+
+ <entry gd:etag="&quot;QXY5ejVSLit7I2A9XRVXFkkORwY.&quot;">
+  <id>http://www.google.com/m8/feeds/contacts/test%40gmail.com/base/948ac108f03db45</id>
+  <updated>2015-06-18T16:13:40.822Z</updated>
+  <app:edited xmlns:app="http://www.w3.org/2007/app">2015-06-18T16:13:40.822Z</app:edited>
+  <category scheme="http://schemas.google.com/g/2005#kind" term="http://schemas.google.com/contact/2008#contact"/>
+  <title>Aaron Rossler</title>
+  <link rel="http://schemas.google.com/contacts/2008/rel#photo" type="image/*" href="https://www.google.com/m8/feeds/photos/media/test%40gmail.com/948ac108f03db45" gd:etag="&quot;eh19bkUofCt7I2BaHVJTdw9tEH0ifl8lcyg.&quot;"/>
+  <link rel="self" type="application/atom+xml" href="https://www.google.com/m8/feeds/contacts/test%40gmail.com/full/948ac108f03db45"/>
+  <link rel="edit" type="application/atom+xml" href="https://www.google.com/m8/feeds/contacts/test%40gmail.com/full/948ac108f03db45"/>
+  <gd:name>
+   <gd:fullName>Aaron Rossler</gd:fullName>
+   <gd:givenName>Aaron</gd:givenName>
+   <gd:familyName>Rossler</gd:familyName>
+   <gd:additionalName>Mark</gd:additionalName>
+   <gd:namePrefix>Sr.</gd:namePrefix>
+   <gd:nameSuffix>Jr.</gd:nameSuffix>
+  </gd:name>
+  <gd:email rel="http://schemas.google.com/g/2005#other" address="rossler@other.info"/>
+  <gd:email rel="http://schemas.google.com/g/2005#home" address="rossler@home.info"/>
+  <gd:email rel="http://schemas.google.com/g/2005#work" address="rossler@work.info"/>  
+  <gd:phoneNumber rel="http://schemas.google.com/g/2005#other" uri="tel:+55-8704-0000">+55-8704-0000</gd:phoneNumber>
+  <gd:phoneNumber rel="http://schemas.google.com/g/2005#home">+55-8704-0001</gd:phoneNumber>
+  <gd:phoneNumber rel="http://schemas.google.com/g/2005#work">+55-8704-0002</gd:phoneNumber>
+  <gd:phoneNumber rel="http://schemas.google.com/g/2005#work_fax">+55-8704-0003</gd:phoneNumber>
+  <gd:phoneNumber rel="http://schemas.google.com/g/2005#home_fax">+55-8704-0004</gd:phoneNumber>
+  <gd:phoneNumber rel="http://schemas.google.com/g/2005#mobile">+55-8704-0005</gd:phoneNumber>
+  <gd:phoneNumber rel="http://schemas.google.com/g/2005#work_mobile">+55-8704-0006</gd:phoneNumber>
+  <gd:phoneNumber rel="http://schemas.google.com/g/2005#other_fax">+55-8704-0007</gd:phoneNumber>
+  <gd:phoneNumber rel="http://schemas.google.com/g/2005#pager">+55-8704-0008</gd:phoneNumber>
+  <gd:phoneNumber rel="http://schemas.google.com/g/2005#work_pager">+55-8704-0009</gd:phoneNumber>
+  <gd:phoneNumber rel="http://schemas.google.com/g/2005#tty_tdd">+55-8704-0010</gd:phoneNumber>
+  <gd:phoneNumber rel="http://schemas.google.com/g/2005#car">+55-8704-0011</gd:phoneNumber>
+  <gd:phoneNumber rel="http://schemas.google.com/g/2005#telex">+55-8704-0012</gd:phoneNumber>
+  <gd:phoneNumber rel="http://schemas.google.com/g/2005#assistant">+55-8704-0013</gd:phoneNumber>
+  <gd:structuredPostalAddress rel="http://schemas.google.com/g/2005#other">
+   <gd:formattedAddress>Other street 00
+00000
+Brazil</gd:formattedAddress>
+   <gd:street>Other street 00</gd:street>
+   <gd:postcode>00000</gd:postcode>
+   <gd:country>Brazil</gd:country>
+   <gd:region>PE</gd:region>
+   <gd:neighborhood>Other</gd:neighborhood>
+   <gd:pobox>POBOX0</gd:pobox>
+  </gd:structuredPostalAddress>
+  <gd:structuredPostalAddress rel="http://schemas.google.com/g/2005#work">
+   <gd:formattedAddress>Other street 01
+11111
+Brazil</gd:formattedAddress>
+   <gd:street>Work street 01</gd:street>
+   <gd:postcode>11111</gd:postcode>
+   <gd:country>Brazil</gd:country>
+   <gd:region>MA</gd:region>
+   <gd:neighborhood>Work</gd:neighborhood>
+   <gd:pobox>POBOX1</gd:pobox>
+  </gd:structuredPostalAddress>
+  <gd:structuredPostalAddress rel="http://schemas.google.com/g/2005#home">
+   <gd:formattedAddress>Other street 02
+22222
+Brazil</gd:formattedAddress>
+   <gd:street>Home street 02</gd:street>
+   <gd:postcode>22222</gd:postcode>
+   <gd:country>Brazil</gd:country>
+   <gd:region>MG</gd:region>
+   <gd:neighborhood>Home</gd:neighborhood>
+   <gd:pobox>POBOX2</gd:pobox>
+  </gd:structuredPostalAddress>
+  <gd:im address='Aaron@gmail.com'
+    protocol='http://schemas.google.com/g/2005#GOOGLE_TALK'
+    primary='true'
+    rel='http://schemas.google.com/g/2005#home'/>
+  <gd:im address='Aaron@aim.com'
+    protocol='http://schemas.google.com/g/2005#AIM'
+    rel='http://schemas.google.com/g/2005#work'/>
+  <gd:im address='Aaron@msn.com'
+    protocol='http://schemas.google.com/g/2005#MSN'
+    rel='http://schemas.google.com/g/2005#work'/>
+  <gd:im address='Aaron@yahoo.com'
+    protocol='http://schemas.google.com/g/2005#YAHOO'
+    rel='http://schemas.google.com/g/2005#other'/>
+  <gd:im address='Aaron@skype.com'
+    protocol='http://schemas.google.com/g/2005#SKYPE'
+    rel='http://schemas.google.com/g/2005#other'/>
+  <gd:im address='Aaron@qq.com'
+    protocol='http://schemas.google.com/g/2005#QQ'
+    rel='http://schemas.google.com/g/2005#other'/>
+  <gd:im address='Aaron@icq.com'
+    protocol='http://schemas.google.com/g/2005#ICQ'
+    rel='http://schemas.google.com/g/2005#other'/>
+  <gd:im address='Aaron@jabber.com'
+    protocol='http://schemas.google.com/g/2005#JABBER'
+    rel='http://schemas.google.com/g/2005#home'/>
+  <gd:im address='Aaron@irc.com'
+    protocol='http://schemas.google.com/g/2005#IRC'
+    rel='http://schemas.google.com/g/2005#home'/>
+  <gd:im address='Aaron@telegram.com'
+    protocol='http://schemas.google.com/g/2005#TELEGRAM'
+    rel='http://schemas.google.com/g/2005#home'/>
+  <gd:organization rel="http://schemas.google.com/g/2005#work" label="Work" primary="true">
+    <gd:orgName>Google, Inc.</gd:orgName>
+    <gd:orgTitle>Tech Writer</gd:orgTitle>
+    <gd:orgJobDescription>Writes documentation</gd:orgJobDescription>
+    <gd:orgDepartment>Software Development</gd:orgDepartment>
+    <gd:orgSymbol>GOOG</gd:orgSymbol>
+  </gd:organization>
+  <gd:organization rel="http://schemas.google.com/g/2005#home" label="Home">
+    <gd:orgName>My house</gd:orgName>
+    <gd:orgTitle>cleaner</gd:orgTitle>
+    <gd:orgJobDescription>Clean the house</gd:orgJobDescription>
+    <gd:orgDepartment>Room</gd:orgDepartment>
+    <gd:orgSymbol>HOUSE</gd:orgSymbol>
+  </gd:organization>
+  <gd:deleted/>
+  <gd:extendedProperty name="X-FAVORITE" value="true"/>
+  <gd:extendedProperty name="X-PROPERTY" value="property-value"/>
+  <gContact:groupMembershipInfo deleted="false" href="http://www.google.com/m8/feeds/groups/test%40gmail.com/base/6"/>
+  <gContact:event rel="anniversary" label="wedding">
+    <gd:when startTime="2005-06-06T17:00:00" endTime="2005-06-06T18:00:00" valueString="This weekend"/>
+  </gContact:event>
+  <gContact:event rel="anniversary" label="memorial">
+    <gd:when startTime="2005-06-06" endTime="2005-06-08" valueString="This month"/>
+  </gContact:event>
+  <gContact:birthday when='1980-07-04'/>
+  <gContact:birthday when='--12-25'/>
+  <gContact:gender value='female'/>
+  <gContact:jot rel='home'>Lived in Orange County</gContact:jot>
+  <gContact:jot rel='user'>Borrowed my copy of "Alice's Adventures in Wonderland"</gContact:jot>
+  <gContact:website href='http://www.ubuntu.com' label='ubuntu' rel='home-page'/>
+  <gContact:website href='http://blog.canonical.com/' label='Canonical blog' rel='blog'/>
+  <gContact:website href='https://launchpad.net/~user' label='lp' rel='profile'/>
+  <gContact:website href='http://www.home.com' label='My home' rel='home'/>
+  <gContact:website href='http://www.work.com' label='My work' rel='work'/>
+  <gContact:website href='http://www.other.com' label='Other web' rel='other'/>
+  <gContact:website href='http://www.ftp.com' label='My ftp' rel='ftp'/>
+  <gd:extendedProperty name="SOUND" value="file://my-ringtone.mp3"/>
+  <gContact:hobby>Paragliding</gContact:hobby>
+  <gContact:nickname>Dragon</gContact:nickname>  
+  <gContact:relation rel="spouse">Katherine</gContact:relation>
+  <gContact:relation rel="child">Mike</gContact:relation>
+ </entry>  
+</feed>

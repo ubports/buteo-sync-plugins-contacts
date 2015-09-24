@@ -1,0 +1,31 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<feed xmlns="http://www.w3.org/2005/Atom" xmlns:batch="http://schemas.google.com/gdata/batch" xmlns:gContact="http://schemas.google.com/contact/2008" xmlns:gd="http://schemas.google.com/g/2005">
+ <id>https://www.google.com/m8/feeds/contacts/bfiller%40gmail.com/full/batch/1437413415201000</id>
+ <updated>2015-07-20T17:30:15.201Z</updated>
+ <title type="text">Batch Feed</title>
+ <entry>
+  <batch:id>qtcontacts:galera::df8fd2e011e64624459c66f8d72417f7559d9c1d</batch:id>
+  <batch:operation type="update"/>
+  <batch:status code="404" reason="Contact not found."/>
+  <id>http://www.google.com/m8/feeds/contacts/bfiller@gmail.com/full/415f25f8a58b972</id>
+  <category scheme="http://schemas.google.com/g/2005#kind" term="http://schemas.google.com/contact/2008#contact"/>
+ </entry>
+ <entry gd:etag="&quot;Q3gyfTVSLyt7I2A9XRVWE04LQg0.&quot;">
+  <batch:id>qtcontacts:galera::f55c2eeb760ffd6843d2e98319d3544ff3e987b5</batch:id>
+  <batch:operation type="insert"/>
+  <batch:status code="201" reason="Created."/>
+  <id>http://www.google.com/m8/feeds/contacts/renato.teste2%40gmail.com/base/5f66bbf78bed2765</id>
+  <updated>2015-07-20T17:30:15.201Z</updated>
+  <category scheme="http://schemas.google.com/g/2005#kind" term="http://schemas.google.com/contact/2008#contact"/>
+  <title>My Contact</title>
+  <link rel="http://schemas.google.com/contacts/2008/rel#photo" type="image/*" href="https://www.google.com/m8/feeds/photos/media/renato.teste2%40gmail.com/5f66bbf78bed2765"/>
+  <link rel="self" type="application/atom+xml" href="https://www.google.com/m8/feeds/contacts/renato.teste2%40gmail.com/full/5f66bbf78bed2765"/>
+  <link rel="edit" type="application/atom+xml" href="https://www.google.com/m8/feeds/contacts/renato.teste2%40gmail.com/full/5f66bbf78bed2765"/>
+  <gd:name>
+   <gd:fullName>My Contact</gd:fullName>
+   <gd:givenName>My</gd:givenName>
+   <gd:familyName>Contact</gd:familyName>
+  </gd:name>
+  <gContact:groupMembershipInfo deleted="false" href="http://www.google.com/m8/feeds/groups/renato.teste2%40gmail.com/base/6"/>
+ </entry>
+</feed>

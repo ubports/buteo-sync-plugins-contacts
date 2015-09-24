@@ -1,0 +1,20 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<profile type="sync" name="google-contacts">
+    <key value="contacts" name="category"/>
+    <key value="google-contacts" name="remote_service_name"/>
+    <key value="online" name="destinationtype"/>
+    <key value="false" name="enabled"/>
+    <key value="true" name="hidden"/>
+    <key value="true" name="scheduled"/>
+    <key value="true" name="sync_always_up_to_date"/>
+    <key value="30" name="sync_since_days_past"/>
+    <key value="true" name="use_accounts"/>
+    <key value="true" name="sync_on_change"/>
+    <key value="60" name="sync_on_change_after" />
+    <profile type="client" name="googlecontacts">
+        <key value="two-way" name="Sync Direction"/>
+        <key value="gdata" name="Sync Protocol"/>
+        <key value="HTTP" name="Sync Transport"/>
+        <key value="prefer remote" name="conflictpolicy"/>
+    </profile>
+</profile>
