@@ -1,5 +1,16 @@
-buteo-sync-plugins-contacts (0.1-0ubuntu1) UNRELEASED; urgency=medium
+buteo-sync-plugins-contacts (0.1+15.10.20150924-0ubuntu1) wily; urgency=medium
 
+  [ Renato Araujo Oliveira Filho ]
   * Initial package
+  * Debian package. added: .bzr-builddeb/ .bzr-builddeb/default.conf
+    debian/ debian/changelog debian/compat debian/control
+    debian/copyright debian/rules
+  * Implemented buteo contacts sync plugin for google, heavily based on:
+      - https://github.com/nemomobile-graveyard/buteo-sync-plugins-
+    google   - https://github.com/nemomobile/buteo-sync-plugins-social
+  * Renamed buteo package.
 
- -- Renato Araujo Oliveira Filho <renato.filho@canonical.com>  Thu, 18 Jun 2015 20:52:19 -0300
+  [ Ken VanDine ]
+  * use correct license for the COPYING file
+
+ -- CI Train Bot <ci-train-bot@canonical.com>  Thu, 24 Sep 2015 17:50:55 +0000
