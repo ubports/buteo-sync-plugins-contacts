@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <profile type="sync" name="google-contacts">
-    <key value="buteo-contacts" name="category"/>
+    <key value="contacts" name="category"/>
     <key value="google-contacts" name="remote_service_name"/>
     <key value="online" name="destinationtype"/>
     <key value="false" name="enabled"/>
