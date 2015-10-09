@@ -1,3 +1,3 @@
-install(FILES buteo-google-contacts.xml
+install(FILES google-contacts.xml
     DESTINATION "/etc/buteo/profiles/sync"
 )

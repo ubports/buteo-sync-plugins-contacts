@@ -1,8 +1,8 @@
 set(SERVICE_FILES
-    buteo-google-contacts.service
+    google-contacts.service
 )
 set(APPLICATION_FILES
-    buteo-address-book-app.application
+    address-book-app.application
 )
 
 install(FILES ${SERVICE_FILES}

@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<application id="buteo-address-book-app">
+<application id="address-book-app">
   <description>Contacts</description>
   <desktop-entry>address-book-app.desktop</desktop-entry>
 

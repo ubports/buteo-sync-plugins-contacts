@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<service id="buteo-google-contacts">
+<service id="google-contacts">
   <type>buteo-contacts</type>
   <name>Google Contacts</name>
   <provider>google</provider>
