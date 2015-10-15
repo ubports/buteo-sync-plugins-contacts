@@ -339,11 +339,11 @@ UContactsBackend::deleteContacts(const QList<QContactId> &aContactIDList) {
     QMap<int, QContactManager::Error> errors;
     QMap<int, UContactsStatus> statusMap;
 
-    if(iMgr->removeContacts(aContactIDList , &errors)) {
+    if(aContactIDList.isEmpty() || iMgr->removeContacts(aContactIDList , &errors)) {
         LOG_DEBUG("Successfully Removed all contacts ");
     }
     else {
-        LOG_WARNING("Failed Removing Contacts");
+        LOG_WARNING("Failed Removing Contacts" << errors);
     }
 
     // QContactManager will populate errorMap only for errors, but we use this as a status map,
@@ -362,8 +362,8 @@ UContactsBackend::deleteContacts(const QList<QContactId> &aContactIDList) {
         }
         else
         {
-            LOG_DEBUG("contact with id " << contactId << " and index " << i <<" is in error");
             QContactManager::Error errorCode = errors.value(i);
+            LOG_WARNING("Removing contact with id " << contactId << " and index " << i <<" is an error" << errorCode);
             status.errorCode = errorCode;
             statusMap.insert(i, status);
         }
