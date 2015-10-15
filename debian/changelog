@@ -1,3 +1,11 @@
+buteo-sync-plugins-contacts (0.1+15.10.20151015.1-0ubuntu1) wily; urgency=medium
+
+  [ Renato Araujo Oliveira Filho ]
+  * Append 'buteo' on online account files to avoid conflict with EDS
+    files.
+
+ -- Bill Filler <ci-train-bot@canonical.com>  Thu, 15 Oct 2015 20:45:27 +0000
+
 buteo-sync-plugins-contacts (0.1+15.10.20150924-0ubuntu1) wily; urgency=medium
 
   [ Renato Araujo Oliveira Filho ]
