@@ -300,7 +300,8 @@ UContactsClient::start()
         return false;
     }
 
-    if (!d->mContactBackend->init(d->mAccountId, d->mAuth->accountDisplayName())) {
+    if (!d->mContactBackend->init(d->mAccountId,
+                                  d->mAuth->accountDisplayName())) {
         LOG_WARNING("Fail to init contact backend");
         return false;
     }

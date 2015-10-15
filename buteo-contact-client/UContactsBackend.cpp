@@ -97,7 +97,13 @@ UContactsBackend::init(uint syncAccount, const QString &syncTarget)
         contact.setType(QContactType::TypeGroup);
 
         QContactDisplayLabel label;
-        label.setLabel(syncTarget);
+        //WORKAROUND: append a extra space in the end of the source name
+        //this is necessary to avoid conflict with old sources used by syncevolution
+        //SyncEvolution sync profile sync contacts from gooble based on the source name
+        //creating a new source with the same name could cause the sync to happen in the
+        //wrong source
+        //FIXME: remove this when syncevolution get removed from image
+        label.setLabel(syncTarget + " ");
         contact.saveDetail(&label);
 
         // set the new source as default
