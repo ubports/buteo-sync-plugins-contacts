@@ -38,7 +38,7 @@
 
 #include "buteosyncfw_p.h"
 
-static const QString GOOGLE_CONTACTS_SERVICE          ("google-contacts");
+static const QString GOOGLE_CONTACTS_SERVICE          ("google-buteo-contacts");
 
 extern "C" GContactsClient* createPlugin(const QString& aPluginName,
                                          const Buteo::SyncProfile& aProfile,

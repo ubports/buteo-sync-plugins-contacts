@@ -69,6 +69,11 @@ UAuth::init(const quint32 accountId, const QString serviceName)
 {
     Q_D(UAuth);
 
+    if ((accountId == 0) || serviceName.isEmpty()) {
+        LOG_DEBUG("Invalid account id or service name:" << accountId << serviceName);
+        return false;
+    }
+
     d->mServiceName = serviceName;
     if (d->mAccountManager && d_ptr->mAccount) {
         LOG_DEBUG("GAuth already initialized");

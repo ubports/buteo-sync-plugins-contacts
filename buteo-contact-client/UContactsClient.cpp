@@ -49,8 +49,13 @@ public:
         : mAuth(0),
           mContactBackend(0),
           mRemoteSource(0),
+          mSlowSync(false),
+          mAborted(false),
           mServiceName(serviceName),
-          mAborted(false)
+          mProgress(0),
+          mAccountId(0),
+          mSyncDirection(Buteo::SyncProfile::SYNC_DIRECTION_TWO_WAY),
+          mConflictResPolicy(Buteo::SyncProfile::CR_POLICY_PREFER_REMOTE_CHANGES)
     {
     }
 
@@ -115,6 +120,7 @@ UContactsClient::init()
         return false;
     }
 
+    LOG_INFO ("Init sync for account:" << d->mAccountId << d->mServiceName);
     d->mAuth = crateAuthenticator(this);
     if (!d->mAuth || !d->mAuth->init(d->mAccountId, d->mServiceName)) {
         LOG_CRITICAL("Fail to create auth object");
@@ -135,8 +141,6 @@ UContactsClient::init()
         goto init_fail;
     }
 
-    d->mItemResults.insert(syncTargetId(), Buteo::DatabaseResults());
-
     // sign in.
     connect(d->mAuth, SIGNAL(success()), SLOT(start()));
     connect(d->mAuth, SIGNAL(failed()), SLOT(onAuthenticationError()));
@@ -150,7 +154,8 @@ UContactsClient::init()
     // Take necessary action when sync is finished
     connect(this,
             SIGNAL(syncFinished(Sync::SyncStatus)),
-            SLOT(onSyncFinished(Sync::SyncStatus)));
+            SLOT(onSyncFinished(Sync::SyncStatus)),
+            Qt::QueuedConnection);
 
     return true;
 
@@ -300,11 +305,13 @@ UContactsClient::start()
         return false;
     }
 
-    if (!d->mContactBackend->init(d->mAccountId, d->mAuth->accountDisplayName())) {
+    if (!d->mContactBackend->init(d->mAccountId,
+                                  d->mAuth->accountDisplayName())) {
         LOG_WARNING("Fail to init contact backend");
         return false;
     }
 
+    d->mItemResults.insert(syncTargetId(), Buteo::DatabaseResults());
     switch (d->mSyncDirection)
     {
     case Buteo::SyncProfile::SYNC_DIRECTION_TWO_WAY:
@@ -787,6 +794,8 @@ UContactsClient::onSyncFinished(Sync::SyncStatus aState)
 {
     FUNCTION_CALL_TRACE;
     Q_D(UContactsClient);
+
+    LOG_INFO("Sync finished with state:" << aState);
 
     switch(aState)
     {

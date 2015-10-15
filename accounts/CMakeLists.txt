@@ -1,5 +1,5 @@
 set(SERVICE_FILES
-     google-contacts.service
+    google-buteo-contacts.service
 )
 set(APPLICATION_FILES
     address-book-app.application

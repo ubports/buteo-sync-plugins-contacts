@@ -97,7 +97,13 @@ UContactsBackend::init(uint syncAccount, const QString &syncTarget)
         contact.setType(QContactType::TypeGroup);
 
         QContactDisplayLabel label;
-        label.setLabel(syncTarget);
+        //WORKAROUND: append a extra space in the end of the source name
+        //this is necessary to avoid conflict with old sources used by syncevolution
+        //SyncEvolution sync profile sync contacts from gooble based on the source name
+        //creating a new source with the same name could cause the sync to happen in the
+        //wrong source
+        //FIXME: remove this when syncevolution get removed from image
+        label.setLabel(syncTarget + " ");
         contact.saveDetail(&label);
 
         // set the new source as default
@@ -333,11 +339,11 @@ UContactsBackend::deleteContacts(const QList<QContactId> &aContactIDList) {
     QMap<int, QContactManager::Error> errors;
     QMap<int, UContactsStatus> statusMap;
 
-    if(iMgr->removeContacts(aContactIDList , &errors)) {
+    if(aContactIDList.isEmpty() || iMgr->removeContacts(aContactIDList , &errors)) {
         LOG_DEBUG("Successfully Removed all contacts ");
     }
     else {
-        LOG_WARNING("Failed Removing Contacts");
+        LOG_WARNING("Failed Removing Contacts" << errors);
     }
 
     // QContactManager will populate errorMap only for errors, but we use this as a status map,
@@ -356,8 +362,8 @@ UContactsBackend::deleteContacts(const QList<QContactId> &aContactIDList) {
         }
         else
         {
-            LOG_DEBUG("contact with id " << contactId << " and index " << i <<" is in error");
             QContactManager::Error errorCode = errors.value(i);
+            LOG_WARNING("Removing contact with id " << contactId << " and index " << i <<" is an error" << errorCode);
             status.errorCode = errorCode;
             statusMap.insert(i, status);
         }
