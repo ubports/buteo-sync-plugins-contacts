@@ -106,12 +106,6 @@ UContactsBackend::init(uint syncAccount, const QString &syncTarget)
         label.setLabel(syncTarget + " ");
         contact.saveDetail(&label);
 
-        // set the new source as default
-        QContactExtendedDetail isDefault;
-        isDefault.setName("IS-PRIMARY");
-        isDefault.setData(true);
-        contact.saveDetail(&isDefault);
-
         // Link source with account
         QContactExtendedDetail accountId;
         accountId.setName("ACCOUNT-ID");
