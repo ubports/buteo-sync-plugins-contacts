@@ -80,6 +80,15 @@ UContactsBackend::init(uint syncAccount, const QString &syncTarget)
     filter.setValue(QContactType::TypeGroup);
 
     QList<QContact> sources = iMgr->contacts(filter);
+
+    // WORKAROUND: sometimes EDS crash while querying for sources we use a second
+    // query to make sure that the source does not exists.
+    // The crash happens on sqlite3 library, check bug #1517252 for more info
+    // FIXME: Remove this when bug #1517252 get fixed.
+    if (sources.isEmpty()) {
+        sources = iMgr->contacts(filter);
+    }
+
     Q_FOREACH(const QContact &contact, sources) {
         QContactExtendedDetail exd = UContactsCustomDetail::getCustomField(contact,
                                                                            "ACCOUNT-ID");
