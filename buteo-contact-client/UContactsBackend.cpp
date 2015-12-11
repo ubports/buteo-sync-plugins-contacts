@@ -511,6 +511,13 @@ void UContactsBackend::reloadCache()
     }
 }
 
+void UContactsBackend::removeSyncTarget()
+{
+    if (iMgr && !mSyncTargetId.isEmpty()) {
+        iMgr->removeContact(QContactId::fromString(QString("qtcontacts:galera::source@%1").arg(mSyncTargetId)));
+    }
+}
+
 QString
 UContactsBackend::getRemoteId(const QContact &contact)
 {

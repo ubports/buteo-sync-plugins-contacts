@@ -140,6 +140,7 @@ private:
 private slots:
     bool start();
     void onAuthenticationError();
+    void onAccountRemoved();
     void onStateChanged(int progress);
     void onSyncFinished(Sync::SyncStatus status);
     void fireSyncFinishedSucessfully();

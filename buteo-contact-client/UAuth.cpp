@@ -94,6 +94,7 @@ UAuth::init(const quint32 accountId, const QString serviceName)
             LOG_DEBUG("Account is not created... Cannot authenticate");
             return false;
         }
+        connect(d->mAccount.data(), SIGNAL(removed()), SIGNAL(accountRemoved()));
         mDisplayName = d->mAccount->displayName();
     }
 

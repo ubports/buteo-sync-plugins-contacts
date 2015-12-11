@@ -213,6 +213,10 @@ public:
      */
     void reloadCache();
 
+    /*!
+     * \brief Remove backend source
+     */
+    void removeSyncTarget();
 
     QContactManager *manager() const;
 
