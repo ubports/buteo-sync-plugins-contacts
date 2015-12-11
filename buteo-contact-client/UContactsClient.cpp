@@ -142,6 +142,7 @@ UContactsClient::init()
     }
 
     // sign in.
+    connect(d->mAuth, SIGNAL(accountRemoved()), SLOT(onAccountRemoved()));
     connect(d->mAuth, SIGNAL(success()), SLOT(start()));
     connect(d->mAuth, SIGNAL(failed()), SLOT(onAuthenticationError()));
 
@@ -267,6 +268,18 @@ UContactsClient::onAuthenticationError()
 {
     LOG_WARNING("Fail to authenticate with account");
     emit syncFinished (Sync::SYNC_AUTHENTICATION_FAILURE);
+}
+
+void UContactsClient::onAccountRemoved()
+{
+    Q_D(UContactsClient);
+
+    LOG_WARNING("ABORT: Account removed while syncing");
+    d->mAborted = true;
+    d->mRemoteSource->abort();
+    d->mContactBackend->removeSyncTarget();
+
+    emit syncFinished(Sync::SYNC_ABORTED);
 }
 
 bool

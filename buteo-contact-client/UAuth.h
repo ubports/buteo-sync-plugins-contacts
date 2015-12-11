@@ -55,6 +55,7 @@ public:
 signals:
     void success();
     void failed();
+    void accountRemoved();
 
 protected:
     QString mToken;
