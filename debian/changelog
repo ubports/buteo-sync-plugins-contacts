@@ -1,3 +1,9 @@
+buteo-sync-plugins-contacts (0.1+16.04.20151211-0ubuntu1) xenial; urgency=medium
+
+  * Does not set new sources as default. (LP: #1511471)
+
+ -- Renato Araujo Oliveira Filho <renato.filho@canonical.com>  Fri, 11 Dec 2015 14:40:17 +0000
+
 buteo-sync-plugins-contacts (0.1+15.10.20151015.1-0ubuntu1) wily; urgency=medium
 
   [ Renato Araujo Oliveira Filho ]
