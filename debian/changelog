@@ -1,3 +1,10 @@
+buteo-sync-plugins-contacts (0.1+16.10.20160804-0ubuntu1) yakkety; urgency=medium
+
+  * Removed conflicts flag with "evolution-data-server-online-accounts"
+    (LP: #1609872)
+
+ -- Renato Araujo Oliveira Filho <renato.filho@canonical.com>  Thu, 04 Aug 2016 17:46:20 +0000
+
 buteo-sync-plugins-contacts (0.1+16.04.20151211-0ubuntu1) xenial; urgency=medium
 
   * Does not set new sources as default. (LP: #1511471)

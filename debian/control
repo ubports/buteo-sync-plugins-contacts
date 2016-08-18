@@ -17,9 +17,7 @@ Homepage: https://launchpad.net/buteo-sync-plugins-contacts
 
 Package: buteo-sync-plugins-contacts-google
 Architecture: any
-Conflicts: evolution-data-server-online-accounts,
-           sync-monitor (<< 0.2),
-Provides: evolution-data-server-online-accounts
+Conflicts: sync-monitor (<< 0.2),
 Depends: ${misc:Depends},
          ${shlibs:Depends},
          buteo-syncfw,
