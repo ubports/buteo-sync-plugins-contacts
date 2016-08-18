@@ -1,3 +1,9 @@
+buteo-sync-plugins-contacts (0.1+16.10.20160818.1-0ubuntu1) yakkety; urgency=medium
+
+  * Update build dep.
+
+ -- Renato Araujo Oliveira Filho <renato.filho@canonical.com>  Thu, 18 Aug 2016 18:48:43 +0000
+
 buteo-sync-plugins-contacts (0.1+16.10.20160804-0ubuntu1) yakkety; urgency=medium
 
   * Removed conflicts flag with "evolution-data-server-online-accounts"
