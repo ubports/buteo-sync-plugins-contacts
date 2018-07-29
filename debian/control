@@ -10,7 +10,7 @@ Build-Depends: cmake,
                libsignon-qt5-dev,
                qt5-default,
                qtbase5-dev,
-               qtpim5-dev,
+               qtpim5-dev (>= 5.0~git20171109~0bd985b),
                signon-plugin-oauth2-dev,
 Standards-Version: 3.9.5
 Homepage: https://launchpad.net/buteo-sync-plugins-contacts
