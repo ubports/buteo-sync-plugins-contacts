@@ -1,7 +1,7 @@
 /****************************************************************************
 **
-** Copyright (C) 2012 Digia Plc and/or its subsidiary(-ies).
-** Contact: http://www.qt-project.org/legal
+** Copyright (C) 2017 The Qt Company Ltd.
+** Contact: https://www.qt.io/licensing/
 **
 ** This file is part of the QtContacts module of the Qt Toolkit.
 **
@@ -10,30 +10,28 @@
 ** Licensees holding valid commercial Qt licenses may use this file in
 ** accordance with the commercial license agreement provided with the
 ** Software or, alternatively, in accordance with the terms contained in
-** a written agreement between you and Digia.  For licensing terms and
-** conditions see http://qt.digia.com/licensing.  For further information
-** use the contact form at http://qt.digia.com/contact-us.
+** a written agreement between you and The Qt Company. For licensing terms
+** and conditions see https://www.qt.io/terms-conditions. For further
+** information use the contact form at https://www.qt.io/contact-us.
 **
 ** GNU Lesser General Public License Usage
 ** Alternatively, this file may be used under the terms of the GNU Lesser
-** General Public License version 2.1 as published by the Free Software
-** Foundation and appearing in the file LICENSE.LGPL included in the
-** packaging of this file.  Please review the following information to
-** ensure the GNU Lesser General Public License version 2.1 requirements
-** will be met: http://www.gnu.org/licenses/old-licenses/lgpl-2.1.html.
-**
-** In addition, as a special exception, Digia gives you certain additional
-** rights.  These rights are described in the Digia Qt LGPL Exception
-** version 1.1, included in the file LGPL_EXCEPTION.txt in this package.
+** General Public License version 3 as published by the Free Software
+** Foundation and appearing in the file LICENSE.LGPL3 included in the
+** packaging of this file. Please review the following information to
+** ensure the GNU Lesser General Public License version 3 requirements
+** will be met: https://www.gnu.org/licenses/lgpl-3.0.html.
 **
 ** GNU General Public License Usage
 ** Alternatively, this file may be used under the terms of the GNU
-** General Public License version 3.0 as published by the Free Software
-** Foundation and appearing in the file LICENSE.GPL included in the
-** packaging of this file.  Please review the following information to
-** ensure the GNU General Public License version 3.0 requirements will be
-** met: http://www.gnu.org/copyleft/gpl.html.
-**
+** General Public License version 2.0 or (at your option) the GNU General
+** Public license version 3 or any later version approved by the KDE Free
+** Qt Foundation. The licenses are as published by the Free Software
+** Foundation and appearing in the file LICENSE.GPL2 and LICENSE.GPL3
+** included in the packaging of this file. Please review the following
+** information to ensure the GNU General Public License requirements will
+** be met: https://www.gnu.org/licenses/gpl-2.0.html and
+** https://www.gnu.org/licenses/gpl-3.0.html.
 **
 ** $QT_END_LICENSE$
 **
@@ -58,9 +56,7 @@
 #include <QtContacts/qcontactmanager.h>
 #include <QtContacts/qcontactmanagerengine.h>
 #include <QtContacts/qcontactchangeset.h>
-#include <QtContacts/qcontactengineid.h>
 #include <QtContacts/qcontactmanagerenginefactory.h>
-#include <QtContacts/qcontactchangelogfilter.h>
 
 QT_BEGIN_NAMESPACE_CONTACTS
 
@@ -73,7 +69,6 @@ class QContactMemoryEngineFactory : public QContactManagerEngineFactory
 public:
     QContactManagerEngine* engine(const QMap<QString, QString> &parameters, QContactManager::Error*);
     QString managerName() const;
-    QContactEngineId* createContactEngineId(const QMap<QString, QString> &parameters, const QString &engineIdString) const;
 };
 
 class QContactMemoryEngineData : public QSharedData
@@ -107,14 +102,17 @@ public:
     QString m_id;                                  // the id parameter value
 
     QContactId m_selfContactId;               // the "MyCard" contact id
-    QList<QContact> m_contacts;                    // list of contacts
+    QList<QContact> m_contacts;               // list of contacts
+    QHash<QContactCollectionId, QContactId> m_contactsInCollections;   // hash of contacts for each collection
+    QHash<QContactCollectionId, QContactCollection> m_idToCollectionHash; // hash of id to the collection identified by that id
     QList<QContactId> m_contactIds;           // list of contact Id's
     QList<QContactRelationship> m_relationships;   // list of contact relationships
     QMap<QContactId, QList<QContactRelationship> > m_orderedRelationships; // map of ordered lists of contact relationships
     QList<QString> m_definitionIds;                // list of definition types (id's)
     quint32 m_nextContactId;
     bool m_anonymous;                              // Is this backend ever shared?
-    QString m_managerUri;                           // for faster lookup.
+    QString m_managerUri;                        // for faster lookup.
+
 
     void emitSharedSignals(QContactChangeSet *cs)
     {
@@ -122,38 +120,15 @@ public:
             cs->emitSignals(engine);
     }
 
+    void emitSharedSignals(QContactCollectionChangeSet *cs)
+    {
+        foreach (QContactManagerEngine *engine, m_sharedEngines)
+            cs->emitSignals(engine);
+    }
+
     QList<QContactManagerEngine*> m_sharedEngines;   // The list of engines that share this data
 };
 
-
-class  QContactMemoryEngineId : public QContactEngineId
-{
-public:
-    QContactMemoryEngineId();
-    ~QContactMemoryEngineId();
-    QContactMemoryEngineId(quint32 contactId, const QString &managerUri);
-    QContactMemoryEngineId(const QContactMemoryEngineId &other);
-    QContactMemoryEngineId(const QMap<QString, QString> &parameters, const QString &engineIdString);
-
-    bool isEqualTo(const QContactEngineId *other) const;
-    bool isLessThan(const QContactEngineId *other) const;
-
-    QString managerUri() const;
-
-    QContactEngineId* clone() const;
-
-    QString toString() const;
-
-#ifndef QT_NO_DEBUG_STREAM
-    QDebug& debugStreamOut(QDebug &dbg) const;
-#endif
-    uint hash() const;
-
-private:
-    quint32 m_contactId;
-    QString m_managerUri;
-    friend class QContactMemoryEngine;
-};
 
 class QContactMemoryEngine : public QContactManagerEngine
 {
@@ -167,6 +142,8 @@ public:
     /* URI reporting */
     QString managerName() const;
     QMap<QString, QString> managerParameters() const;
+    QMap<QString, QString> idInterpretationParameters() const;
+
     /*! \reimp */
     int managerVersion() const {return 1;}
 
@@ -182,9 +159,16 @@ public:
     virtual QContactId selfContactId(QContactManager::Error *error) const;
 
     /* Relationships between contacts */
-    virtual QList<QContactRelationship> relationships(const QString &relationshipType, const QContact &participant, QContactRelationship::Role role, QContactManager::Error *error) const;
+    virtual QList<QContactRelationship> relationships(const QString &relationshipType, const QContactId &participantId, QContactRelationship::Role role, QContactManager::Error *error) const;
     virtual bool saveRelationships(QList<QContactRelationship> *relationships, QMap<int, QContactManager::Error> *errorMap, QContactManager::Error *error);
     virtual bool removeRelationships(const QList<QContactRelationship> &relationships, QMap<int, QContactManager::Error> *errorMap, QContactManager::Error *error);
+
+    // collections
+    QContactCollectionId defaultCollectionId() const;
+    QContactCollection collection(const QContactCollectionId &collectionId, QContactManager::Error *error);
+    QList<QContactCollection> collections(QContactManager::Error* error);
+    bool saveCollection(QContactCollection* collection, QContactManager::Error* error);
+    bool removeCollection(const QContactCollectionId& collectionId, QContactManager::Error* error);
 
     /*! \reimp */
     virtual bool validateContact(const QContact &contact, QContactManager::Error *error) const

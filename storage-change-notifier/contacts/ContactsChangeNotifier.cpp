@@ -42,14 +42,14 @@ ContactsChangeNotifier::~ContactsChangeNotifier()
 void ContactsChangeNotifier::enable()
 {
     if(iManager && iDisabled) {
-        connect(iManager, SIGNAL(contactsAdded(const QList<QContactId>&)),
-                          SLOT(onContactsAdded(const QList<QContactId>&)));
+        connect(iManager, &QContactManager::contactsAdded,
+                this, &ContactsChangeNotifier::onContactsAdded);
 
-        connect(iManager, SIGNAL(contactsRemoved(const QList<QContactId>&)),
-                          SLOT(onContactsRemoved(const QList<QContactId>&)));
+        connect(iManager, &QContactManager::contactsRemoved,
+                this, &ContactsChangeNotifier::onContactsRemoved);
 
-        connect(iManager, SIGNAL(contactsChanged(const QList<QContactId>&)),
-                          SLOT(onContactsChanged(const QList<QContactId>&)));
+        connect(iManager, &QContactManager::contactsChanged,
+                this, &ContactsChangeNotifier::onContactsChanged);
         iDisabled = false;
     }
 }

@@ -1,3 +1,9 @@
+buteo-sync-plugins-contacts (0.2+ubports2) xenial; urgency=medium
+
+  * Update to latest QtPim
+
+ -- Alberto Mardegan <mardy@users.sourceforge.net>  Sun, 29 Jul 2018 14:30:01 +0300
+
 buteo-sync-plugins-contacts (0.2+ubports1) xenial; urgency=medium
 
   * No change rebuild for xenial 
