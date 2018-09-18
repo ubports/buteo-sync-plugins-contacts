@@ -1,3 +1,9 @@
+buteo-sync-plugins-contacts (0.3~0ubports1) xenial; urgency=medium
+
+  * Change versioning scheme
+
+ -- Alberto Mardegan <mardy@users.sourceforge.net>  Tue, 18 Sep 2018 20:29:07 +0300
+
 buteo-sync-plugins-contacts (0.2+ubports2) xenial; urgency=medium
 
   * Update to latest QtPim
